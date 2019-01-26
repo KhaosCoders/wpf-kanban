@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.329
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3FEA47FC-3B96-4A45-96D1-BB74317A8B6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF-Kanban", "Source\WPF-Kanban.csproj", "{7A6F1CE4-7427-4294-8FB7-35DE8DB3444E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{7A474A54-E5C6-42F1-B790-9E4531E62123}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp1", "Samples\WpfApp1\WpfApp1.csproj", "{81A7E462-6997-454C-944D-7EABC21A8C13}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7A6F1CE4-7427-4294-8FB7-35DE8DB3444E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A6F1CE4-7427-4294-8FB7-35DE8DB3444E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A6F1CE4-7427-4294-8FB7-35DE8DB3444E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A6F1CE4-7427-4294-8FB7-35DE8DB3444E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81A7E462-6997-454C-944D-7EABC21A8C13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81A7E462-6997-454C-944D-7EABC21A8C13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81A7E462-6997-454C-944D-7EABC21A8C13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81A7E462-6997-454C-944D-7EABC21A8C13}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{81A7E462-6997-454C-944D-7EABC21A8C13} = {7A474A54-E5C6-42F1-B790-9E4531E62123}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F72CC9D8-6CAA-4613-AA8D-D092E5E08157}
+	EndGlobalSection
+EndGlobal
