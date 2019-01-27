@@ -50,6 +50,7 @@
                         BorderThickness="{TemplateBinding BorderThickness}">
                         <DockPanel>
                             <Control DockPanel.Dock="Top" Template="{TemplateBinding TitleControl}" />
+                            <!--
                             <ItemsControl ItemsSource="{TemplateBinding Columns}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -57,6 +58,8 @@
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                             </ItemsControl>
+                            -->
+                            <ScrollViewer x:Name="KB_ScrollViewer" Focusable="False" />
                         </DockPanel>
                     </Border>
                 </ControlTemplate>
@@ -187,13 +190,17 @@
 
     <Style TargetType="{x:Type local:KanbanCard}">
         <Setter Property="Background" Value="Red" />
+        <Setter Property="Width" Value="100" />
+        <Setter Property="Height" Value="100" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanCard}">
                     <Border
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}" />
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <TextBlock Text="Card" />
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

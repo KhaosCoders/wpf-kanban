@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,8 @@ namespace WpfApp1
     public class DummyData
     {
         public DataTable Table { get; set; }
+
+        public ObservableCollection<CardData> Collection { get; set; } = new ObservableCollection<CardData>();
 
         public DummyData()
         {
@@ -22,6 +25,20 @@ namespace WpfApp1
             Table.Rows.Add("Doing", "Doi 1");
             Table.Rows.Add("Done", "Don 1");
             Table.Rows.Add("Backlog", "BL 2");
+
+
+
+            Collection.Add(new CardData() { Column = "Backlog", Title = "BL 1" });
+            Collection.Add(new CardData() { Column = "Requested", Title = "R 1" });
+            Collection.Add(new CardData() { Column = "Design", Title = "De 1" });
+            Collection.Add(new CardData() { Column = "Doing", Title = "Doi 1" });
+            Collection.Add(new CardData() { Column = "Done", Title = "Don 1" });
+            Collection.Add(new CardData() { Column = "Backlog", Title = "BL 2" });
+
         }
+
+
+
+
     }
 }

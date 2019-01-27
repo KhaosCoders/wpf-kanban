@@ -20,7 +20,7 @@ namespace KC.WPF_Kanban
 
         private static void UpdateBoardLayout(DependencyObject d)
         {
-            var panel = FrameworkUtils.FindParent<Panel>(d);
+            var panel = FrameworkUtils.FindParent<Panel>(d as FrameworkElement);
             panel?.InvalidateMeasure();
         }
 

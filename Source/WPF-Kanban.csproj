@@ -51,6 +51,7 @@
     <Compile Include="Converter\TextUppercaseConverter.cs" />
     <Compile Include="ICollapsible.cs" />
     <Compile Include="IColumnSpan.cs" />
+    <Compile Include="KanbanBoardPresenter.cs" />
     <Compile Include="KanbanCard.cs" />
     <Compile Include="KanbanCardCollection.cs" />
     <Compile Include="KanbanColumn.cs" />

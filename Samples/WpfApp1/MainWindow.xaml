@@ -4,12 +4,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:kanban="clr-namespace:KC.WPF_Kanban;assembly=WPF-Kanban"
+    xmlns:local="clr-namespace:WpfApp1"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="MainWindow"
     Width="800"
     Height="450"
+    d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True,
+                                     Type={x:Type local:DummyData}}"
     mc:Ignorable="d">
-    <kanban:KanbanBoard Title="My Board">
+    <kanban:KanbanBoard Title="My Board" ItemsSource="{Binding Collection}">
         <kanban:KanbanBoard.Columns>
             <kanban:KanbanColumn Caption="Backlog" IsCollapsed="False" />
             <kanban:KanbanColumn Caption="Requested" />
@@ -21,5 +24,10 @@
             </kanban:KanbanColumn>
             <kanban:KanbanColumn Caption="Done" />
         </kanban:KanbanBoard.Columns>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <kanban:KanbanCard />
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
     </kanban:KanbanBoard>
 </Window>
