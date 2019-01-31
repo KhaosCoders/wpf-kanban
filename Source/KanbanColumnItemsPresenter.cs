@@ -13,14 +13,15 @@ namespace KC.WPF_Kanban
         /// <summary>
         /// Gets or sets the <see cref="ControlTemplate"/> used when sub-columns are displayed
         /// </summary>
-        public ControlTemplate ColumnsTemplate {
-            get => columnsTemplate;
+        public ControlTemplate ColumnsTemplate
+        {
+            get => this.columnsTemplate;
             set
             {
-                if (columnsTemplate != value)
+                if (this.columnsTemplate != value)
                 {
-                    columnsTemplate = value;
-                    SelectTemplate();
+                    this.columnsTemplate = value;
+                    this.SelectTemplate();
                 }
             }
         }
@@ -29,14 +30,15 @@ namespace KC.WPF_Kanban
         /// <summary>
         /// Gets or sets the <see cref="ControlTemplate"/> used when cards are displayed
         /// </summary>
-        public ControlTemplate CardsTemplate {
-            get => cardsTemplate;
+        public ControlTemplate CardsTemplate
+        {
+            get => this.cardsTemplate;
             set
             {
-                if (cardsTemplate != value)
+                if (this.cardsTemplate != value)
                 {
-                    cardsTemplate = value;
-                    SelectTemplate();
+                    this.cardsTemplate = value;
+                    this.SelectTemplate();
                 }
             }
         }
@@ -47,8 +49,8 @@ namespace KC.WPF_Kanban
         /// </summary>
         public KanbanColumnCollection Columns
         {
-            get { return (KanbanColumnCollection)GetValue(ColumnsProperty); }
-            set { SetValue(ColumnsProperty, value); }
+            get => (KanbanColumnCollection)this.GetValue(ColumnsProperty);
+            set => this.SetValue(ColumnsProperty, value);
         }
         public static readonly DependencyProperty ColumnsProperty =
             DependencyProperty.Register("Columns", typeof(KanbanColumnCollection), typeof(KanbanColumnItemsPresenter),
@@ -71,32 +73,42 @@ namespace KC.WPF_Kanban
             }
         }
 
-        private void Columns_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            SelectTemplate();
-        }
+        private void Columns_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) => this.SelectTemplate();
 
         /// <summary>
         /// Selects the correct <see cref="ControlTemplate"/> for eighter displaying sub-columns or cards
         /// </summary>
         private void SelectTemplate()
         {
-            if (Columns?.Count > 0)
+            if (this.Columns?.Count > 0)
             {
-                if (Template != ColumnsTemplate)
+                if (this.Template != this.ColumnsTemplate)
                 {
-                    Template = ColumnsTemplate;
-                    InvalidateVisual();
+                    this.Template = this.ColumnsTemplate;
+                    this.InvalidateVisual();
                 }
             }
             else
             {
-                if (Template != CardsTemplate)
+                if (this.Template != this.CardsTemplate)
                 {
-                    Template = CardsTemplate;
-                    InvalidateVisual();
+                    this.Template = this.CardsTemplate;
+                    this.InvalidateVisual();
                 }
             }
         }
+
+        /// <summary>
+        /// Gets or sets a collection with cards
+        /// </summary>
+        public KanbanCardCollection Cards
+        {
+            get => (KanbanCardCollection)this.GetValue(CardsProperty);
+            set => this.SetValue(CardsProperty, value);
+        }
+        public static readonly DependencyProperty CardsProperty =
+            DependencyProperty.Register("Cards", typeof(KanbanCardCollection), typeof(KanbanColumnItemsPresenter),
+                new FrameworkPropertyMetadata(null));
+
     }
 }

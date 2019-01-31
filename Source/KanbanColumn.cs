@@ -16,6 +16,7 @@ namespace KC.WPF_Kanban
         public KanbanColumn()
         {
             Columns = new KanbanColumnCollection();
+            Cards = new KanbanCardCollection();
         }
 
         private static void UpdateBoardLayout(DependencyObject d)
@@ -56,28 +57,18 @@ namespace KC.WPF_Kanban
         /// <summary>
         /// Gets or sets a span factor of the column
         /// </summary>
-        public int ColumnSpan
-        {
-            get => (int)GetValue(ColumnSpanProperty);
-            set => SetValue(ColumnSpanProperty, value);
+        public int ColumnSpan {
+            get => _columnSpan;
+            set
+            {
+                if (_columnSpan != value)
+                {
+                    _columnSpan = value;
+                    UpdateBoardLayout(this);
+                }
+            }
         }
-        public static int GetColumnSpan(DependencyObject obj)
-        {
-            return (int)obj.GetValue(ColumnSpanProperty);
-        }
-        public static void SetColumnSpan(DependencyObject obj, int value)
-        {
-            obj.SetValue(ColumnSpanProperty, value);
-        }
-        public static readonly DependencyProperty ColumnSpanProperty =
-            DependencyProperty.RegisterAttached("ColumnSpan", typeof(int), typeof(KanbanColumn),
-                new FrameworkPropertyMetadata(1, FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender,
-                    new PropertyChangedCallback(OnColumnSpanChanged)));
-
-        private static void OnColumnSpanChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            UpdateBoardLayout(d);
-        }
+        private int _columnSpan = 1;
 
         /// <summary>
         /// Gets or sets the columns collection of the board
@@ -99,6 +90,28 @@ namespace KC.WPF_Kanban
             DependencyProperty.RegisterAttached("Columns", typeof(KanbanColumnCollection), typeof(KanbanColumn),
                 new FrameworkPropertyMetadata(null));
 
+        /// <summary>
+        /// Gets or sets an unique value for the column
+        /// Used to assign each <see cref="KanbanCard"/> to a column
+        /// </summary>
+        public object ColumnValue { get; set; }
 
+
+        public ObservableCollection<KanbanCard> Cards
+        {
+            get => GetValue(CardsProperty) as ObservableCollection<KanbanCard>;
+            set => SetValue(CardsProperty, value);
+        }
+        public static KanbanCardCollection GetCards(DependencyObject obj)
+        {
+            return (KanbanCardCollection)obj.GetValue(CardsProperty);
+        }
+        public static void SetCards(DependencyObject obj, KanbanCardCollection value)
+        {
+            obj.SetValue(CardsProperty, value);
+        }
+        public static readonly DependencyProperty CardsProperty =
+            DependencyProperty.RegisterAttached("Cards", typeof(KanbanCardCollection), typeof(KanbanColumn),
+                new FrameworkPropertyMetadata(null));
     }
 }

@@ -1,10 +1,12 @@
 ﻿using KC.WPF_Kanban.Utils;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 
 namespace KC.WPF_Kanban
 {
@@ -91,6 +93,59 @@ namespace KC.WPF_Kanban
             DependencyProperty.RegisterAttached("Columns", typeof(KanbanColumnCollection), typeof(KanbanBoard),
                 new FrameworkPropertyMetadata(null));
 
+
+        public BindingBase ColumnBinding { get; set; }
+
+
+        public void AddCard(UIElement cardContainer)
+        {
+            if (ColumnBinding is Binding binding && cardContainer is KanbanCard card)
+            {
+                Binding valueBinding = new Binding()
+                {
+                    Source = card.DataContext,
+                    Path = binding.Path
+                };
+                var colValue = FrameworkUtils.EvalBinding(valueBinding);
+                KanbanColumn column = FindColumnForValue(colValue);
+                column?.Cards.Add(card);
+            }
+        }
+
+        private KanbanColumn FindColumnForValue(object value)
+        {
+            foreach(KanbanColumn column in Columns)
+            {
+                if (value.Equals(column.ColumnValue))
+                {
+                    return column;
+                }
+                KanbanColumn found = FindSubColumnForValue(value, column);
+                if (found != null)
+                {
+                    return found;
+                }
+            }
+            return null;
+        }
+
+        private KanbanColumn FindSubColumnForValue(object value, KanbanColumn column)
+        {
+            foreach(KanbanColumn col in column.Columns)
+            {
+                if (value.Equals(col.ColumnValue))
+                {
+                    return col;
+                }
+                KanbanColumn found = FindSubColumnForValue(value, col);
+                if (found != null)
+                {
+                    return found;
+                }
+            }
+            return null;
+        }
+
         #region Card Generation
 
         protected override bool IsItemItsOwnContainerOverride(object item)
@@ -103,7 +158,7 @@ namespace KC.WPF_Kanban
             return new KanbanCard();
         }
 
-        
+
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
         {
             base.PrepareContainerForItemOverride(element, item);

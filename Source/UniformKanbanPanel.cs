@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace KC.WPF_Kanban
@@ -17,17 +12,11 @@ namespace KC.WPF_Kanban
 
         public Orientation Orientation
         {
-            get => (Orientation)GetValue(OrientationProperty);
-            set => SetValue(OrientationProperty, value);
+            get => (Orientation)this.GetValue(OrientationProperty);
+            set => this.SetValue(OrientationProperty, value);
         }
-        public static Orientation GetOrientation(DependencyObject obj)
-        {
-            return (Orientation)obj.GetValue(OrientationProperty);
-        }
-        public static void SetOrientation(DependencyObject obj, Orientation value)
-        {
-            obj.SetValue(OrientationProperty, value);
-        }
+        public static Orientation GetOrientation(DependencyObject obj) => (Orientation)obj.GetValue(OrientationProperty);
+        public static void SetOrientation(DependencyObject obj, Orientation value) => obj.SetValue(OrientationProperty, value);
         public static readonly DependencyProperty OrientationProperty =
             DependencyProperty.RegisterAttached("Orientation", typeof(Orientation), typeof(UniformKanbanPanel),
                 new FrameworkPropertyMetadata(Orientation.Horizontal,
@@ -37,26 +26,26 @@ namespace KC.WPF_Kanban
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            Size size = GetOrientatedSize(0d, availableSize.Width, 0d, availableSize.Height);
+            Size size = this.GetOrientatedSize(0d, availableSize.Width, 0d, availableSize.Height);
             // Calculate different counts needed to calculate the uniform size
-            SplotCount count = GetTotalSlotCount();
+            SplotCount count = this.GetTotalSlotCount();
             if (count.TotalSlots == 0)
             {
-                return size;
+                return Size.Empty;
             }
-            bool isHorizontal = Orientation == Orientation.Horizontal;
+            bool isHorizontal = this.Orientation == Orientation.Horizontal;
 
             // Space to split between columns
             double availableSpace = isHorizontal ? availableSize.Width : availableSize.Height;
-            // Substract spacing between columns from available space
-            double spacingSpace = (count.TotalSlots - 1) * ColumnSpacing;
+            // Subtract spacing between columns from available space
+            double spacingSpace = (count.TotalSlots - 1) * this.ColumnSpacing;
             availableSpace -= spacingSpace;
 
             // First measure the collapsed controls
-            // These are fix in size and must therefor substracted from available space
-            Size collapsedSize = GetOrientatedSize(1d, availableSize.Width, 1d, availableSize.Height);
+            // These are fix in size and must therefor subtracted from available space
+            Size collapsedSize = this.GetOrientatedSize(1d, availableSize.Width, 1d, availableSize.Height);
             double collapsedSpace = 0d;
-            foreach (FrameworkElement element in InternalChildren)
+            foreach (FrameworkElement element in this.InternalChildren)
             {
                 if (element is ICollapsible collapsible && collapsible.IsCollapsed)
                 {
@@ -76,12 +65,12 @@ namespace KC.WPF_Kanban
             }
             availableSpace -= collapsedSpace;
 
-            // Then meausure all the other controls
-            uniformSpace = availableSpace / count.UsedSlots;
-            Size uniformSize = GetOrientatedSize(uniformSpace, availableSize.Width, uniformSpace, availableSize.Height);
+            // Then measure all the other controls
+            this.uniformSpace = availableSpace / count.UsedSlots;
+            Size uniformSize = this.GetOrientatedSize(this.uniformSpace, availableSize.Width, this.uniformSpace, availableSize.Height);
             Size controlSpanSize;
             double usedSpace = 0;
-            foreach (UIElement element in InternalChildren)
+            foreach (UIElement element in this.InternalChildren)
             {
                 controlSpanSize = new Size(uniformSize.Width, uniformSize.Height);
                 if (!(element is ICollapsible collapsible && collapsible.IsCollapsed))
@@ -91,12 +80,12 @@ namespace KC.WPF_Kanban
                         if (isHorizontal)
                         {
                             controlSpanSize.Width *= columnSpan.ColumnSpan;
-                            controlSpanSize.Width += (columnSpan.ColumnSpan - 1) * ColumnSpacing;
+                            controlSpanSize.Width += (columnSpan.ColumnSpan - 1) * this.ColumnSpacing;
                         }
                         else
                         {
                             controlSpanSize.Height *= columnSpan.ColumnSpan;
-                            controlSpanSize.Height += (columnSpan.ColumnSpan - 1) * ColumnSpacing;
+                            controlSpanSize.Height += (columnSpan.ColumnSpan - 1) * this.ColumnSpacing;
                         }
                     }
 
@@ -129,16 +118,16 @@ namespace KC.WPF_Kanban
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            if (InternalChildren.Count == 0)
+            if (this.InternalChildren.Count == 0)
             {
                 return finalSize;
             }
-            bool isHorizontal = Orientation == Orientation.Horizontal;
+            bool isHorizontal = this.Orientation == Orientation.Horizontal;
 
             double position = 0;
             double spanSpace;
             Rect controlRect;
-            foreach(UIElement element in InternalChildren)
+            foreach (UIElement element in this.InternalChildren)
             {
                 if (element is ICollapsible collapsible && collapsible.IsCollapsed)
                 {
@@ -155,14 +144,14 @@ namespace KC.WPF_Kanban
                 else if (element is IColumnSpan columnspan && columnspan.ColumnSpan > 1)
                 {
                     // Multi-Span element
-                    spanSpace = (columnspan.ColumnSpan - 1) * ColumnSpacing;
+                    spanSpace = (columnspan.ColumnSpan - 1) * this.ColumnSpacing;
                     if (isHorizontal)
                     {
-                        controlRect = new Rect(position, 0, (uniformSpace * columnspan.ColumnSpan) + spanSpace, finalSize.Height);
+                        controlRect = new Rect(position, 0, (this.uniformSpace * columnspan.ColumnSpan) + spanSpace, finalSize.Height);
                     }
                     else
                     {
-                        controlRect = new Rect(0, position, finalSize.Width, (uniformSpace * columnspan.ColumnSpan) + spanSpace);
+                        controlRect = new Rect(0, position, finalSize.Width, (this.uniformSpace * columnspan.ColumnSpan) + spanSpace);
                     }
                 }
                 else
@@ -170,11 +159,11 @@ namespace KC.WPF_Kanban
                     // Basic 1 Spot rect
                     if (isHorizontal)
                     {
-                        controlRect = new Rect(position, 0, uniformSpace, finalSize.Height);
+                        controlRect = new Rect(position, 0, this.uniformSpace, finalSize.Height);
                     }
                     else
                     {
-                        controlRect = new Rect(0, position, finalSize.Width, uniformSpace);
+                        controlRect = new Rect(0, position, finalSize.Width, this.uniformSpace);
                     }
                 }
                 if (isHorizontal)
@@ -185,14 +174,14 @@ namespace KC.WPF_Kanban
                 {
                     position += controlRect.Height;
                 }
-                position += ColumnSpacing;
+                position += this.ColumnSpacing;
                 element.Arrange(controlRect);
             }
             if (position > 0)
             {
-                position -= ColumnSpacing;
+                position -= this.ColumnSpacing;
             }
-            return GetOrientatedSize(position, finalSize.Width, position, finalSize.Height);
+            return this.GetOrientatedSize(position, finalSize.Width, position, finalSize.Height);
         }
 
         /// <summary>
@@ -200,17 +189,30 @@ namespace KC.WPF_Kanban
         /// </summary>
         private Size GetOrientatedSize(double width, double widthMax, double height, double heightMax)
         {
-            if (Orientation == Orientation.Horizontal)
+            if (this.Orientation == Orientation.Horizontal)
             {
-                return new Size(width, heightMax);
+                return this.NoInfinity(new Size(width, heightMax));
             }
-            return new Size(widthMax, height);
+            return this.NoInfinity(new Size(widthMax, height));
+        }
+
+        private Size NoInfinity(Size size)
+        {
+            if (double.IsPositiveInfinity(size.Width))
+            {
+                size.Width = 1000;
+            }
+            if (double.IsPositiveInfinity(size.Height))
+            {
+                size.Height = 1000;
+            }
+            return size;
         }
 
         private SplotCount GetTotalSlotCount()
         {
             SplotCount count = new SplotCount();
-            foreach (UIElement element in InternalChildren)
+            foreach (UIElement element in this.InternalChildren)
             {
                 if (element is ICollapsible collapsible && collapsible.IsCollapsed)
                 {
@@ -230,7 +232,7 @@ namespace KC.WPF_Kanban
 
         private class SplotCount
         {
-            public int TotalSlots => CollapsedSlots + UsedSlots;
+            public int TotalSlots => this.CollapsedSlots + this.UsedSlots;
 
             public int CollapsedSlots { get; set; }
 

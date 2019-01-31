@@ -1,8 +1,7 @@
-﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converter="clr-namespace:KC.WPF_Kanban.Converter"
-    xmlns:local="clr-namespace:KC.WPF_Kanban">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converter="clr-namespace:KC.WPF_Kanban.Converter"
+                    xmlns:local="clr-namespace:KC.WPF_Kanban">
 
     <!-- Boilerplate Style for new controls:
     <Style TargetType="{x:Type local:Type}">
@@ -36,6 +35,7 @@
     <converter:TextUppercaseConverter x:Key="convUppercase" />
 
     <!--#endregion-->
+
     <!--#region Kanban Board-->
 
     <Style TargetType="{x:Type local:KanbanBoard}">
@@ -44,22 +44,21 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanBoard}">
-                    <Border
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                         <DockPanel>
                             <Control DockPanel.Dock="Top" Template="{TemplateBinding TitleControl}" />
-                            <!--
-                            <ItemsControl ItemsSource="{TemplateBinding Columns}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <local:UniformKanbanPanel Margin="6" />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
-                            -->
-                            <ScrollViewer x:Name="KB_ScrollViewer" Focusable="False" />
+                            <ScrollViewer x:Name="KB_ScrollViewer" Focusable="False">
+                                <StackPanel>
+                                    <ItemsControl Margin="6" ItemsSource="{TemplateBinding Columns}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <local:UniformKanbanPanel />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                    <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                </StackPanel>
+                            </ScrollViewer>
                         </DockPanel>
                     </Border>
                 </ControlTemplate>
@@ -87,19 +86,13 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanBoardTitle}">
-                    <Border
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="1" />
                             </Grid.RowDefinitions>
-                            <TextBlock
-                                Grid.Row="0"
-                                Style="{StaticResource styKanbanBoardTitleText}"
-                                Text="{TemplateBinding Title}" />
+                            <TextBlock Grid.Row="0" Style="{StaticResource styKanbanBoardTitleText}" Text="{TemplateBinding Title}" />
 
                             <Border Grid.Row="1" Style="{StaticResource styKanbanBoardTitleLine}" />
                         </Grid>
@@ -134,27 +127,46 @@
 
     <ControlTemplate x:Key="tplKanbanColumnWithCards" TargetType="local:KanbanColumnItemsPresenter">
         <Border Margin="0,4,0,0" Background="{StaticResource kanbanColumnBackground}">
-            <ItemsPresenter />
+            <ItemsControl ItemsSource="{TemplateBinding Cards}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
         </Border>
     </ControlTemplate>
 
+    <Style x:Key="styCollapseButton" TargetType="ToggleButton">
+        <Setter Property="MinWidth" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" />
+        <Setter Property="MinHeight" Value="{Binding ActualWidth, RelativeSource={RelativeSource Self}}" />
+        <Setter Property="Background" Value="{StaticResource kanbanColumnHeaderBackground}" />
+        <Setter Property="Content" Value="&lt;" />
+
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Content" Value="&gt;" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <Style TargetType="{x:Type local:KanbanColumn}">
-        <Setter Property="MinWidth" Value="20" />
+        <Setter Property="MinWidth" Value="28" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanColumn}">
-                    <Border
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                         <DockPanel>
                             <Border DockPanel.Dock="Top" Style="{StaticResource styKanbanColumnHeaderBorder}">
-                                <TextBlock Style="{StaticResource styKanbanColumnHeaderText}" Text="{TemplateBinding Caption, Converter={StaticResource convUppercase}}" />
+                                <DockPanel>
+                                    <ToggleButton DockPanel.Dock="Left" IsChecked="{Binding IsCollapsed, RelativeSource={RelativeSource Mode=TemplatedParent}}" Style="{StaticResource styCollapseButton}" />
+                                    <TextBlock Style="{StaticResource styKanbanColumnHeaderText}" Text="{TemplateBinding Caption, Converter={StaticResource convUppercase}}" />
+                                </DockPanel>
                             </Border>
-                            <local:KanbanColumnItemsPresenter
-                                CardsTemplate="{StaticResource tplKanbanColumnWithCards}"
-                                Columns="{TemplateBinding Columns}"
-                                ColumnsTemplate="{StaticResource tplKanbanColumnWithColumns}" />
+                            <local:KanbanColumnItemsPresenter Cards="{TemplateBinding Cards}"
+                                                              CardsTemplate="{StaticResource tplKanbanColumnWithCards}"
+                                                              Columns="{TemplateBinding Columns}"
+                                                              ColumnsTemplate="{StaticResource tplKanbanColumnWithColumns}" />
                         </DockPanel>
                     </Border>
                 </ControlTemplate>
@@ -165,16 +177,19 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="local:KanbanColumn">
-                            <Border
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                                 <Border DockPanel.Dock="Top" Style="{StaticResource styKanbanColumnHeaderBorder}">
-                                    <TextBlock Style="{StaticResource styKanbanColumnHeaderText}" Text="{TemplateBinding Caption, Converter={StaticResource convUppercase}}">
-                                        <TextBlock.LayoutTransform>
-                                            <RotateTransform Angle="90" />
-                                        </TextBlock.LayoutTransform>
-                                    </TextBlock>
+                                    <StackPanel Orientation="Vertical">
+                                        <ToggleButton Margin="0,0,0,4"
+                                                      DockPanel.Dock="Left"
+                                                      IsChecked="{Binding IsCollapsed, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                                      Style="{StaticResource styCollapseButton}" />
+                                        <TextBlock Style="{StaticResource styKanbanColumnHeaderText}" Text="{TemplateBinding Caption, Converter={StaticResource convUppercase}}">
+                                            <TextBlock.LayoutTransform>
+                                                <RotateTransform Angle="90" />
+                                            </TextBlock.LayoutTransform>
+                                        </TextBlock>
+                                    </StackPanel>
                                 </Border>
                             </Border>
                         </ControlTemplate>
@@ -195,10 +210,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanCard}">
-                    <Border
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                         <TextBlock Text="Card" />
                     </Border>
                 </ControlTemplate>

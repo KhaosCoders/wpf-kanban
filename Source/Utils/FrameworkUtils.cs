@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 
 namespace KC.WPF_Kanban.Utils
@@ -22,8 +19,10 @@ namespace KC.WPF_Kanban.Utils
         /// <returns>A sealed ControlTemplate</returns>
         public static ControlTemplate CreateTemplate(Type templateType, Type targetType)
         {
-            ControlTemplate template = new ControlTemplate(targetType);
-            template.VisualTree = new FrameworkElementFactory(templateType);
+            ControlTemplate template = new ControlTemplate(targetType)
+            {
+                VisualTree = new FrameworkElementFactory(templateType)
+            };
             template.Seal();
             return template;
         }
@@ -45,7 +44,6 @@ namespace KC.WPF_Kanban.Utils
 
                 parent = parent.TemplatedParent as FrameworkElement;
             }
-
             return null;
         }
 
@@ -62,9 +60,24 @@ namespace KC.WPF_Kanban.Utils
 
                 parent = VisualTreeHelper.GetParent(parent) as UIElement;
             }
-
             return null;
         }
+
+        public static object EvalBinding(Binding binding)
+        {
+            DependencyObject dependencyObject = new DependencyObject();
+            BindingOperations.SetBinding(dependencyObject, EvalDummyProperty, binding);
+            object value = dependencyObject.GetValue(EvalDummyProperty);
+            BindingOperations.ClearBinding(dependencyObject, EvalDummyProperty);
+            return value;
+        }
+
+        private static readonly DependencyProperty EvalDummyProperty =
+            DependencyProperty.RegisterAttached(
+               "EvalDummy",
+               typeof(object),
+               typeof(DependencyObject),
+               new PropertyMetadata(null));
 
     }
 }
