@@ -54,6 +54,7 @@
     <Compile Include="KanbanBoardPresenter.cs" />
     <Compile Include="KanbanCard.cs" />
     <Compile Include="KanbanCardCollection.cs" />
+    <Compile Include="KanbanCardLimitPill.cs" />
     <Compile Include="KanbanColumn.cs" />
     <Compile Include="KanbanColumnCollection.cs" />
     <Compile Include="KanbanColumnItemsPresenter.cs" />

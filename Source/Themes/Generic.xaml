@@ -27,6 +27,10 @@
     <SolidColorBrush x:Key="kanbanTitleForeground" Color="#505050" />
     <SolidColorBrush x:Key="kanbanColumnHeaderBackground" Color="#E8E8E8" />
     <SolidColorBrush x:Key="kanbanColumnBackground" Color="#F7F7F7" />
+    <SolidColorBrush x:Key="kanbanPillBackground" Color="#CFCFCF" />
+    <SolidColorBrush x:Key="kanbanPillForeground" Color="#373737" />
+    <SolidColorBrush x:Key="kanbanPillViolatedForeground" Color="#FC3030" />
+    <SolidColorBrush x:Key="kanbanColumnViolatedBackground" Color="#FC5858" />
 
     <!--#endregion-->
 
@@ -130,7 +134,7 @@
             <ItemsControl ItemsSource="{TemplateBinding Cards}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel Orientation="Vertical" />
+                        <WrapPanel Orientation="Vertical" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
@@ -157,18 +161,21 @@
                 <ControlTemplate TargetType="{x:Type local:KanbanColumn}">
                     <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                         <DockPanel>
-                            <Border DockPanel.Dock="Top" Style="{StaticResource styKanbanColumnHeaderBorder}">
+                            <Border Name="border" DockPanel.Dock="Top" Style="{StaticResource styKanbanColumnHeaderBorder}">
                                 <DockPanel>
                                     <ToggleButton DockPanel.Dock="Left" IsChecked="{Binding IsCollapsed, RelativeSource={RelativeSource Mode=TemplatedParent}}" Style="{StaticResource styCollapseButton}" />
+                                    <local:KanbanCardLimitPill DockPanel.Dock="Right" />
                                     <TextBlock Style="{StaticResource styKanbanColumnHeaderText}" Text="{TemplateBinding Caption, Converter={StaticResource convUppercase}}" />
                                 </DockPanel>
                             </Border>
-                            <local:KanbanColumnItemsPresenter Cards="{TemplateBinding Cards}"
-                                                              CardsTemplate="{StaticResource tplKanbanColumnWithCards}"
-                                                              Columns="{TemplateBinding Columns}"
-                                                              ColumnsTemplate="{StaticResource tplKanbanColumnWithColumns}" />
+                            <local:KanbanColumnItemsPresenter CardsTemplate="{StaticResource tplKanbanColumnWithCards}" ColumnsTemplate="{StaticResource tplKanbanColumnWithColumns}" />
                         </DockPanel>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsCardLimitViolated, RelativeSource={RelativeSource Mode=Self}}" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource kanbanColumnViolatedBackground}" />
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -178,24 +185,104 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="local:KanbanColumn">
                             <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                                <Border DockPanel.Dock="Top" Style="{StaticResource styKanbanColumnHeaderBorder}">
+                                <Border Name="border" DockPanel.Dock="Top" Style="{StaticResource styKanbanColumnHeaderBorder}">
                                     <StackPanel Orientation="Vertical">
                                         <ToggleButton Margin="0,0,0,4"
                                                       DockPanel.Dock="Left"
                                                       IsChecked="{Binding IsCollapsed, RelativeSource={RelativeSource Mode=TemplatedParent}}"
                                                       Style="{StaticResource styCollapseButton}" />
+                                        <local:KanbanCardLimitPill Margin="0,0,0,4" Orientation="Vertical" />
                                         <TextBlock Style="{StaticResource styKanbanColumnHeaderText}" Text="{TemplateBinding Caption, Converter={StaticResource convUppercase}}">
                                             <TextBlock.LayoutTransform>
-                                                <RotateTransform Angle="90" />
+                                                <RotateTransform Angle="270" />
                                             </TextBlock.LayoutTransform>
                                         </TextBlock>
                                     </StackPanel>
                                 </Border>
                             </Border>
+                            <ControlTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsCardLimitViolated, RelativeSource={RelativeSource Mode=Self}}" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="{StaticResource kanbanColumnViolatedBackground}" />
+                                </DataTrigger>
+                            </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
             </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--#endregion-->
+
+    <!--#region KanbanCardLimitPill-->
+
+    <Style x:Key="styKanbanPillSmallText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+    </Style>
+
+    <Style x:Key="styKanbanPillLargeText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
+    <Style TargetType="{x:Type local:KanbanCardLimitPill}">
+        <Setter Property="Background" Value="{StaticResource kanbanPillBackground}" />
+        <Setter Property="TextBlock.Foreground" Value="{StaticResource kanbanPillForeground}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:KanbanCardLimitPill}">
+                    <Border Name="border"
+                            Padding="4,1,4,1"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="4">
+                        <DockPanel>
+                            <TextBlock Name="txt1"
+                                       DockPanel.Dock="Left"
+                                       Style="{StaticResource styKanbanPillSmallText}"
+                                       Text="{Binding CardCount, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:KanbanCardLimitPill}}}" />
+                            <TextBlock Name="txt3"
+                                       DockPanel.Dock="Right"
+                                       Style="{StaticResource styKanbanPillLargeText}"
+                                       Text="{Binding CardLimit, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:KanbanCardLimitPill}}}" />
+                            <TextBlock Name="txt2" Style="{StaticResource styKanbanPillSmallText}" Text=" / " />
+                        </DockPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsCardLimitViolated, RelativeSource={RelativeSource Mode=Self}}" Value="True">
+                            <Setter TargetName="txt3" Property="TextBlock.FontWeight" Value="Bold" />
+                            <Setter TargetName="txt3" Property="TextBlock.Foreground" Value="{StaticResource kanbanPillViolatedForeground}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Orientation, RelativeSource={RelativeSource Mode=Self}}" Value="Vertical">
+                            <Setter TargetName="border" Property="Padding" Value="1,4,1,4" />
+                            <Setter TargetName="txt1" Property="DockPanel.Dock" Value="Bottom" />
+                            <Setter TargetName="txt3" Property="DockPanel.Dock" Value="Top" />
+                            <Setter TargetName="txt1" Property="TextBlock.LayoutTransform">
+                                <Setter.Value>
+                                    <RotateTransform Angle="270" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="txt2" Property="TextBlock.LayoutTransform">
+                                <Setter.Value>
+                                    <RotateTransform Angle="270" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="txt3" Property="TextBlock.LayoutTransform">
+                                <Setter.Value>
+                                    <RotateTransform Angle="270" />
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding CardLimit, RelativeSource={RelativeSource Mode=Self}}" Value="-1">
+                <Setter Property="Visibility" Value="Collapsed" />
+            </DataTrigger>
         </Style.Triggers>
     </Style>
 

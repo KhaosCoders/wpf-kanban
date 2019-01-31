@@ -21,6 +21,7 @@ namespace WpfApp1
             Table.Columns.Add(new DataColumn("Title", typeof(string)));
             Table.Rows.Add("Backlog", "BL 1");
             Table.Rows.Add("Requested", "R 1");
+            Table.Rows.Add("Requested", "R 2");
             Table.Rows.Add("Design", "De 1");
             Table.Rows.Add("Doing", "Doi 1");
             Table.Rows.Add("Done", "Don 1");
@@ -30,6 +31,7 @@ namespace WpfApp1
 
             Collection.Add(new CardData() { Column = "Backlog", Title = "BL 1" });
             Collection.Add(new CardData() { Column = "Requested", Title = "R 1" });
+            Collection.Add(new CardData() { Column = "Requested", Title = "R 2" });
             Collection.Add(new CardData() { Column = "Design", Title = "De 1" });
             Collection.Add(new CardData() { Column = "Doing", Title = "Doi 1" });
             Collection.Add(new CardData() { Column = "Done", Title = "Don 1" });

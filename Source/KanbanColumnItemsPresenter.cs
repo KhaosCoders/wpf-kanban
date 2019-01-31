@@ -54,11 +54,11 @@ namespace KC.WPF_Kanban
         }
         public static readonly DependencyProperty ColumnsProperty =
             DependencyProperty.Register("Columns", typeof(KanbanColumnCollection), typeof(KanbanColumnItemsPresenter),
-                new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnColumnsChanged)));
+                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnColumnsChanged)));
 
         private static void OnColumnsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            // (de-)register collection changed handler, to switch template if sub-columns are added
+            // (un-)register collection changed handler, to switch template if sub-columns are added
             if (d is KanbanColumnItemsPresenter presenter)
             {
                 if (e.NewValue is KanbanColumnCollection newCollection)
@@ -76,7 +76,7 @@ namespace KC.WPF_Kanban
         private void Columns_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) => this.SelectTemplate();
 
         /// <summary>
-        /// Selects the correct <see cref="ControlTemplate"/> for eighter displaying sub-columns or cards
+        /// Selects the correct <see cref="ControlTemplate"/> for either displaying sub-columns or cards
         /// </summary>
         private void SelectTemplate()
         {
@@ -108,7 +108,7 @@ namespace KC.WPF_Kanban
         }
         public static readonly DependencyProperty CardsProperty =
             DependencyProperty.Register("Cards", typeof(KanbanCardCollection), typeof(KanbanColumnItemsPresenter),
-                new FrameworkPropertyMetadata(null));
+                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
 
     }
 }

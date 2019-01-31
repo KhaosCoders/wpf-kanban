@@ -13,11 +13,14 @@
         mc:Ignorable="d">
     <kanban:KanbanBoard Title="My Board" ColumnBinding="{Binding Column}" ItemsSource="{Binding Collection}">
         <kanban:KanbanBoard.Columns>
-            <kanban:KanbanColumn Caption="Backlog" ColumnValue="Backlog" IsCollapsed="True" />
-            <kanban:KanbanColumn Caption="Requested" ColumnValue="Requested" />
-            <kanban:KanbanColumn Caption="In progress" ColumnSpan="3">
+            <kanban:KanbanColumn Caption="Backlog"
+                                 CardLimit="5"
+                                 ColumnValue="Backlog"
+                                 IsCollapsed="True" />
+            <kanban:KanbanColumn Caption="Requested" CardLimit="2" ColumnValue="Requested" />
+            <kanban:KanbanColumn Caption="In progress" CardLimit="2" ColumnSpan="3">
                 <kanban:KanbanColumn.Columns>
-                    <kanban:KanbanColumn Caption="Design" ColumnValue="Design" />
+                    <kanban:KanbanColumn Caption="Design" CardLimit="1" ColumnValue="Design" />
                     <kanban:KanbanColumn Caption="Doing" ColumnSpan="2" ColumnValue="Doing" />
                 </kanban:KanbanColumn.Columns>
             </kanban:KanbanColumn>
