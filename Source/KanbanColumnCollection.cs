@@ -14,5 +14,9 @@ namespace KC.WPF_Kanban
     /// </summary>
     public sealed class KanbanColumnCollection : ObservableCollection<KanbanColumn>
     {
+        /// <summary>
+        /// Gets or sets the panel the column is displayed on
+        /// </summary>
+        public KanbanBoardGridPanel Panel { get; set; }
     }
 }

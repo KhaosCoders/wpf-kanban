@@ -31,12 +31,14 @@
     <SolidColorBrush x:Key="kanbanPillForeground" Color="#373737" />
     <SolidColorBrush x:Key="kanbanPillViolatedForeground" Color="#FC3030" />
     <SolidColorBrush x:Key="kanbanColumnViolatedBackground" Color="#FC5858" />
+    <SolidColorBrush x:Key="kanbanCardBackground" Color="#FFFDC1" />
 
     <!--#endregion-->
 
     <!--#region Converters-->
 
     <converter:TextUppercaseConverter x:Key="convUppercase" />
+    <converter:ColorToBrushConverter x:Key="convColorToBrush" TrasparencyReplacement="{StaticResource kanbanCardBackground}" />
 
     <!--#endregion-->
 
@@ -53,13 +55,7 @@
                             <Control DockPanel.Dock="Top" Template="{TemplateBinding TitleControl}" />
                             <ScrollViewer x:Name="KB_ScrollViewer" Focusable="False">
                                 <StackPanel>
-                                    <ItemsControl Margin="6" ItemsSource="{TemplateBinding Columns}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <local:UniformKanbanPanel />
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                    </ItemsControl>
+                                    <local:KanbanBoardGridPanel Columns="{TemplateBinding Columns}" />
                                     <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                                 </StackPanel>
                             </ScrollViewer>
@@ -134,7 +130,7 @@
             <ItemsControl ItemsSource="{TemplateBinding Cards}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Vertical" />
+                        <WrapPanel Orientation="Horizontal" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
@@ -290,15 +286,33 @@
 
     <!--#region KanbanCard-->
 
+    <Style x:Key="styCardTitle" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
     <Style TargetType="{x:Type local:KanbanCard}">
-        <Setter Property="Background" Value="Red" />
-        <Setter Property="Width" Value="100" />
-        <Setter Property="Height" Value="100" />
+        <Setter Property="Padding" Value="10,10" />
+        <Setter Property="Margin" Value="10,10" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanCard}">
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                        <TextBlock Text="Card" />
+                    <Border Width="{TemplateBinding CardWidth}"
+                            Height="{TemplateBinding CardHeight}"
+                            Background="{Binding Color, Converter={StaticResource convColorToBrush}}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0"
+                                       Padding="4"
+                                       Style="{StaticResource styCardTitle}"
+                                       Text="{Binding Title}" />
+
+                        </Grid>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

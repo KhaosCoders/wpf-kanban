@@ -18,7 +18,7 @@
                                  ColumnValue="Backlog"
                                  IsCollapsed="True" />
             <kanban:KanbanColumn Caption="Requested" CardLimit="2" ColumnValue="Requested" />
-            <kanban:KanbanColumn Caption="In progress" CardLimit="2" ColumnSpan="3">
+            <kanban:KanbanColumn Caption="In progress" CardLimit="3" ColumnSpan="3">
                 <kanban:KanbanColumn.Columns>
                     <kanban:KanbanColumn Caption="Design" CardLimit="1" ColumnValue="Design" />
                     <kanban:KanbanColumn Caption="Doing" ColumnSpan="2" ColumnValue="Doing" />

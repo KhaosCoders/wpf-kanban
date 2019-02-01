@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace KC.WPF_Kanban
 {
+    /// <summary>
+    /// A collection of <see cref="KanbanCard"/> displayed by <see cref="KanbanColumn"/>
+    /// </summary>
     public class KanbanCardCollection : ObservableCollection<KanbanCard>
     {
         /// <summary>

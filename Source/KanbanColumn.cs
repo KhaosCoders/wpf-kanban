@@ -49,8 +49,9 @@ namespace KC.WPF_Kanban
             set => SetValue(CaptionProperty, value);
         }
         public static readonly DependencyProperty CaptionProperty =
-            DependencyProperty.Register("Caption", typeof(string), typeof(KanbanColumn),
-                new FrameworkPropertyMetadata("Column"));
+            KanbanColumnHeader.CaptionProperty.AddOwner(
+                typeof(KanbanColumn), new FrameworkPropertyMetadata(KanbanColumnHeader.DefaultColumnCaption,
+                    FrameworkPropertyMetadataOptions.Inherits));
 
         /// <summary>
         /// Gets or sets whether the column is collapsed

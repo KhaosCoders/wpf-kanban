@@ -62,7 +62,7 @@ namespace KC.WPF_Kanban
                 new FrameworkPropertyMetadata(FrameworkUtils.CreateTemplate(typeof(KanbanBoardTitle), typeof(Control))));
 
         /// <summary>
-        /// Gets or sets the orientation von the columns inside the board
+        /// Gets or sets the orientation of the columns inside the board
         /// </summary>
         public Orientation Orientation
         {
@@ -76,22 +76,16 @@ namespace KC.WPF_Kanban
         /// <summary>
         /// Gets or sets the columns collection of the board
         /// </summary>
-        public ObservableCollection<KanbanColumn> Columns
+        public KanbanColumnCollection Columns
         {
-            get => GetValue(ColumnsProperty) as ObservableCollection<KanbanColumn>;
-            set => SetValue(ColumnsProperty, value);
-        }
-        public static KanbanColumnCollection GetColumns(DependencyObject obj)
-        {
-            return (KanbanColumnCollection)obj.GetValue(ColumnsProperty);
-        }
-        public static void SetColumns(DependencyObject obj, KanbanColumnCollection value)
-        {
-            obj.SetValue(ColumnsProperty, value);
+            get { return (KanbanColumnCollection)GetValue(ColumnsProperty); }
+            set { SetValue(ColumnsProperty, value); }
         }
         public static readonly DependencyProperty ColumnsProperty =
-            DependencyProperty.RegisterAttached("Columns", typeof(KanbanColumnCollection), typeof(KanbanBoard),
+            DependencyProperty.Register("Columns", typeof(KanbanColumnCollection), typeof(KanbanBoard),
                 new FrameworkPropertyMetadata(null));
+
+
 
 
         public BindingBase ColumnBinding { get; set; }
