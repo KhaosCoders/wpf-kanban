@@ -3,6 +3,8 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Linq;
+using System.Windows.Data;
+using System.Collections.Generic;
 
 namespace KC.WPF_Kanban
 {
@@ -11,6 +13,8 @@ namespace KC.WPF_Kanban
     /// </summary>
     public class KanbanColumn : Control, ICollapsible, IColumnSpan
     {
+        internal const string DefaultColumnCaption = "Unknown";
+
         #region Override DP Metadata
 
         static KanbanColumn()
@@ -30,13 +34,17 @@ namespace KC.WPF_Kanban
         {
             // Set values so heritage to sub-columns is broken up
             Columns = new KanbanColumnCollection();
-            Cards = new KanbanCardCollection();
             CardLimit = -1;
-            // Take the bubbling event to calculate the correct CardCount
-            CardsChanged += this.KanbanColumn_CardsChanged;
         }
 
         #endregion
+
+        /// <summary>
+        /// Gets or sets an unique value for the column
+        /// used to assign each <see cref="KanbanCard"/> to a column
+        /// </summary>
+        /// <seealso cref="KanbanBoard.ColumnBinding"/>
+        public object ColumnValue { get; set; }
 
         #region Visual DPs
 
@@ -48,10 +56,17 @@ namespace KC.WPF_Kanban
             get => (string)GetValue(CaptionProperty);
             set => SetValue(CaptionProperty, value);
         }
+        public static string GetCaption(DependencyObject obj)
+        {
+            return (string)obj.GetValue(CaptionProperty);
+        }
+        public static void SetCaption(DependencyObject obj, string value)
+        {
+            obj.SetValue(CaptionProperty, value);
+        }
         public static readonly DependencyProperty CaptionProperty =
-            KanbanColumnHeader.CaptionProperty.AddOwner(
-                typeof(KanbanColumn), new FrameworkPropertyMetadata(KanbanColumnHeader.DefaultColumnCaption,
-                    FrameworkPropertyMetadataOptions.Inherits));
+            DependencyProperty.RegisterAttached("Caption", typeof(string), typeof(KanbanColumn),
+                new FrameworkPropertyMetadata(DefaultColumnCaption));
 
         /// <summary>
         /// Gets or sets whether the column is collapsed
@@ -61,30 +76,29 @@ namespace KC.WPF_Kanban
             get => (bool)GetValue(IsCollapsedProperty);
             set => SetValue(IsCollapsedProperty, value);
         }
+        public static bool GetIsCollapsed(DependencyObject obj)
+        {
+            return (bool)obj.GetValue(IsCollapsedProperty);
+        }
+        public static void SetIsCollapsed(DependencyObject obj, bool value)
+        {
+            obj.SetValue(IsCollapsedProperty, value);
+        }
         public static readonly DependencyProperty IsCollapsedProperty =
-            DependencyProperty.Register("IsCollapsed", typeof(bool), typeof(KanbanColumn),
-                new FrameworkPropertyMetadata(false, new PropertyChangedCallback(OnIsCollapsedChanged)));
-
-        // When a column is collapsed or expanded, the layout of the parent UniformKanbanPanel has to be updated
-        private static void OnIsCollapsedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            UpdateBoardLayout(d);
+            DependencyProperty.RegisterAttached("IsCollapsed", typeof(bool), typeof(KanbanColumn),
+                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         /// <summary>
         /// Gets or sets a span factor of the column
         /// </summary>
-        public int ColumnSpan {
-            get => _columnSpan;
-            set
-            {
-                if (_columnSpan != value)
-                {
-                    _columnSpan = value;
-                    // When a columns span is is changed, the layout of the parent UniformKanbanPanel has to be updated
-                    UpdateBoardLayout(this);
-                }
-            }
+        public int ColumnSpan
+        {
+            get { return (int)GetValue(ColumnSpanProperty); }
+            set { SetValue(ColumnSpanProperty, value); }
         }
-        private int _columnSpan = 1;
+        public static readonly DependencyProperty ColumnSpanProperty =
+            DependencyProperty.Register("ColumnSpan", typeof(int), typeof(KanbanColumn),
+                new FrameworkPropertyMetadata(1, FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         /// <summary>
         /// Gets or sets the limit of cards for the column.
@@ -115,13 +129,14 @@ namespace KC.WPF_Kanban
         /// <summary>
         /// Gets or sets wheter the card limit is violated
         /// </summary>
-        public bool IsCardLimitViolated {
+        public bool IsCardLimitViolated
+        {
             get => (bool)GetValue(IsCardLimitViolatedProperty);
             set => SetValue(IsCardLimitViolatedProperty, value);
         }
         public static readonly DependencyProperty IsCardLimitViolatedProperty =
-            KanbanCardLimitPill.IsCardLimitViolatedProperty.AddOwner(
-                typeof(KanbanColumn), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.Inherits));
+            KanbanCardLimitPill.IsCardLimitViolatedProperty.AddOwner(typeof(KanbanColumn),
+                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.Inherits));
 
         #endregion
 
@@ -149,80 +164,12 @@ namespace KC.WPF_Kanban
 
         #endregion
 
-        #region Events
+        public List<KanbanBoardCell> Cells { get; set; } = new List<KanbanBoardCell>();
 
-        /// <summary>
-        /// A event that is fired whenever the cards assigned to the column change
-        /// </summary>
-        public event RoutedEventHandler CardsChanged
-        {
-            add { AddHandler(CardsChangedEvent, value); }
-            remove { RemoveHandler(CardsChangedEvent, value); }
-        }
-        public static readonly RoutedEvent CardsChangedEvent = EventManager
-            .RegisterRoutedEvent("CardsChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(KanbanColumn));
-
-        #endregion
-
-        #region Cards
-
-        /// <summary>
-        /// Gets or sets a collection of cards displayed within the column
-        /// </summary>
-        public KanbanCardCollection Cards
-        {
-            get => GetValue(CardsProperty) as KanbanCardCollection;
-            set => SetValue(CardsProperty, value);
-        }
-        public static KanbanCardCollection GetCards(DependencyObject obj)
-        {
-            return (KanbanCardCollection)obj.GetValue(CardsProperty);
-        }
-        public static void SetCards(DependencyObject obj, KanbanCardCollection value)
-        {
-            obj.SetValue(CardsProperty, value);
-        }
-        public static readonly DependencyProperty CardsProperty =
-            KanbanColumnItemsPresenter.CardsProperty.AddOwner(
-                typeof(KanbanColumn), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnCardsChanged)));
-
-        private static void OnCardsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            // If the Cards collection changes, register new collection changed event handlers
-            if (e.OldValue is KanbanCardCollection oldCollection)
-            {
-                oldCollection.CollectionChanged -= Cards_CollectionChanged;
-                oldCollection.KanbanColumn = null;
-            }
-            if(e.NewValue is KanbanCardCollection newCollection)
-            {
-                newCollection.CollectionChanged += Cards_CollectionChanged;
-                newCollection.KanbanColumn = (d as KanbanColumn);
-            }
-            (d as KanbanColumn)?.RaiseEvent(new RoutedEventArgs(CardsChangedEvent));
-        }
-
-        // If the cards collection is changed let the event bubble up
-        private static void Cards_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) =>
-            (sender as KanbanCardCollection)?.KanbanColumn?.RaiseEvent(new RoutedEventArgs(CardsChangedEvent));
-
-        /// <summary>
-        /// Gets or sets an unique value for the column
-        /// used to assign each <see cref="KanbanCard"/> to a column
-        /// </summary>
-        /// <seealso cref="KanbanBoard.ColumnBinding"/>
-        public object ColumnValue { get; set; }
-
-        #endregion
 
         #region private Methods
 
-        /// <summary>
-        /// Causes an update on the layout for the parent Panel
-        /// </summary>
-        /// <param name="d"></param>
-        private static void UpdateBoardLayout(DependencyObject d) =>
-            FrameworkUtils.FindParent<Panel>(d as FrameworkElement)?.InvalidateMeasure();
+        /*
 
         // EventHandler: Cards of this or sub-column changed
         private void KanbanColumn_CardsChanged(object sender, RoutedEventArgs e) =>
@@ -238,6 +185,8 @@ namespace KC.WPF_Kanban
             count += this.Columns.Sum(c => c.CountCards());
             return count;
         }
+
+    */
 
         #endregion
     }

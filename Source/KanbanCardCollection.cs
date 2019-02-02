@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 namespace KC.WPF_Kanban
 {
     /// <summary>
-    /// A collection of <see cref="KanbanCard"/> displayed by <see cref="KanbanColumn"/>
+    /// A collection of <see cref="KanbanCard"/> displayed by <see cref="KanbanBoardCell"/>
     /// </summary>
     public class KanbanCardCollection : ObservableCollection<KanbanCard>
     {
         /// <summary>
-        /// Gets the <see cref="KanbanColumn"/> this collection is assigned to
+        /// Gets the <see cref="KanbanBoardCell"/> this collection is assigned to
         /// </summary>
-        public KanbanColumn KanbanColumn { get; internal set; }
+        public KanbanBoardCell Cell { get; internal set; }
     }
 }

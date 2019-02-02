@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -28,13 +29,12 @@ namespace KC.WPF_Kanban
             FrameworkElementFactory kanbanBoardPresenterFactory = new FrameworkElementFactory(typeof(KanbanBoardPresenter));
             kanbanBoardPresenterFactory.SetValue(NameProperty, ItemsPanelPartName);
             ItemsPanelProperty.OverrideMetadata(ownerType, new FrameworkPropertyMetadata(new ItemsPanelTemplate(kanbanBoardPresenterFactory)));
-
-
         }
 
         public KanbanBoard()
         {
             Columns = new KanbanColumnCollection();
+            Swimlanes = new KanbanSwimlaneCollection();
         }
 
         /// <summary>
@@ -90,20 +90,74 @@ namespace KC.WPF_Kanban
 
         public BindingBase ColumnBinding { get; set; }
 
+        public BindingBase SwimlaneBinding { get; set; }
+
+
+
+
+
+
+
+        public KanbanSwimlaneCollection Swimlanes
+        {
+            get { return (KanbanSwimlaneCollection)GetValue(SwimlanesProperty); }
+            set { SetValue(SwimlanesProperty, value); }
+        }
+        public static readonly DependencyProperty SwimlanesProperty =
+            DependencyProperty.Register("Swimlanes", typeof(KanbanSwimlaneCollection), typeof(KanbanBoard),
+                new FrameworkPropertyMetadata(null));
+
+
+
+
+
 
         public void AddCard(UIElement cardContainer)
         {
-            if (ColumnBinding is Binding binding && cardContainer is KanbanCard card)
+            if (cardContainer is KanbanCard card)
             {
-                Binding valueBinding = new Binding()
+                KanbanColumn column = null;
+                if (ColumnBinding is Binding binding)
                 {
-                    Source = card.DataContext,
-                    Path = binding.Path
-                };
-                var colValue = FrameworkUtils.EvalBinding(valueBinding);
-                KanbanColumn column = FindColumnForValue(colValue);
-                column?.Cards.Add(card);
+                    Binding valueBinding = new Binding()
+                    {
+                        Source = card.DataContext,
+                        Path = binding.Path
+                    };
+                    object columnValue = FrameworkUtils.EvalBinding(valueBinding);
+                    column = FindColumnForValue(columnValue);
+                }
+
+                KanbanSwimlane lane = null;
+                if (SwimlaneBinding is Binding binding2)
+                {
+                    Binding valueBinding = new Binding()
+                    {
+                        Source = card.DataContext,
+                        Path = binding2.Path
+                    };
+                    object laneValue = FrameworkUtils.EvalBinding(valueBinding);
+                    lane = FindSwimlaneForValue(laneValue);
+                }
+
+                if (column != null)
+                {
+                    var cell = column.Cells.FirstOrDefault(c => c.Swimlane == lane);
+                    cell?.Cards.Add(card);
+                }
             }
+        }
+
+        private KanbanSwimlane FindSwimlaneForValue(object value)
+        {
+            foreach (KanbanSwimlane lane in Swimlanes)
+            {
+                if (value.Equals(lane.LaneValue))
+                {
+                    return lane;
+                }
+            }
+            return null;
         }
 
         private KanbanColumn FindColumnForValue(object value)

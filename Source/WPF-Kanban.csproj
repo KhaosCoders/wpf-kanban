@@ -52,6 +52,7 @@
     <Compile Include="Converter\TextUppercaseConverter.cs" />
     <Compile Include="ICollapsible.cs" />
     <Compile Include="IColumnSpan.cs" />
+    <Compile Include="KanbanBoardCell.cs" />
     <Compile Include="KanbanBoardGridPanel.cs" />
     <Compile Include="KanbanBoardPresenter.cs" />
     <Compile Include="KanbanCard.cs" />
@@ -59,8 +60,9 @@
     <Compile Include="KanbanCardLimitPill.cs" />
     <Compile Include="KanbanColumn.cs" />
     <Compile Include="KanbanColumnCollection.cs" />
-    <Compile Include="KanbanColumnHeader.cs" />
     <Compile Include="KanbanColumnItemsPresenter.cs" />
+    <Compile Include="KanbanSwimlane.cs" />
+    <Compile Include="KanbanSwimlaneCollection.cs" />
     <Compile Include="Model\KanbanCard.cs" />
     <Compile Include="Model\KanbanColumn.cs" />
     <Compile Include="Model\KanbanModelBase.cs" />

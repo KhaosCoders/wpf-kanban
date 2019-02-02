@@ -29,14 +29,14 @@ namespace WpfApp1
             Table.Rows.Add("Done", "Don 1");
             Table.Rows.Add("Backlog", "BL 2");
 
-            Collection.Add(new CardData() { Column = "Backlog", Title = "Something in the backlog Part 1/2", Color = Colors.LightBlue });
-            Collection.Add(new CardData() { Column = "Requested", Title = "This is something requested, not started jet" });
-            Collection.Add(new CardData() { Column = "Requested", Title = "This also is something requested ;)" });
-            Collection.Add(new CardData() { Column = "Design", Title = "We're designing the hell out of this", Color = Colors.LightBlue });
-            Collection.Add(new CardData() { Column = "Doing", Title = "Something we're working on right now", Color = Colors.LightGreen });
-            Collection.Add(new CardData() { Column = "Doing", Title = "The other thing we're working on right now", Color = Colors.LightBlue });
-            Collection.Add(new CardData() { Column = "Done", Title = "This is done, yeah!" });
-            Collection.Add(new CardData() { Column = "Backlog", Title = "Something in the backlog Part 2/2" });
+            Collection.Add(new CardData() { Column = "Backlog", Lane = "lane1", Title = "Something in the backlog Part 1/2", Color = Colors.LightBlue });
+            Collection.Add(new CardData() { Column = "Requested", Lane = "lane1", Title = "This is something requested, not started jet" });
+            Collection.Add(new CardData() { Column = "Requested", Lane = "lane1", Title = "This also is something requested ;)" });
+            Collection.Add(new CardData() { Column = "Design", Lane = "lane1", Title = "We're designing the hell out of this", Color = Colors.LightBlue });
+            Collection.Add(new CardData() { Column = "Doing", Lane = "lane2", Title = "Something we're working on right now", Color = Colors.LightGreen });
+            Collection.Add(new CardData() { Column = "Doing", Lane = "lane2", Title = "The other thing we're working on right now", Color = Colors.LightBlue });
+            Collection.Add(new CardData() { Column = "Done", Lane = "lane1", Title = "This is done, yeah!" });
+            Collection.Add(new CardData() { Column = "Backlog", Lane = "lane2", Title = "Something in the backlog Part 2/2" });
         }
     }
 }
