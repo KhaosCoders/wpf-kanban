@@ -164,8 +164,38 @@ namespace KC.WPF_Kanban
 
         #endregion
 
-        public List<KanbanBoardCell> Cells { get; set; } = new List<KanbanBoardCell>();
+        #region Cells
 
+        protected List<KanbanBoardCell> Cells { get; set; } = new List<KanbanBoardCell>();
+
+        /// <summary>
+        /// Adds a <see cref="KanbanBoardCell"/> to the column
+        /// </summary>
+        public void AddCell(KanbanBoardCell cell)
+        {
+            cell.Column = this;
+            Cells.Add(cell);
+        }
+
+        /// <summary>
+        /// Removes a <see cref="KanbanBoardCell"/> from the column
+        /// </summary>
+        /// <param name="cell"></param>
+        public void RemoveCell(KanbanBoardCell cell)
+        {
+            if (cell.Column == this)
+            {
+                cell.Column = null;
+            }
+            Cells.Remove(cell);
+        }
+
+        /// <summary>
+        /// Returns the first <see cref="KanbanBoardCell"/> of this collumn, that is assigned to the given <see cref="KanbanSwimlane"/>, or null.
+        /// </summary>
+        public KanbanBoardCell FindCellForSwimlane(KanbanSwimlane lane) => Cells.FirstOrDefault(c => c.Swimlane == lane);
+
+        #endregion
 
         #region private Methods
 

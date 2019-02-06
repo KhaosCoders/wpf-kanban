@@ -73,19 +73,9 @@ namespace KC.WPF_Kanban
             DependencyProperty.Register("Columns", typeof(KanbanColumnCollection), typeof(KanbanBoard),
                 new FrameworkPropertyMetadata(null));
 
-
-
-
-        public BindingBase ColumnBinding { get; set; }
-
-        public BindingBase SwimlaneBinding { get; set; }
-
-
-
-
-
-
-
+        /// <summary>
+        /// Gets or sets the swimlane collection of the board
+        /// </summary>
         public KanbanSwimlaneCollection Swimlanes
         {
             get { return (KanbanSwimlaneCollection)GetValue(SwimlanesProperty); }
@@ -95,6 +85,12 @@ namespace KC.WPF_Kanban
             DependencyProperty.Register("Swimlanes", typeof(KanbanSwimlaneCollection), typeof(KanbanBoard),
                 new FrameworkPropertyMetadata(null));
 
+
+
+
+        public BindingBase ColumnBinding { get; set; }
+
+        public BindingBase SwimlaneBinding { get; set; }
 
 
 
@@ -130,7 +126,7 @@ namespace KC.WPF_Kanban
 
                 if (column != null)
                 {
-                    var cell = column.Cells.FirstOrDefault(c => c.Swimlane == lane);
+                    var cell = column.FindCellForSwimlane(lane);
                     cell?.Cards.Add(card);
                 }
             }

@@ -25,11 +25,28 @@ namespace KC.WPF_Kanban
             Cards = new KanbanCardCollection();
         }
 
+        #region Column / Swimlane
 
+        /// <summary>
+        /// Gets or sets the assigned <see cref="KanbanColumn"/>
+        /// </summary>
         public KanbanColumn Column { get; set; }
 
+        /// <summary>
+        /// Gets or sets the assigned <see cref="KanbanSwimlane"/>
+        /// </summary>
         public KanbanSwimlane Swimlane { get; set; }
 
+        /// <summary>
+        /// Removes the cell from the board and therefor from the Column and Swimlane
+        /// </summary>
+        public void RemoveCell()
+        {
+            Column?.RemoveCell(this);
+            Swimlane?.RemoveCell(this);
+        }
+
+        #endregion
 
         #region Events
 

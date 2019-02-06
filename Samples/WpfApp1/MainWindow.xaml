@@ -20,24 +20,20 @@
         <kanban:KanbanBoard.Columns>
             <kanban:KanbanColumn
                 Caption="Backlog"
-                CardCount="2"
                 CardLimit="5"
                 ColumnValue="Backlog"
                 IsCollapsed="True" />
             <kanban:KanbanColumn
                 Caption="Requested"
-                CardCount="2"
                 CardLimit="4"
                 ColumnValue="Requested" />
             <kanban:KanbanColumn
                 Caption="In progress"
-                CardCount="3"
                 CardLimit="2"
                 ColumnSpan="3">
                 <kanban:KanbanColumn.Columns>
                     <kanban:KanbanColumn
                         Caption="Design"
-                        CardCount="1"
                         CardLimit="1"
                         ColumnValue="Design" />
                     <kanban:KanbanColumn

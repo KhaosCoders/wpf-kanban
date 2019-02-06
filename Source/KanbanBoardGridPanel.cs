@@ -9,16 +9,26 @@ using System.Windows.Controls;
 
 namespace KC.WPF_Kanban
 {
+    /// <summary>
+    /// The Grid-panel used to layout all elements of a <see cref="KanbanBoard"/>
+    /// </summary>
     public class KanbanBoardGridPanel : Grid
     {
+        #region Constructor
 
         public KanbanBoardGridPanel()
         {
+            // Enable for Debugging lines
             //ShowGridLines = true;
         }
 
-        #region Columns
+        #endregion
 
+        #region Column-Collection
+
+        /// <summary>
+        /// Gets or sets a collection of <see cref="KanbanColumn"/>
+        /// </summary>
         public KanbanColumnCollection Columns {
             get => (KanbanColumnCollection)GetValue(ColumnsProperty);
             set => SetValue(ColumnsProperty, value);
@@ -38,18 +48,21 @@ namespace KC.WPF_Kanban
 
         private static void OnColumnsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            // When the columns collection is changed, listen for new columns
             if (d is KanbanBoardGridPanel panel)
             {
                 if (e.OldValue is KanbanColumnCollection oldCollection)
                 {
                     oldCollection.CollectionChanged -= Columns_CollectionChanged;
                     oldCollection.Panel = null;
+                    // Clear all columns if collection is removed
                     panel.ClearColumns();
                 }
                 if (e.NewValue is KanbanColumnCollection newCollection)
                 {
                     newCollection.CollectionChanged += Columns_CollectionChanged;
                     newCollection.Panel = panel;
+                    // Add all columns of the new attached collection
                     foreach(KanbanColumn column in newCollection)
                     {
                         panel.AddColumn(column);
@@ -60,6 +73,7 @@ namespace KC.WPF_Kanban
 
         private static void Columns_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            // Whenn the attached column collection is changed
             if (sender is KanbanColumnCollection collection)
             {
                 switch (e.Action)
@@ -73,89 +87,60 @@ namespace KC.WPF_Kanban
                     case NotifyCollectionChangedAction.Reset:
                         collection.Panel?.ClearColumns();
                         break;
+                    case NotifyCollectionChangedAction.Move:
+                        // TODO: Implement changing of order of columns
+                        break;
                 }
+                // No matter the change, the panel will need a relayout-run
                 collection.Panel?.InvalidateMeasure();
             }
         }
 
+        #endregion
+
+        #region Columns
+
         /// <summary>
-        /// Adds a <see cref="KanbanColumn"/> (including its <see cref="KanbanColumnHeader"/>) to the panel
+        /// Adds a <see cref="KanbanColumn"/> and all its sub-columns to the panel
         /// </summary>
         private void AddColumn(KanbanColumn column)
         {
+            // Listen for changes on sub-columns
             column.Columns.CollectionChanged += SubColumns_CollectionChanged;
             Children.Add(column);
             if (column.Columns.Count > 0)
             {
+                // Add all known sub-columns, too
                 foreach (KanbanColumn subcolumn in column.Columns)
                 {
-                    AddSubColumn(subcolumn);
+                    AddColumn(subcolumn);
                 }
             }
             else
             {
+                // If the column has no sub-column: add cells for each known swimlane
                 AddCellsForNewColumn(column);
             }
         }
 
         /// <summary>
-        /// Removes a <see cref="KanbanColumn"/> (including its <see cref="KanbanColumnHeader"/>) from the panel
+        /// Removes a <see cref="KanbanColumn"/> and all its sub-columns from the panel
         /// </summary>
         private void RemoveColumn(KanbanColumn column)
         {
+            // Stop listening for changes from sub-columns
             column.Columns.CollectionChanged -= SubColumns_CollectionChanged;
             Children.Remove(column);
+            // Remove all sub-columns
             foreach (KanbanColumn subcolumn in column.Columns)
             {
-                RemoveSubColumn(subcolumn);
+                RemoveColumn(subcolumn);
             }
         }
 
-        private void SubColumns_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add when e.NewItems.Count == 1 && e.NewItems[0] is KanbanColumn column:
-                    AddSubColumn(column);
-                    break;
-                case NotifyCollectionChangedAction.Remove when e.OldItems.Count == 1 && e.OldItems[0] is KanbanColumn column:
-                    RemoveSubColumn(column);
-                    break;
-                case NotifyCollectionChangedAction.Reset:
-                    ClearColumns();
-                    break;
-            }
-        }
-
-
-        private void AddSubColumn(KanbanColumn column)
-        {
-            column.Columns.CollectionChanged += SubColumns_CollectionChanged;
-            Children.Add(column);
-            if (column.Columns.Count > 0)
-            {
-                foreach (KanbanColumn subcolumn in column.Columns)
-                {
-                    AddSubColumn(subcolumn);
-                }
-            }
-            else
-            {
-                AddCellsForNewColumn(column);
-            }
-        }
-
-
-        private void RemoveSubColumn(KanbanColumn column)
-        {
-            column.Columns.CollectionChanged -= SubColumns_CollectionChanged;
-            Children.Remove(column);
-            foreach (KanbanColumn subcolumn in column.Columns)
-            {
-                RemoveSubColumn(subcolumn);
-            }
-        }
-
+        /// <summary>
+        /// Removes all instances of <see cref="KanbanColumn"/> (and the sub-columns) from the board
+        /// </summary>
         private void ClearColumns()
         {
             foreach (UIElement element in Children)
@@ -167,10 +152,30 @@ namespace KC.WPF_Kanban
             }
         }
 
+        private void SubColumns_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add when e.NewItems.Count == 1 && e.NewItems[0] is KanbanColumn column:
+                    AddColumn(column);
+                    break;
+                case NotifyCollectionChangedAction.Remove when e.OldItems.Count == 1 && e.OldItems[0] is KanbanColumn column:
+                    RemoveColumn(column);
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    // Todo: Clear only sub-columns of the correct column
+                    //ClearColumns();
+                    break;
+            }
+        }
+
         #endregion
 
-        #region Swimlanes
+        #region Swimlane-Collection
 
+        /// <summary>
+        /// Gets or sets a collection of <see cref="KanbanSwimlane"/>
+        /// </summary>
         public KanbanSwimlaneCollection Swimlanes
         {
             get => (KanbanSwimlaneCollection)GetValue(SwimlanesProperty);
@@ -193,16 +198,19 @@ namespace KC.WPF_Kanban
         {
             if (d is KanbanBoardGridPanel panel)
             {
+                // When the swimlane collection is changed, listen for new lanes
                 if (e.OldValue is KanbanSwimlaneCollection oldCollection)
                 {
                     oldCollection.CollectionChanged -= Swimlanes_CollectionChanged;
                     oldCollection.Panel = null;
+                    // Clear all lanes if collection is removed
                     panel.ClearSwimlanes();
                 }
                 if(e.NewValue is KanbanSwimlaneCollection newCollection)
                 {
                     newCollection.Panel = panel;
                     newCollection.CollectionChanged += Swimlanes_CollectionChanged;
+                    // Add all lanes of the new attached collection
                     foreach (KanbanSwimlane lane in newCollection)
                     {
                         panel.AddSwimlane(lane);
@@ -212,9 +220,9 @@ namespace KC.WPF_Kanban
         }
 
         private static void Swimlanes_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-
         {
-            if(sender is KanbanSwimlaneCollection collection)
+            // Whenn the attached column collection is changed
+            if (sender is KanbanSwimlaneCollection collection)
             {
                 switch(e.Action)
                 {
@@ -222,16 +230,45 @@ namespace KC.WPF_Kanban
                         collection.Panel?.AddSwimlane(lane);
                         break;
                     case NotifyCollectionChangedAction.Remove when e.OldItems.Count == 1 && e.OldItems[0] is KanbanSwimlane lane:
-                        collection.Panel?.Children.Remove(lane);
+                        collection.Panel?.RemoveSwimlane(lane);
                         break;
                     case NotifyCollectionChangedAction.Reset:
                         collection.Panel?.ClearSwimlanes();
                         break;
+                    case NotifyCollectionChangedAction.Move:
+                        // TODO: Implement changing of order of lanes
+                        break;
                 }
+                // No matter the change, the panel will need a relayout-run
                 collection.Panel?.InvalidateMeasure();
             }
         }
 
+        #endregion
+
+        #region Swimlanes
+
+        /// <summary>
+        /// Adds a <see cref="KanbanSwimlane"/> to the panel
+        /// </summary>
+        private void AddSwimlane(KanbanSwimlane lane)
+        {
+            Children.Add(lane);
+            // Add cells for all known columns for this lane
+            AddCellsForNewSwimlane(lane);
+        }
+
+        /// <summary>
+        /// Removes a <see cref="KanbanSwimlane"/> from the panel
+        /// </summary>
+        private void RemoveSwimlane(KanbanSwimlane lane)
+        {
+            Children.Remove(lane);
+        }
+
+        /// <summary>
+        /// Removes all instances of <see cref="KanbanSwimlane"/> from the panel
+        /// </summary>
         private void ClearSwimlanes()
         {
             foreach (UIElement element in Children)
@@ -243,26 +280,29 @@ namespace KC.WPF_Kanban
             }
         }
 
-        private void AddSwimlane(KanbanSwimlane lane)
-        {
-            Children.Add(lane);
-            AddCellsForNewSwimlane(lane);
-        }
-
         #endregion
 
         #region Cells
 
-        public List<KanbanBoardCell> Cells { get; protected set; } = new List<KanbanBoardCell>();
+        /// <summary>
+        /// Gets a <see cref="List{T}"/> of <see cref="KanbanBoardCell"/>
+        /// </summary>
+        public List<KanbanBoardCell> Cells { get; protected set; }
+            = new List<KanbanBoardCell>();
 
+        /// <summary>
+        /// Creates and adds <see cref="KanbanBoardCell"/> for a newly added <see cref="KanbanColumn"/>
+        /// </summary>
         private void AddCellsForNewColumn(KanbanColumn column)
         {
             if (Swimlanes != null)
             {
+                // Add a cell for each lane
                 foreach (KanbanSwimlane lane in Swimlanes)
                 {
                     AddNewCell(lane, column);
                 }
+                // Add cells for all sub-columns, too
                 foreach(KanbanColumn subcolumn in column.Columns)
                 {
                     AddCellsForNewColumn(subcolumn);
@@ -270,10 +310,14 @@ namespace KC.WPF_Kanban
             }
         }
 
+        /// <summary>
+        /// Creates and adds <see cref="KanbanBoardCell"/> for a newly added <see cref="KanbanSwimlane"/>
+        /// </summary>
         private void AddCellsForNewSwimlane(KanbanSwimlane lane)
         {
             if (Columns != null)
             {
+                // Add a cell for each column
                 foreach (KanbanColumn column in Columns)
                 {
                     AddCellsForNewSwimlane(lane, column);
@@ -281,21 +325,32 @@ namespace KC.WPF_Kanban
             }
         }
 
+        /// <summary>
+        /// Creates and adds <see cref="KanbanBoardCell"/> for a newly added <see cref="KanbanSwimlane"/> in a given <see cref="KanbanColumn"/>
+        /// </summary>
         private void AddCellsForNewSwimlane(KanbanSwimlane lane, KanbanColumn column)
         {
+            // Add cell for lane/column combination
             AddNewCell(lane, column);
+            // Add cells for sub-columns, too
             foreach (KanbanColumn subcolumn in column.Columns)
             {
                 AddCellsForNewSwimlane(lane, subcolumn);
             }
         }
 
+        /// <summary>
+        /// Creates a new <see cref="KanbanBoardCell"/> for a given <see cref="KanbanColumn"/> / <see cref="KanbanSwimlane"/> combination
+        /// </summary>
         private void AddNewCell(KanbanSwimlane lane, KanbanColumn column)
         {
-            KanbanBoardCell cell = new KanbanBoardCell() { Column = column, Swimlane = lane };
-            column.Cells.Add(cell);
-            lane.Cells.Add(cell);
+            KanbanBoardCell cell = new KanbanBoardCell();
+            // Assign cell to column and lane
+            column.AddCell(cell);
+            lane.AddCell(cell);
+            // Remember the cell
             Cells.Add(cell);
+            // Add cell as visual child
             Children.Add(cell);
         }
 
@@ -354,6 +409,7 @@ namespace KC.WPF_Kanban
                 // Column with subcolumns
                 if (cell != null)
                 {
+                    cell.RemoveCell();
                     Cells.Remove(cell);
                     Children.Remove(cell);
                 }
@@ -535,6 +591,5 @@ namespace KC.WPF_Kanban
         }
 
         #endregion
-
     }
 }
