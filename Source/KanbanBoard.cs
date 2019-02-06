@@ -62,18 +62,6 @@ namespace KC.WPF_Kanban
                 new FrameworkPropertyMetadata(FrameworkUtils.CreateTemplate(typeof(KanbanBoardTitle), typeof(Control))));
 
         /// <summary>
-        /// Gets or sets the orientation of the columns inside the board
-        /// </summary>
-        public Orientation Orientation
-        {
-            get => (Orientation)GetValue(OrientationProperty);
-            set => SetValue(OrientationProperty, value);
-        }
-        public static readonly DependencyProperty OrientationProperty =
-            UniformKanbanPanel.OrientationProperty.AddOwner(
-                typeof(KanbanBoard), new FrameworkPropertyMetadata(Orientation.Horizontal, FrameworkPropertyMetadataOptions.Inherits));
-
-        /// <summary>
         /// Gets or sets the columns collection of the board
         /// </summary>
         public KanbanColumnCollection Columns

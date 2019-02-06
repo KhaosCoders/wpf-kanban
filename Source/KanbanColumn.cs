@@ -11,7 +11,7 @@ namespace KC.WPF_Kanban
     /// <summary>
     /// A column in a <see cref="KanbanBoard"/>
     /// </summary>
-    public class KanbanColumn : Control, ICollapsible, IColumnSpan
+    public class KanbanColumn : Control, IColumnSpan
     {
         internal const string DefaultColumnCaption = "Unknown";
 
