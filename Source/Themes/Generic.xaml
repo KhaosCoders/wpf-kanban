@@ -40,6 +40,7 @@
 
     <converter:TextUppercaseConverter x:Key="convUppercase" />
     <converter:ColorToBrushConverter x:Key="convColorToBrush" TrasparencyReplacement="{StaticResource kanbanCardBackground}" />
+    <converter:BooleanToVisibilityConverter x:Key="convInvertedBoolToVisibility" Invert="True" />
 
     <!--#endregion-->
 
@@ -162,7 +163,8 @@
                             <ToggleButton
                                 Grid.Column="0"
                                 IsChecked="{Binding IsCollapsed, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                Style="{StaticResource styCollapseButton}" />
+                                Style="{StaticResource styCollapseButton}"
+                                Visibility="{Binding IsSubColumn, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource convInvertedBoolToVisibility}}" />
                             <TextBlock
                                 Grid.Column="1"
                                 Style="{StaticResource styKanbanColumnHeaderText}"

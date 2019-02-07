@@ -147,6 +147,17 @@ namespace KC.WPF_Kanban
             KanbanCardLimitPill.IsCardLimitViolatedProperty.AddOwner(typeof(KanbanColumn),
                 new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.Inherits));
 
+        /// <summary>
+        /// Gets wether the column is a sub-column
+        /// </summary>
+        public bool IsSubColumn
+        {
+            get { return (bool)GetValue(IsSubColumnProperty); }
+            private set { SetValue(IsSubColumnProperty, value); }
+        }
+        public static readonly DependencyProperty IsSubColumnProperty =
+            DependencyProperty.Register("IsSubColumn", typeof(bool), typeof(KanbanColumn), new FrameworkPropertyMetadata(false));
+
         #endregion
 
         #region Events
@@ -197,6 +208,7 @@ namespace KC.WPF_Kanban
                     foreach(KanbanColumn subcolumn in oldCollection)
                     {
                         subcolumn.CardCountChanged -= column.SubColumn_CardCountChanged;
+                        subcolumn.IsSubColumn = false;
                     }
                 }
                 if (e.NewValue is KanbanColumnCollection newCollection)
@@ -205,6 +217,7 @@ namespace KC.WPF_Kanban
                     foreach (KanbanColumn subcolumn in newCollection)
                     {
                         subcolumn.CardCountChanged += column.SubColumn_CardCountChanged;
+                        subcolumn.IsSubColumn = true;
                     }
                 }
             }
@@ -217,24 +230,29 @@ namespace KC.WPF_Kanban
             {
                 case NotifyCollectionChangedAction.Add when e.NewItems.Count==1 && e.NewItems[0] is KanbanColumn column:
                     column.CardCountChanged += SubColumn_CardCountChanged;
+                    column.IsSubColumn = true;
                     break;
                 case NotifyCollectionChangedAction.Remove when e.OldItems.Count == 1 && e.OldItems[0] is KanbanColumn column:
                     column.CardCountChanged -= SubColumn_CardCountChanged;
+                    column.IsSubColumn = false;
                     break;
                 case NotifyCollectionChangedAction.Reset:
                     foreach(KanbanColumn column in e.OldItems)
                     {
                         column.CardCountChanged -= SubColumn_CardCountChanged;
+                        column.IsSubColumn = false;
                     }
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     foreach (KanbanColumn column in e.OldItems)
                     {
                         column.CardCountChanged -= SubColumn_CardCountChanged;
+                        column.IsSubColumn = false;
                     }
                     foreach (KanbanColumn column in e.NewItems)
                     {
                         column.CardCountChanged += SubColumn_CardCountChanged;
+                        column.IsSubColumn = true;
                     }
                     break;
             }
