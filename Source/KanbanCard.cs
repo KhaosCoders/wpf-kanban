@@ -69,7 +69,5 @@ namespace KC.WPF_Kanban
 
         #endregion
 
-
-
     }
 }

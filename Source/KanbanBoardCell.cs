@@ -105,11 +105,7 @@ namespace KC.WPF_Kanban
         private static void Cards_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) =>
             (sender as KanbanCardCollection)?.Cell?.RaiseEvent(new RoutedEventArgs(CardsChangedEvent));
 
-
-
         #endregion
-
-
 
     }
 }

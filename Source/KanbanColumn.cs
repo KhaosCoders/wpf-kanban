@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Linq;
 using System.Windows.Data;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace KC.WPF_Kanban
 {
@@ -124,7 +125,15 @@ namespace KC.WPF_Kanban
         }
         public static readonly DependencyProperty CardCountProperty =
             KanbanCardLimitPill.CardCountProperty.AddOwner(
-                typeof(KanbanColumn), new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.Inherits));
+                typeof(KanbanColumn), new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnCardCountChanged)));
+
+        private static void OnCardCountChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is UIElement element)
+            {
+                element.RaiseEvent(new RoutedEventArgs(CardCountChangedEvent));
+            }
+        }
 
         /// <summary>
         /// Gets or sets wheter the card limit is violated
@@ -137,6 +146,21 @@ namespace KC.WPF_Kanban
         public static readonly DependencyProperty IsCardLimitViolatedProperty =
             KanbanCardLimitPill.IsCardLimitViolatedProperty.AddOwner(typeof(KanbanColumn),
                 new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.Inherits));
+
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// A event that is fired whenever the count of cards inside the column change
+        /// </summary>
+        public event RoutedEventHandler CardCountChanged
+        {
+            add { AddHandler(CardCountChangedEvent, value); }
+            remove { RemoveHandler(CardCountChangedEvent, value); }
+        }
+        public static readonly RoutedEvent CardCountChangedEvent = EventManager
+            .RegisterRoutedEvent("CardCountChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(KanbanColumn));
 
         #endregion
 
@@ -160,7 +184,61 @@ namespace KC.WPF_Kanban
         }
         public static readonly DependencyProperty ColumnsProperty =
             KanbanColumnItemsPresenter.ColumnsProperty.AddOwner(
-                typeof(KanbanColumn), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
+                typeof(KanbanColumn), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnColumnsChanged)));
+
+        private static void OnColumnsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            // Need to listen for new collections of sub-columns to register the CardCountChangedEvent on each column
+            if (d is KanbanColumn column)
+            {
+                if (e.OldValue is KanbanColumnCollection oldCollection)
+                {
+                    oldCollection.CollectionChanged -= column.Columns_CollectionChanged;
+                    foreach(KanbanColumn subcolumn in oldCollection)
+                    {
+                        subcolumn.CardCountChanged -= column.SubColumn_CardCountChanged;
+                    }
+                }
+                if (e.NewValue is KanbanColumnCollection newCollection)
+                {
+                    newCollection.CollectionChanged += column.Columns_CollectionChanged;
+                    foreach (KanbanColumn subcolumn in newCollection)
+                    {
+                        subcolumn.CardCountChanged += column.SubColumn_CardCountChanged;
+                    }
+                }
+            }
+        }
+
+        private void Columns_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            // When the column collection changed, register the CardCountChangedEvent on the sub-columns
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add when e.NewItems.Count==1 && e.NewItems[0] is KanbanColumn column:
+                    column.CardCountChanged += SubColumn_CardCountChanged;
+                    break;
+                case NotifyCollectionChangedAction.Remove when e.OldItems.Count == 1 && e.OldItems[0] is KanbanColumn column:
+                    column.CardCountChanged -= SubColumn_CardCountChanged;
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    foreach(KanbanColumn column in e.OldItems)
+                    {
+                        column.CardCountChanged -= SubColumn_CardCountChanged;
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+                    foreach (KanbanColumn column in e.OldItems)
+                    {
+                        column.CardCountChanged -= SubColumn_CardCountChanged;
+                    }
+                    foreach (KanbanColumn column in e.NewItems)
+                    {
+                        column.CardCountChanged += SubColumn_CardCountChanged;
+                    }
+                    break;
+            }
+        }
 
         #endregion
 
@@ -174,6 +252,7 @@ namespace KC.WPF_Kanban
         public void AddCell(KanbanBoardCell cell)
         {
             cell.Column = this;
+            cell.CardsChanged += Cell_CardsChanged;
             Cells.Add(cell);
         }
 
@@ -187,6 +266,7 @@ namespace KC.WPF_Kanban
             {
                 cell.Column = null;
             }
+            cell.CardsChanged -= Cell_CardsChanged;
             Cells.Remove(cell);
         }
 
@@ -197,26 +277,18 @@ namespace KC.WPF_Kanban
 
         #endregion
 
-        #region private Methods
+        #region Count Cards
 
-        /*
+        // Sub-Columns changed => re-count cards
+        private void SubColumn_CardCountChanged(object sender, RoutedEventArgs e) => CardCount = SumCardsOfCells();
 
-        // EventHandler: Cards of this or sub-column changed
-        private void KanbanColumn_CardsChanged(object sender, RoutedEventArgs e) =>
-            CardCount = CountCards();
+        // CardCount of cell changed => re-count cards
+        private void Cell_CardsChanged(object sender, RoutedEventArgs e) => CardCount = SumCardsOfCells();
 
         /// <summary>
-        /// counts all cards
+        /// Counts all cards assigned to the column and all sub-columns
         /// </summary>
-        /// <returns></returns>
-        private int CountCards()
-        {
-            int count = this.Cards?.Count ?? 0;
-            count += this.Columns.Sum(c => c.CountCards());
-            return count;
-        }
-
-    */
+        private int SumCardsOfCells() => Cells.Sum(cell => cell.Cards.Count) + Columns.Sum(col => col.SumCardsOfCells());
 
         #endregion
     }
