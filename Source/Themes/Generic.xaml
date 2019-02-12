@@ -33,6 +33,7 @@
     <SolidColorBrush x:Key="kanbanPillViolatedForeground" Color="#FC3030" />
     <SolidColorBrush x:Key="kanbanColumnViolatedBackground" Color="#FC5858" />
     <SolidColorBrush x:Key="kanbanCardBackground" Color="#FFFDC1" />
+    <SolidColorBrush x:Key="kanbanIconColor" Color="#BFBFBF" />
 
     <!--#endregion-->
 
@@ -44,11 +45,25 @@
 
     <!--#endregion-->
 
+    <!--#region Icons-->
+
+    <Viewbox x:Key="icArrow" x:Shared="false">
+        <Grid Width="512" Height="512">
+            <Path
+                Data="M128,256L384,0v128L256,256l128,128v128L128,256z"
+                Fill="{StaticResource kanbanIconColor}"
+                Stretch="Fill" />
+        </Grid>
+    </Viewbox>
+
+    <!--#endregion-->
+
     <!--#region Kanban Board-->
 
     <Style TargetType="{x:Type local:KanbanBoard}">
         <Setter Property="FontFamily" Value="Arial" />
         <Setter Property="Background" Value="{StaticResource kanbanBoardBackground}" />
+        <Setter Property="Focusable" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanBoard}">
@@ -91,6 +106,7 @@
 
     <Style TargetType="{x:Type local:KanbanBoardTitle}">
         <Setter Property="Background" Value="{StaticResource kanbanBoardTitleBackground}" />
+        <Setter Property="Focusable" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanBoardTitle}">
@@ -121,19 +137,36 @@
     <!--#region KanbanColumn-->
 
     <Style x:Key="styCollapseButton" TargetType="ToggleButton">
-        <Setter Property="Width" Value="14" />
-        <Setter Property="Height" Value="14" />
+        <Setter Property="Width" Value="12" />
+        <Setter Property="Height" Value="12" />
+        <Setter Property="Margin" Value="4,0,0,0" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="HorizontalAlignment" Value="Left" />
-        <Setter Property="Background" Value="{StaticResource kanbanColumnHeaderBackground}" />
-        <Setter Property="Content" Value="&lt;" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Content" Value="{StaticResource icArrow}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
 
         <Style.Triggers>
             <Trigger Property="IsChecked" Value="True">
-                <Setter Property="Content" Value="&gt;" />
+                <Setter Property="LayoutTransform">
+                    <Setter.Value>
+                        <RotateTransform Angle="180" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Padding" Value="4,0,0,0" />
             </Trigger>
         </Style.Triggers>
+
     </Style>
 
     <Style x:Key="styKanbanColumnHeaderText" TargetType="TextBlock">
@@ -150,6 +183,7 @@
         <Setter Property="MinWidth" Value="34" />
         <Setter Property="Margin" Value="1,1,1,1" />
         <Setter Property="Canvas.ZIndex" Value="1" />
+        <Setter Property="Focusable" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanColumn}">
@@ -197,6 +231,7 @@
                                     <StackPanel Orientation="Vertical">
                                         <ToggleButton
                                             Margin="0,0,0,4"
+                                            HorizontalAlignment="Center"
                                             DockPanel.Dock="Left"
                                             IsChecked="{Binding IsCollapsed, RelativeSource={RelativeSource Mode=TemplatedParent}}"
                                             Style="{StaticResource styCollapseButton}" />
@@ -227,11 +262,12 @@
 
     <Style TargetType="{x:Type local:KanbanBoardCell}">
         <Setter Property="MinWidth" Value="28" />
+        <Setter Property="Focusable" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanBoardCell}">
                     <Border Margin="1,1,1,1" Background="{StaticResource kanbanColumnBackground}">
-                        <ItemsControl ItemsSource="{TemplateBinding Cards}">
+                        <ItemsControl Height="{Binding Panel.ActualHeight, RelativeSource={RelativeSource Mode=Self}}" ItemsSource="{TemplateBinding Cards}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel Orientation="Horizontal" />
@@ -263,6 +299,7 @@
         <Setter Property="TextBlock.Foreground" Value="{StaticResource kanbanPillForeground}" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Focusable" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanCardLimitPill}">
@@ -371,10 +408,10 @@
 
     <Style x:Key="stySwimLaneCaption" TargetType="TextBlock">
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="HorizontalAlignment" Value="Center" />
     </Style>
 
     <Style TargetType="{x:Type local:KanbanSwimlane}">
+        <Setter Property="Focusable" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanSwimlane}">
@@ -383,7 +420,20 @@
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
-                        <TextBlock Style="{StaticResource stySwimLaneCaption}" Text="{TemplateBinding Caption, Converter={StaticResource convUppercase}}" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="1"
+                                Style="{StaticResource stySwimLaneCaption}"
+                                Text="{TemplateBinding Caption,
+                                                       Converter={StaticResource convUppercase}}" />
+                            <TextBlock Grid.Column="2" Text="{Binding CardCount, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:KanbanSwimlane}}, StringFormat=' ({0})'}" />
+                        </Grid>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

@@ -442,11 +442,19 @@ namespace KC.WPF_Kanban
                                 column.Columns.Count > 0 ? 1 :
                                 firstCardsRow - startRow;
 
+            // this column visible
+            column.Visibility = Visibility.Visible;
+
             // Set column size
             if (column.IsCollapsed)
             {
                 // size collapsed columns only to their MinWidth
                 ColumnDefinitions[currentColumn].Width = new GridLength(column.MinWidth, GridUnitType.Pixel);
+                // Hide all sub-columns
+                foreach (KanbanColumn subcolumn in column.Columns)
+                {
+                    subcolumn.Visibility = Visibility.Collapsed;
+                }
             }
             else
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ using System.Windows.Media;
 
 namespace KC.WPF_Kanban
 {
-    public class KanbanSwimlane : Control
+    public class KanbanSwimlane : Control, INotifyPropertyChanged
     {
         private const string DefaultCaption = "SWIMLANE";
 
@@ -36,6 +37,7 @@ namespace KC.WPF_Kanban
         public void AddCell(KanbanBoardCell cell)
         {
             cell.Swimlane = this;
+            cell.CardsChanged += Cell_CardsChanged;
             Cells.Add(cell);
         }
 
@@ -47,9 +49,18 @@ namespace KC.WPF_Kanban
             if (cell.Swimlane == this)
             {
                 cell.Swimlane = null;
+                cell.CardsChanged -= Cell_CardsChanged;
             }
             Cells.Remove(cell);
         }
+
+        /// <summary>
+        /// Gets the count of all cards assigned to the <see cref="KanbanSwimlane"/>
+        /// </summary>
+        public int CardCount => Cells.Sum(cell => cell.Cards.Count);
+
+        private void Cell_CardsChanged(object sender, RoutedEventArgs e) =>
+            OnPropertyChanged(nameof(CardCount));
 
         #endregion
 
@@ -69,6 +80,18 @@ namespace KC.WPF_Kanban
 
         #endregion
 
+        /// <summary>
+        /// Gets or sets a unique value that is used to assign cards to the <see cref="KanbanSwimlane"/>
+        /// </summary>
         public string LaneValue { get; set; }
+
+        #region NotifyPropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        #endregion
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace KC.WPF_Kanban
@@ -87,23 +82,31 @@ namespace KC.WPF_Kanban
 
         private static void OnCardsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            // If the Cards collection changes, register new collection changed event handlers
-            if (e.OldValue is KanbanCardCollection oldCollection)
+            if (d is KanbanBoardCell cell)
             {
-                oldCollection.CollectionChanged -= Cards_CollectionChanged;
-                oldCollection.Cell = null;
+                // If the Cards collection changes, register new collection changed event handlers
+                if (e.OldValue is KanbanCardCollection oldCollection)
+                {
+                    oldCollection.CollectionChanged -= Cards_CollectionChanged;
+                    oldCollection.Cell = null;
+                }
+                if (e.NewValue is KanbanCardCollection newCollection)
+                {
+                    newCollection.CollectionChanged += Cards_CollectionChanged;
+                    newCollection.Cell = cell;
+                }
+                cell.RaiseEvent(new RoutedEventArgs(CardsChangedEvent));
             }
-            if (e.NewValue is KanbanCardCollection newCollection)
-            {
-                newCollection.CollectionChanged += Cards_CollectionChanged;
-                newCollection.Cell = (d as KanbanBoardCell);
-            }
-            (d as KanbanBoardCell)?.RaiseEvent(new RoutedEventArgs(CardsChangedEvent));
         }
 
         // If the cards collection is changed let the event bubble up
-        private static void Cards_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) =>
-            (sender as KanbanCardCollection)?.Cell?.RaiseEvent(new RoutedEventArgs(CardsChangedEvent));
+        private static void Cards_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (sender is KanbanCardCollection collection && collection.Cell != null)
+            {
+                collection.Cell.RaiseEvent(new RoutedEventArgs(CardsChangedEvent));
+            }
+        }
 
         #endregion
 
