@@ -362,47 +362,62 @@ namespace KC.WPF_Kanban
         protected override Size MeasureOverride(Size constraint)
         {
             // Get the deepest level of sub-columns
-            int columnSpan = 0;
-            int columnsDepth = GetColumnsDepth(out columnSpan);
+            // And by the way count needed columns for grid layout
+            int totalColSpan = 0;
+            int firstExpandedCol = 0;
+            int expandedColSpan = 0;
+            int columnsDepth = GetColumnsDepth(out totalColSpan, out firstExpandedCol, out expandedColSpan);
 
-            // Rows (eighter two rows per swimlane, or 1 row minimum)
-            int rowCount = Math.Max(1, Swimlanes.Count * 2);
+            // Rows (eighter one or two rows per swimlane)
+            int rowCount = 1 + Swimlanes.Sum(lane => lane.IsCollapsed ? 1 : 2);
 
             // Define the needed number of columns and rows
-            UpdateGridColumnDefinitions(columnSpan);
+            UpdateGridColumnDefinitions(totalColSpan);
             UpdateGridRowDefinitions(columnsDepth + rowCount);
 
             // Assign each control to the corret cell in the grid layout
             int currentColumn = 0;
+            int currentRow = columnsDepth;
             foreach (KanbanColumn column in Columns)
             {
-                int currentRow = columnsDepth;
+                currentRow = columnsDepth;
                 foreach (KanbanSwimlane lane in Swimlanes)
                 {
                     // place the swimlane header
                     if (currentColumn == 0)
                     {
-                        AutoSizeRow(currentRow);
-                        SetRow(lane, currentRow);
-                        SetColumn(lane, 0);
-                        SetColumnSpan(lane, columnSpan);
+                        if (firstExpandedCol >= 0)
+                        {
+                            AutoSizeRow(currentRow);
+                            SetRow(lane, currentRow);
+                            SetColumn(lane, firstExpandedCol);
+                            SetColumnSpan(lane, expandedColSpan);
+                            lane.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            lane.Visibility = Visibility.Collapsed;
+                        }
                     }
                     currentRow++;
 
                     // place cells
                     SetCellsPosition(lane, column, currentRow, currentColumn);
-                    currentRow++;
+                    if (!lane.IsCollapsed)
+                    {
+                        currentRow++;
+                    }
                 }
                 // Place the column header
                 SetColumnPosition(column, ref currentColumn, 0, columnsDepth, rowCount);
             }
-
+            // The very last row is never used by any lane. Used as spacer for long column
+            StarSizeRow(currentRow);
             return base.MeasureOverride(constraint);
         }
 
         private void SetCellsPosition(KanbanSwimlane lane, KanbanColumn column, int currentRow, int currentColumn)
         {
-            StarSizeRow(currentRow);
             KanbanBoardCell cell = Cells.FirstOrDefault(c => c.Column == column && c.Swimlane == lane);
             if (column.Columns.Count > 0)
             {
@@ -425,10 +440,18 @@ namespace KC.WPF_Kanban
                 // Column with cards
                 if (cell != null)
                 {
-                    SetRow(cell, currentRow);
-                    SetColumn(cell, currentColumn);
-                    SetColumnSpan(cell, column.ColumnSpan);
-                    cell.SetValue(VisibilityProperty, column.IsCollapsed ? Visibility.Collapsed : Visibility.Visible);
+                    if (column.IsCollapsed || lane.IsCollapsed)
+                    {
+                        cell.SetValue(VisibilityProperty, Visibility.Collapsed );
+                    }
+                    else
+                    {
+                        StarSizeRow(currentRow);
+                        SetRow(cell, currentRow);
+                        SetColumn(cell, currentColumn);
+                        SetColumnSpan(cell, column.ColumnSpan);
+                        cell.SetValue(VisibilityProperty, Visibility.Visible);
+                    }
                 }
             }
         }
@@ -488,28 +511,37 @@ namespace KC.WPF_Kanban
 
         private void StarSizeColumn(int index)
         {
-            var column = ColumnDefinitions[index];
-            if (!column.Width.IsStar)
+            if (index < ColumnDefinitions.Count)
             {
-                column.Width = new GridLength(1, GridUnitType.Star);
+                var column = ColumnDefinitions[index];
+                if (!column.Width.IsStar)
+                {
+                    column.Width = new GridLength(1, GridUnitType.Star);
+                }
             }
         }
 
         private void StarSizeRow(int index)
         {
-            var row = RowDefinitions[index];
-            if (!row.Height.IsStar)
+            if (index < RowDefinitions.Count)
             {
-                row.Height = new GridLength(1, GridUnitType.Star);
+                var row = RowDefinitions[index];
+                if (!row.Height.IsStar)
+                {
+                    row.Height = new GridLength(1, GridUnitType.Star);
+                }
             }
         }
 
         private void AutoSizeRow(int index)
         {
-            var row = RowDefinitions[index];
-            if (!row.Height.IsAuto)
+            if (index < RowDefinitions.Count)
             {
-                row.Height = new GridLength(1, GridUnitType.Auto);
+                var row = RowDefinitions[index];
+                if (!row.Height.IsAuto)
+                {
+                    row.Height = new GridLength(1, GridUnitType.Auto);
+                }
             }
         }
 
@@ -554,10 +586,12 @@ namespace KC.WPF_Kanban
         /// <summary>
         /// Loops through all columns and returns the deepest level of sub-columns
         /// </summary>
-        /// <param name="columnSpan">also returns the count of columns on the main level</param>
-        private int GetColumnsDepth(out int columnSpan)
+        /// <param name="totalColSpan">also returns the count of columns on the main level</param>
+        private int GetColumnsDepth(out int totalColSpan, out int firstExpandedSpan, out int totalExpandedSpan)
         {
-            columnSpan = 0;
+            totalColSpan = 0;
+            firstExpandedSpan = -1;
+            totalExpandedSpan = 0;
             int depth = 1;
             foreach(KanbanColumn column in Columns)
             {
@@ -565,16 +599,45 @@ namespace KC.WPF_Kanban
                 if (column.IsCollapsed)
                 {
                     // Collapsed collumns span only 1, no matter the real span
-                    columnSpan++;
+                    totalColSpan++;
                 }
                 else
                 {
-                    columnSpan += column.ColumnSpan;
+                    // Index of first expanded column
+                    if (firstExpandedSpan < 0)
+                    {
+                        firstExpandedSpan = totalColSpan;
+                    }
+                    totalColSpan += column.ColumnSpan;
                     int colDepth = GetColumnDepth(column);
                     if (colDepth > depth)
                     {
                         depth = colDepth;
                     }
+                }
+            }
+            // Expanded column span = total span - collapsed collumns left and right
+            totalExpandedSpan = totalColSpan;
+            foreach (KanbanColumn column in Columns)
+            {
+                if (column.IsCollapsed)
+                {
+                    totalExpandedSpan--;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            foreach (KanbanColumn column in Columns.Reverse())
+            {
+                if (column.IsCollapsed)
+                {
+                    totalExpandedSpan--;
+                }
+                else
+                {
+                    break;
                 }
             }
             return depth;

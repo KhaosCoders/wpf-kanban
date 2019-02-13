@@ -1,58 +1,40 @@
-﻿<Window
-    x:Class="WpfApp1.MainWindow"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:kanban="clr-namespace:KC.WPF_Kanban;assembly=WPF-Kanban"
-    xmlns:local="clr-namespace:WpfApp1"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="MainWindow"
-    Width="1200"
-    Height="600"
-    d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True,
-                                     Type={x:Type local:DummyData}}"
-    mc:Ignorable="d">
-    <kanban:KanbanBoard
-        Title="My Board"
-        ColumnBinding="{Binding Column}"
-        ItemsSource="{Binding Collection}"
-        SwimlaneBinding="{Binding Lane}">
+﻿<Window x:Class="WpfApp1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:kanban="clr-namespace:KC.WPF_Kanban;assembly=WPF-Kanban"
+        xmlns:local="clr-namespace:WpfApp1"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Title="MainWindow"
+        Width="1200"
+        Height="600"
+        d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True,
+                                         Type={x:Type local:DummyData}}"
+        mc:Ignorable="d">
+    <kanban:KanbanBoard Title="My Board"
+                        ColumnBinding="{Binding Column}"
+                        ItemsSource="{Binding Collection}"
+                        SwimlaneBinding="{Binding Lane}">
         <kanban:KanbanBoard.Columns>
-            <kanban:KanbanColumn
-                Caption="Backlog"
-                CardLimit="5"
-                ColumnValue="Backlog"
-                IsCollapsed="True" />
-            <kanban:KanbanColumn
-                Caption="Requested"
-                CardLimit="4"
-                ColumnValue="Requested" />
-            <kanban:KanbanColumn
-                Caption="In progress"
-                CardLimit="2"
-                ColumnSpan="3">
+            <kanban:KanbanColumn Caption="Backlog"
+                                 CardLimit="5"
+                                 ColumnValue="Backlog"
+                                 IsCollapsed="True" />
+            <kanban:KanbanColumn Caption="Requested" CardLimit="4" ColumnValue="Requested" />
+            <kanban:KanbanColumn Caption="In progress" CardLimit="2" ColumnSpan="3">
                 <kanban:KanbanColumn.Columns>
-                    <kanban:KanbanColumn
-                        Caption="Design"
-                        CardLimit="1"
-                        ColumnValue="Design" />
-                    <kanban:KanbanColumn
-                        Caption="Doing"
-                        ColumnSpan="2"
-                        ColumnValue="Doing" />
+                    <kanban:KanbanColumn Caption="Design" CardLimit="1" ColumnValue="Design" />
+                    <kanban:KanbanColumn Caption="Doing" ColumnSpan="2" ColumnValue="Doing" />
                 </kanban:KanbanColumn.Columns>
             </kanban:KanbanColumn>
             <kanban:KanbanColumn Caption="Done" ColumnValue="Done" />
         </kanban:KanbanBoard.Columns>
         <kanban:KanbanBoard.Swimlanes>
-            <kanban:KanbanSwimlane
-                Background="Aquamarine"
-                Caption="Lane 1"
-                LaneValue="lane1" />
-            <kanban:KanbanSwimlane
-                Background="AliceBlue"
-                Caption="Lane 2"
-                LaneValue="lane2" />
+            <kanban:KanbanSwimlane Background="Aquamarine" Caption="Lane 1" LaneValue="lane1" />
+            <kanban:KanbanSwimlane Background="AliceBlue"
+                                   Caption="Lane 2"
+                                   IsCollapsed="True"
+                                   LaneValue="lane2" />
         </kanban:KanbanBoard.Swimlanes>
         <ItemsControl.ItemTemplate>
             <DataTemplate>

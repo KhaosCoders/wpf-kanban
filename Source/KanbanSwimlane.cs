@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using KC.WPF_Kanban.Utils;
 
 namespace KC.WPF_Kanban
 {
@@ -77,6 +78,31 @@ namespace KC.WPF_Kanban
         public static readonly DependencyProperty CaptionProperty =
             DependencyProperty.Register("Caption", typeof(string), typeof(KanbanSwimlane),
                 new FrameworkPropertyMetadata(DefaultCaption));
+
+        /// <summary>
+        /// Gets or sets whether the <see cref="KanbanSwimlane"/> is collapsed
+        /// </summary>
+        public bool IsCollapsed
+        {
+            get { return (bool)GetValue(IsCollapsedProperty); }
+            set { SetValue(IsCollapsedProperty, value); }
+        }
+        public static readonly DependencyProperty IsCollapsedProperty =
+            DependencyProperty.Register("IsCollapsed", typeof(bool), typeof(KanbanSwimlane),
+                new FrameworkPropertyMetadata(false, new PropertyChangedCallback(OnIsCollapsedChanged)));
+
+        private static void OnIsCollapsedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            // Relayout kanban panel, when swimlane is expanded or collapsed
+            if (d is KanbanSwimlane lane)
+            {
+                var panel = FrameworkUtils.FindVisualParent<KanbanBoardGridPanel>(lane);
+                if (panel != null)
+                {
+                    panel.InvalidateMeasure();
+                }
+            }
+        }
 
         #endregion
 
