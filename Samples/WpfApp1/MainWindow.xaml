@@ -22,15 +22,18 @@
                 Caption="Backlog"
                 CardLimit="5"
                 ColumnValue="Backlog"
-                IsCollapsed="True" />
+                IsCollapsed="True"
+                Color="Black" />
             <kanban:KanbanColumn
                 Caption="Requested"
                 CardLimit="4"
-                ColumnValue="Requested" />
+                ColumnValue="Requested"
+                Color="Blue" />
             <kanban:KanbanColumn
                 Caption="In progress"
                 CardLimit="2"
-                ColumnSpan="3">
+                ColumnSpan="3"
+                Color="Orange">
                 <kanban:KanbanColumn.Columns>
                     <kanban:KanbanColumn
                         Caption="Design"
@@ -42,7 +45,10 @@
                         ColumnValue="Doing" />
                 </kanban:KanbanColumn.Columns>
             </kanban:KanbanColumn>
-            <kanban:KanbanColumn Caption="Done" ColumnValue="Done" />
+            <kanban:KanbanColumn
+                Caption="Done"
+                ColumnValue="Done"
+                Color="Green" />
         </kanban:KanbanBoard.Columns>
         <kanban:KanbanBoard.Swimlanes>
             <kanban:KanbanSwimlane
@@ -56,6 +62,7 @@
             <kanban:KanbanSwimlane
                 Background="DarkGoldenrod"
                 Caption="Lane 3"
+                Foreground="White"
                 IsCollapsed="True"
                 LaneValue="lane3" />
         </kanban:KanbanBoard.Swimlanes>

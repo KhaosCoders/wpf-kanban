@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Data;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Windows.Media;
 
 namespace KC.WPF_Kanban
 {
@@ -157,6 +158,17 @@ namespace KC.WPF_Kanban
         }
         public static readonly DependencyProperty IsSubColumnProperty =
             DependencyProperty.Register("IsSubColumn", typeof(bool), typeof(KanbanColumn), new FrameworkPropertyMetadata(false));
+
+        /// <summary>
+        /// Gets or sets a color brush used to draw a highlight color on the column header
+        /// </summary>
+        public Brush Color
+        {
+            get { return (Brush)GetValue(ColorProperty); }
+            set { SetValue(ColorProperty, value); }
+        }
+        public static readonly DependencyProperty ColorProperty =
+            DependencyProperty.Register("Color", typeof(Brush), typeof(KanbanColumn), new FrameworkPropertyMetadata(Brushes.Transparent));
 
         #endregion
 

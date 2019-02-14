@@ -446,7 +446,7 @@ namespace KC.WPF_Kanban
                     }
                     else
                     {
-                        StarSizeRow(currentRow);
+                        AutoSizeRow(currentRow);
                         SetRow(cell, currentRow);
                         SetColumn(cell, currentColumn);
                         SetColumnSpan(cell, column.ColumnSpan);
