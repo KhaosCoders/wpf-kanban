@@ -39,7 +39,7 @@ namespace KC.WPF_Kanban
             switch (args.Action)
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
-                    throw new NotImplementedException("Implement Reset!");
+                    //throw new NotImplementedException("Implement Reset!");
 
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
                     throw new NotImplementedException("Implement Remove");

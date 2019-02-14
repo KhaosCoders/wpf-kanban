@@ -108,7 +108,7 @@ namespace KC.WPF_Kanban
                         Source = card.DataContext,
                         Path = binding.Path
                     };
-                    object columnValue = FrameworkUtils.EvalBinding(valueBinding);
+                    object columnValue = null; // FrameworkUtils.EvalBinding(valueBinding);
                     column = FindColumnForValue(columnValue);
                 }
 
@@ -120,7 +120,7 @@ namespace KC.WPF_Kanban
                         Source = card.DataContext,
                         Path = binding2.Path
                     };
-                    object laneValue = FrameworkUtils.EvalBinding(valueBinding);
+                    object laneValue = null; // FrameworkUtils.EvalBinding(valueBinding);
                     lane = FindSwimlaneForValue(laneValue);
                 }
 
@@ -134,6 +134,10 @@ namespace KC.WPF_Kanban
 
         private KanbanSwimlane FindSwimlaneForValue(object value)
         {
+            if (value == null)
+            {
+                return null;
+            }
             foreach (KanbanSwimlane lane in Swimlanes)
             {
                 if (value.Equals(lane.LaneValue))
@@ -146,6 +150,10 @@ namespace KC.WPF_Kanban
 
         private KanbanColumn FindColumnForValue(object value)
         {
+            if (value == null)
+            {
+                return null;
+            }
             foreach(KanbanColumn column in Columns)
             {
                 if (value.Equals(column.ColumnValue))

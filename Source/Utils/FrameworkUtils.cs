@@ -63,21 +63,6 @@ namespace KC.WPF_Kanban.Utils
             return null;
         }
 
-        public static object EvalBinding(Binding binding)
-        {
-            DependencyObject dependencyObject = new DependencyObject();
-            BindingOperations.SetBinding(dependencyObject, EvalDummyProperty, binding);
-            object value = dependencyObject.GetValue(EvalDummyProperty);
-            BindingOperations.ClearBinding(dependencyObject, EvalDummyProperty);
-            return value;
-        }
-
-        private static readonly DependencyProperty EvalDummyProperty =
-            DependencyProperty.RegisterAttached(
-               "EvalDummy",
-               typeof(object),
-               typeof(DependencyObject),
-               new PropertyMetadata(null));
 
     }
 }

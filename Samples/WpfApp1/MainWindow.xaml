@@ -31,10 +31,11 @@
         </kanban:KanbanBoard.Columns>
         <kanban:KanbanBoard.Swimlanes>
             <kanban:KanbanSwimlane Background="Aquamarine" Caption="Lane 1" LaneValue="lane1" />
-            <kanban:KanbanSwimlane Background="AliceBlue"
-                                   Caption="Lane 2"
+            <kanban:KanbanSwimlane Background="AliceBlue" Caption="Lane 2" LaneValue="lane2" />
+            <kanban:KanbanSwimlane Background="DarkGoldenrod"
+                                   Caption="Lane 3"
                                    IsCollapsed="True"
-                                   LaneValue="lane2" />
+                                   LaneValue="lane3" />
         </kanban:KanbanBoard.Swimlanes>
         <ItemsControl.ItemTemplate>
             <DataTemplate>

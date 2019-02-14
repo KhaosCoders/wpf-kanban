@@ -226,24 +226,24 @@ namespace KC.WPF_Kanban
         private void Columns_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             // When the column collection changed, register the CardCountChangedEvent on the sub-columns
-            switch (e.Action)
+            switch (e?.Action)
             {
-                case NotifyCollectionChangedAction.Add when e.NewItems.Count==1 && e.NewItems[0] is KanbanColumn column:
+                case NotifyCollectionChangedAction.Add when e.NewItems?.Count==1 && e.NewItems[0] is KanbanColumn column:
                     column.CardCountChanged += SubColumn_CardCountChanged;
                     column.IsSubColumn = true;
                     break;
-                case NotifyCollectionChangedAction.Remove when e.OldItems.Count == 1 && e.OldItems[0] is KanbanColumn column:
+                case NotifyCollectionChangedAction.Remove when e.OldItems?.Count == 1 && e.OldItems[0] is KanbanColumn column:
                     column.CardCountChanged -= SubColumn_CardCountChanged;
                     column.IsSubColumn = false;
                     break;
-                case NotifyCollectionChangedAction.Reset:
+                case NotifyCollectionChangedAction.Reset when e.OldItems?.Count > 0:
                     foreach(KanbanColumn column in e.OldItems)
                     {
                         column.CardCountChanged -= SubColumn_CardCountChanged;
                         column.IsSubColumn = false;
                     }
                     break;
-                case NotifyCollectionChangedAction.Replace:
+                case NotifyCollectionChangedAction.Replace when e.OldItems?.Count > 0 && e.NewItems?.Count > 0:
                     foreach (KanbanColumn column in e.OldItems)
                     {
                         column.CardCountChanged -= SubColumn_CardCountChanged;
