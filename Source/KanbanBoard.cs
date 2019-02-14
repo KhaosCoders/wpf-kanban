@@ -86,53 +86,22 @@ namespace KC.WPF_Kanban
                 new FrameworkPropertyMetadata(null));
 
 
+        #region Column/Lane assignment
 
+        /// <summary>
+        /// Gets or sets a property path used on each card to access a value that machtes the column value
+        /// </summary>
+        public string ColumnPath { get; set; }
 
-        public BindingBase ColumnBinding { get; set; }
+        /// <summary>
+        /// Gets or sets a property path used on each card to access a value that machtes the swimlane value
+        /// </summary>
+        public string SwimlanePath { get; set; }
 
-        public BindingBase SwimlaneBinding { get; set; }
-
-
-
-
-
-        public void AddCard(UIElement cardContainer)
-        {
-            if (cardContainer is KanbanCard card)
-            {
-                KanbanColumn column = null;
-                if (ColumnBinding is Binding binding)
-                {
-                    Binding valueBinding = new Binding()
-                    {
-                        Source = card.DataContext,
-                        Path = binding.Path
-                    };
-                    object columnValue = null; // FrameworkUtils.EvalBinding(valueBinding);
-                    column = FindColumnForValue(columnValue);
-                }
-
-                KanbanSwimlane lane = null;
-                if (SwimlaneBinding is Binding binding2)
-                {
-                    Binding valueBinding = new Binding()
-                    {
-                        Source = card.DataContext,
-                        Path = binding2.Path
-                    };
-                    object laneValue = null; // FrameworkUtils.EvalBinding(valueBinding);
-                    lane = FindSwimlaneForValue(laneValue);
-                }
-
-                if (column != null)
-                {
-                    var cell = column.FindCellForSwimlane(lane);
-                    cell?.Cards.Add(card);
-                }
-            }
-        }
-
-        private KanbanSwimlane FindSwimlaneForValue(object value)
+        /// <summary>
+        /// Returns the first swimlane with the specified value or null if no such lane exists
+        /// </summary>
+        protected KanbanSwimlane FindSwimlaneForValue(object value)
         {
             if (value == null)
             {
@@ -148,13 +117,16 @@ namespace KC.WPF_Kanban
             return null;
         }
 
-        private KanbanColumn FindColumnForValue(object value)
+        /// <summary>
+        /// Returns the first column with the specified value or null if no such column exists
+        /// </summary>
+        protected KanbanColumn FindColumnForValue(object value)
         {
             if (value == null)
             {
                 return null;
             }
-            foreach(KanbanColumn column in Columns)
+            foreach (KanbanColumn column in Columns)
             {
                 if (value.Equals(column.ColumnValue))
                 {
@@ -169,9 +141,12 @@ namespace KC.WPF_Kanban
             return null;
         }
 
+        /// <summary>
+        /// Used by <see cref="FindColumnForValue"/>
+        /// </summary>
         private KanbanColumn FindSubColumnForValue(object value, KanbanColumn column)
         {
-            foreach(KanbanColumn col in column.Columns)
+            foreach (KanbanColumn col in column.Columns)
             {
                 if (value.Equals(col.ColumnValue))
                 {
@@ -185,6 +160,39 @@ namespace KC.WPF_Kanban
             }
             return null;
         }
+
+
+        #endregion
+
+
+
+        public void AddCard(UIElement cardContainer)
+        {
+            if (cardContainer is KanbanCard card)
+            {
+                KanbanColumn column = null;
+                if (!string.IsNullOrWhiteSpace(ColumnPath))
+                {
+                    object columnValue = PropertyPathResolver.ResolvePath(card.DataContext, ColumnPath);
+                    column = FindColumnForValue(columnValue);
+                }
+
+                KanbanSwimlane lane = null;
+                if (!string.IsNullOrWhiteSpace(SwimlanePath))
+                {
+                    object laneValue = PropertyPathResolver.ResolvePath(card.DataContext, SwimlanePath);
+                    lane = FindSwimlaneForValue(laneValue);
+                }
+
+                if (column != null)
+                {
+                    var cell = column.FindCellForSwimlane(lane);
+                    cell?.Cards.Add(card);
+                }
+            }
+        }
+
+
 
         #region Card Generation
 

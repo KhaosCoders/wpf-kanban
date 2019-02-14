@@ -67,6 +67,7 @@
     <Compile Include="Model\KanbanColumn.cs" />
     <Compile Include="Model\KanbanModelBase.cs" />
     <Compile Include="Utils\FrameworkUtils.cs" />
+    <Compile Include="Utils\PropertyPathResolver.cs" />
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
