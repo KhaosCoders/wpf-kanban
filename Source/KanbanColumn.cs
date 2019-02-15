@@ -43,7 +43,7 @@ namespace KC.WPF_Kanban
 
         /// <summary>
         /// Gets or sets an unique value for the column
-        /// used to assign each <see cref="KanbanCard"/> to a column
+        /// used to assign each <see cref="KanbanCardPresenter"/> to a column
         /// </summary>
         /// <seealso cref="KanbanBoard.ColumnBinding"/>
         public object ColumnValue { get; set; }
@@ -319,6 +319,23 @@ namespace KC.WPF_Kanban
         /// Counts all cards assigned to the column and all sub-columns
         /// </summary>
         private int SumCardsOfCells() => Cells.Sum(cell => cell.Cards.Count) + Columns.Sum(col => col.SumCardsOfCells());
+
+        #endregion
+
+        #region Cards
+
+        public void ClearCards()
+        {
+            foreach(KanbanBoardCell cell in Cells)
+            {
+                cell.ClearCards();
+            }
+            foreach(KanbanColumn column in Columns)
+            {
+                column.ClearCards();
+            }
+        }
+
 
         #endregion
     }

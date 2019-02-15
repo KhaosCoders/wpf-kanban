@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace KC.WPF_Kanban
 {
     /// <summary>
-    /// A collection of <see cref="KanbanCard"/> displayed by <see cref="KanbanBoardCell"/>
+    /// A collection of <see cref="KanbanCardPresenter"/> displayed by <see cref="KanbanBoardCell"/>
     /// </summary>
-    public class KanbanCardCollection : ObservableCollection<KanbanCard>
+    public class KanbanCardCollection : ObservableCollection<KanbanCardPresenter>
     {
         /// <summary>
         /// Gets the <see cref="KanbanBoardCell"/> this collection is assigned to

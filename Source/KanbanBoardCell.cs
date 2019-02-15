@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace KC.WPF_Kanban
@@ -106,6 +107,11 @@ namespace KC.WPF_Kanban
             {
                 collection.Cell.RaiseEvent(new RoutedEventArgs(CardsChangedEvent));
             }
+        }
+
+        internal void ClearCards()
+        {
+            Cards?.Clear();
         }
 
         #endregion

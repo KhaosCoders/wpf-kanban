@@ -13,7 +13,7 @@ namespace WpfApp1
 
         public string Assignee { get; set; }
 
-        public Color Color { get; set; }
+        public Color TitleColor { get; set; }
 
         public string this[string indexer]
         {

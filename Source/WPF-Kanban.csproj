@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converter\BrushConverter.cs" />
     <Compile Include="Converter\ColorToBrushConverter.cs" />
     <Compile Include="Converter\TextUppercaseConverter.cs" />
     <Compile Include="IColumnSpan.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="KanbanBoardGridPanel.cs" />
     <Compile Include="KanbanBoardPresenter.cs" />
     <Compile Include="KanbanCard.cs" />
+    <Compile Include="KanbanCardPresenter.cs" />
     <Compile Include="KanbanCardCollection.cs" />
     <Compile Include="KanbanCardLimitPill.cs" />
     <Compile Include="KanbanCellWrapPanel.cs" />

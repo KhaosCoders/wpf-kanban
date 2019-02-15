@@ -168,7 +168,7 @@ namespace KC.WPF_Kanban
 
         public void AddCard(UIElement cardContainer)
         {
-            if (cardContainer is KanbanCard card)
+            if (cardContainer is KanbanCardPresenter card)
             {
                 KanbanColumn column = null;
                 if (!string.IsNullOrWhiteSpace(ColumnPath))
@@ -192,35 +192,27 @@ namespace KC.WPF_Kanban
             }
         }
 
+        public void ClearCards()
+        {
+            foreach(KanbanColumn column in Columns)
+            {
+                column.ClearCards();
+            }
+        }
+
 
 
         #region Card Generation
 
         protected override bool IsItemItsOwnContainerOverride(object item)
         {
-            return item is KanbanCard;
+            return (item is UIElement);
         }
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            return new KanbanCard();
+            return new KanbanCardPresenter();
         }
-
-
-
-        protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
-        {
-            base.PrepareContainerForItemOverride(element, item);
-
-            KanbanCard card = (KanbanCard)element;
-
-        }
-
-        protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
-        {
-            base.OnItemsChanged(e);
-        }
-
         #endregion
 
 

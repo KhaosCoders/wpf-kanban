@@ -1,6 +1,7 @@
 ﻿<Window x:Class="WpfApp1.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="clr-namespace:KC.WPF_Kanban.Converter;assembly=WPF-Kanban"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:kanban="clr-namespace:KC.WPF_Kanban;assembly=WPF-Kanban"
         xmlns:local="clr-namespace:WpfApp1"
@@ -11,13 +12,18 @@
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True,
                                          Type={x:Type local:DummyData}}"
         mc:Ignorable="d">
+    <Window.Resources>
+        <conv:BrushConverter x:Key="convBrush" />
+    </Window.Resources>
     <kanban:KanbanBoard Title="My Board"
-                        kanban:KanbanCard.LeftTitlePath="Number"
-                        kanban:KanbanCard.RightTitlePath="Assignee"
-                        kanban:KanbanCard.TitleBackgroundPath="Color"
                         ColumnPath="[Column]"
                         ItemsSource="{Binding Collection}"
                         SwimlanePath="[Lane]">
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <kanban:KanbanCard LeftTitle="{Binding Number}" RightTitle="{Binding Assignee}" TitleBackground="{Binding TitleColor, Converter={StaticResource convBrush}}" />
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
         <kanban:KanbanBoard.Columns>
             <kanban:KanbanColumn Caption="Backlog"
                                  CardLimit="5"

@@ -14,24 +14,6 @@ namespace KC.WPF_Kanban
     public class KanbanBoardPresenter : VirtualizingPanel
     {
         /// <summary>
-        /// Gets the internal generator
-        /// </summary>
-        private ItemContainerGenerator InternalGenerator
-        {
-            get
-            {
-                if (this._generator == null)
-                {
-                    this._generator = this.GetType()
-                        .GetProperty("Generator", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                        .GetValue(this) as ItemContainerGenerator;
-                }
-                return this._generator;
-            }
-        }
-        private ItemContainerGenerator _generator;
-
-        /// <summary>
         /// Called when the Items collection associated with the containing ItemsControl changes.
         /// </summary>
         protected override void OnItemsChanged(object sender, ItemsChangedEventArgs args)
@@ -39,10 +21,11 @@ namespace KC.WPF_Kanban
             switch (args.Action)
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
-                    //throw new NotImplementedException("Implement Reset!");
+                    this.Owner.ClearCards();
+                    break;
 
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-                    //throw new NotImplementedException(string.Format("Implement Remove. Count:{0} OldPos:{1} Pos:{2}", args.ItemCount, args.OldPosition, args.Position));
+                    throw new NotImplementedException(string.Format("Implement Remove. Count:{0} OldPos:{1} Pos:{2}", args.ItemCount, args.OldPosition, args.Position));
 
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
                     throw new NotImplementedException("Implement Replace");
@@ -50,6 +33,7 @@ namespace KC.WPF_Kanban
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
                     throw new NotImplementedException("Implement Add");
             }
+
         }
 
         /// <summary>
@@ -62,7 +46,7 @@ namespace KC.WPF_Kanban
                 // internal method EnsureGenerator() is called when accessing InternalChildren ;)
                 var children = this.InternalChildren;
                 // Use generator to create all new cards
-                IItemContainerGenerator generator = this.InternalGenerator;
+                IItemContainerGenerator generator = this.ItemContainerGenerator;
                 UIElement child = null;
 
                 // This will startup the generator and generate ALL cards
@@ -71,9 +55,14 @@ namespace KC.WPF_Kanban
                     var startPos = generator.GeneratorPositionFromIndex(0);
                     using (generator.StartAt(startPos, GeneratorDirection.Forward, true))
                     {
-                        while ((child = generator.GenerateNext() as UIElement) != null)
+                        bool newlyRealized;
+                        while ((child = generator.GenerateNext(out newlyRealized) as UIElement) != null)
                         {
-                            this.Owner.AddCard(child);
+                            generator.PrepareItemContainer(child);
+                            if (newlyRealized)
+                            {
+                                this.Owner.AddCard(child);
+                            }
                         }
                     }
                 }
