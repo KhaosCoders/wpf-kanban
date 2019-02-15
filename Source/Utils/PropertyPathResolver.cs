@@ -83,7 +83,6 @@ namespace KC.WPF_Kanban.Utils
             }
             // Strip [ and ]
             string[] indexerValues = indexer.Substring(1, indexer.Length - 2).Split(',');
-            object value = null;
             // Read Properties from Type
             Type type = context.GetType();
             if (!_knownProperties.TryGetValue(type, out List<PropertyInfo> properties))

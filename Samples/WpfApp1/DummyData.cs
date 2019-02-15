@@ -30,14 +30,14 @@ namespace WpfApp1
             Table.Rows.Add("Done", "lane1", "Don 1");
             Table.Rows.Add("Backlog", "lane2", "BL 2");
 
-            Collection.Add(new CardData() { Column = "Backlog", Lane = "lane1", Title = "Something in the backlog Part 1/2", Color = Colors.LightBlue });
-            Collection.Add(new CardData() { Column = "Requested", Lane = "lane1", Title = "This is something requested, not started jet" });
-            Collection.Add(new CardData() { Column = "Requested", Lane = "lane1", Title = "This also is something requested ;)" });
-            Collection.Add(new CardData() { Column = "Design", Lane = "lane1", Title = "We're designing the hell out of this", Color = Colors.LightBlue });
-            Collection.Add(new CardData() { Column = "Doing", Lane = "lane2", Title = "Something we're working on right now", Color = Colors.LightGreen });
-            Collection.Add(new CardData() { Column = "Doing", Lane = "lane2", Title = "The other thing we're working on right now", Color = Colors.LightBlue });
-            Collection.Add(new CardData() { Column = "Done", Lane = "lane1", Title = "This is done, yeah!" });
-            Collection.Add(new CardData() { Column = "Backlog", Lane = "lane2", Title = "Something in the backlog Part 2/2" });
+            Collection.Add(new CardData() { Column = "Backlog", Lane = "lane1", Number=1, Assignee = "User1", Description = "Something in the backlog Part 1/2", Color = Colors.LightBlue });
+            Collection.Add(new CardData() { Column = "Requested", Lane = "lane1", Number = 2, Assignee = "User2", Description = "This is something requested, not started jet" });
+            Collection.Add(new CardData() { Column = "Requested", Lane = "lane1", Number = 99999, Assignee = "User1", Description = "This also is something requested ;)" });
+            Collection.Add(new CardData() { Column = "Design", Lane = "lane1", Number = 4, Assignee = "User1", Description = "We're designing the hell out of this", Color = Colors.LightBlue });
+            Collection.Add(new CardData() { Column = "Doing", Lane = "lane2", Number = 5, Assignee = "User2", Description = "Something we're working on right now", Color = Colors.LightGreen });
+            Collection.Add(new CardData() { Column = "Doing", Lane = "lane2", Number = 6, Assignee = "User2", Description = "The other thing we're working on right now", Color = Colors.LightBlue });
+            Collection.Add(new CardData() { Column = "Done", Lane = "lane1", Number = 7, Assignee = "User1", Description = "This is done, yeah!" });
+            Collection.Add(new CardData() { Column = "Backlog", Lane = "lane2", Number = 8, Assignee = "User1", Description = "Something in the backlog Part 2/2" });
         }
     }
 }

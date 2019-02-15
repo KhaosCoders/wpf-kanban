@@ -207,6 +207,7 @@ namespace KC.WPF_Kanban
         }
 
 
+
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
         {
             base.PrepareContainerForItemOverride(element, item);

@@ -12,6 +12,9 @@
                                          Type={x:Type local:DummyData}}"
         mc:Ignorable="d">
     <kanban:KanbanBoard Title="My Board"
+                        kanban:KanbanCard.LeftTitlePath="Number"
+                        kanban:KanbanCard.RightTitlePath="Assignee"
+                        kanban:KanbanCard.TitleBackgroundPath="Color"
                         ColumnPath="[Column]"
                         ItemsSource="{Binding Collection}"
                         SwimlanePath="[Lane]">
@@ -46,10 +49,5 @@
                                    IsCollapsed="True"
                                    LaneValue="lane3" />
         </kanban:KanbanBoard.Swimlanes>
-        <ItemsControl.ItemTemplate>
-            <DataTemplate>
-                <kanban:KanbanCard />
-            </DataTemplate>
-        </ItemsControl.ItemTemplate>
     </kanban:KanbanBoard>
 </Window>

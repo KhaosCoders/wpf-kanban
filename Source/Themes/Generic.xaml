@@ -26,7 +26,7 @@
     <SolidColorBrush x:Key="kanbanBoardTitleBackground" Color="#E8E8E8" />
     <SolidColorBrush x:Key="kanbanTitleForeground" Color="#505050" />
     <SolidColorBrush x:Key="kanbanColumnHeaderBackground" Color="#E8E8E8" />
-    <SolidColorBrush x:Key="kanbanColumnBackground" Color="#F7F7F7" />
+    <SolidColorBrush x:Key="kanbanColumnBackground" Color="#00F7F7F7" />
     <SolidColorBrush x:Key="kanbanPillBackground" Color="#CFCFCF" />
     <SolidColorBrush x:Key="kanbanPillForeground" Color="#373737" />
     <SolidColorBrush x:Key="kanbanPillViolatedForeground" Color="#FC3030" />
@@ -346,9 +346,13 @@
 
     <!--#region KanbanCard-->
 
-    <Style x:Key="styCardTitle" TargetType="TextBlock">
+    <Style x:Key="styCardDescription" TargetType="TextBlock">
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <Style x:Key="styCardTitle" TargetType="TextBlock">
+        <Setter Property="Margin" Value="2" />
     </Style>
 
     <Style TargetType="{x:Type local:KanbanCard}">
@@ -359,15 +363,23 @@
                 <ControlTemplate TargetType="{x:Type local:KanbanCard}">
                     <Border Width="{TemplateBinding CardWidth}"
                             Height="{TemplateBinding CardHeight}"
-                            Background="{Binding Color, Converter={StaticResource convColorToBrush}}"
+                            Background="White"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0"
+                            <Border Grid.Row="0" Background="{TemplateBinding TitleBackground}">
+                                <Grid>
+                                    <TextBlock HorizontalAlignment="Left" Style="{StaticResource styCardTitle}" Text="{TemplateBinding LeftTitle}" />
+                                    <TextBlock HorizontalAlignment="Right" Style="{StaticResource styCardTitle}" Text="{TemplateBinding RightTitle}" />
+                                </Grid>
+                            </Border>
+
+                            <TextBlock Grid.Row="1"
                                        Padding="4"
                                        Style="{StaticResource styCardTitle}"
                                        Text="{Binding Title}" />

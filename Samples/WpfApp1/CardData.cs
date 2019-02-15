@@ -7,7 +7,11 @@ namespace WpfApp1
         public string Column { get; set; }
         public string Lane { get; set; }
 
-        public string Title { get; set; }
+        public string Description { get; set; }
+
+        public int Number { get; set; }
+
+        public string Assignee { get; set; }
 
         public Color Color { get; set; }
 
