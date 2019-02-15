@@ -25,7 +25,7 @@
                                    DescriptionText="{Binding Description}"
                                    LeftTitle="{Binding Number}"
                                    RightTitle="{Binding Assignee}"
-                                   TitleBackground="{Binding TitleColor, Converter={StaticResource convBrush}}"
+                                   TitleBackground="{Binding TitleRgb, Converter={StaticResource convBrush}}"
                                    WorkedMinutes="{Binding Duration}" />
             </DataTemplate>
         </ItemsControl.ItemTemplate>

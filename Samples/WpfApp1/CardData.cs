@@ -31,5 +31,13 @@ namespace WpfApp1
                 return null;
             }
         }
+
+
+        public int TitleRgb => RGB(TitleColor);
+
+        private int RGB(Color color)
+        {
+            return ((int)color.R * (255*255)) + ((int)color.G * 255) + (int)color.B;
+        }
     }
 }

@@ -23,7 +23,11 @@ namespace KC.WPF_Kanban.Converter
                 case Color color:
                     return new SolidColorBrush(color);
                 case int i:
-                    return new SolidColorBrush(Color.FromRgb((byte)(i % (255 ^ 3)), (byte)(i % (255 ^ 2)), (byte)(i % 255)));
+                    if (i==0)
+                    {
+                        return Brushes.Transparent;
+                    }
+                    return new SolidColorBrush(Color.FromRgb((byte)(i % (255*255*255) / 255 / 255), (byte)(i % (255*255) / 255), (byte)(i % 255)));
             }
             return value;
         }
