@@ -33,6 +33,7 @@
     <SolidColorBrush x:Key="kanbanColumnViolatedBackground" Color="#FC5858" />
     <SolidColorBrush x:Key="kanbanCardBackground" Color="#FFFDC1" />
     <SolidColorBrush x:Key="kanbanIconColor" Color="#BFBFBF" />
+    <SolidColorBrush x:Key="kanbanCardFooterBackground" Color="#CFCFCF" />
 
     <!--#endregion-->
 
@@ -41,6 +42,8 @@
     <converter:TextUppercaseConverter x:Key="convUppercase" />
     <converter:ColorToBrushConverter x:Key="convColorToBrush" TrasparencyReplacement="{StaticResource kanbanCardBackground}" />
     <converter:BooleanToVisibilityConverter x:Key="convInvertedBoolToVisibility" Invert="True" />
+    <converter:MinutesToShortDurationConverter x:Key="convMinutesToDuration" />
+    <converter:ConditionalVisibilityConverter x:Key="convNegativeInvisible" Target="0" />
 
     <!--#endregion-->
 
@@ -347,7 +350,6 @@
     <!--#region KanbanCard-->
 
     <Style x:Key="styCardDescription" TargetType="TextBlock">
-        <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
 
@@ -369,8 +371,8 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition />
                                 <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Border Grid.Row="0" Background="{TemplateBinding TitleBackground}">
                                 <Grid>
@@ -381,8 +383,25 @@
 
                             <TextBlock Grid.Row="1"
                                        Padding="4"
-                                       Style="{StaticResource styCardTitle}"
-                                       Text="{Binding Title}" />
+                                       Style="{StaticResource styCardDescription}"
+                                       Text="{TemplateBinding DescriptionText}" />
+
+                            <Border Grid.Row="2" Margin="0,1,0,1" Background="{StaticResource kanbanCardFooterBackground}">
+                                <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal">
+                                    <local:ElapsedTime Width="25"
+                                                       Margin="2"
+                                                       Background="White"
+                                                       Time="{TemplateBinding CreationTime}" />
+
+                                    <TextBlock Width="25"
+                                               Margin="2"
+                                               Background="White"
+                                               Text="{TemplateBinding WorkedMinutes,
+                                                                      Converter={StaticResource convMinutesToDuration}}"
+                                               Visibility="{TemplateBinding WorkedMinutes,
+                                                                            Converter={StaticResource convNegativeInvisible}}" />
+                                </StackPanel>
+                            </Border>
 
                         </Grid>
                     </Border>
@@ -468,4 +487,19 @@
 
     <!--#endregion-->
 
+    <!--#region ElapsedTime-->
+
+    <Style TargetType="{x:Type local:ElapsedTime}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:ElapsedTime}">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                        <TextBlock Text="{TemplateBinding ElapsedTimeStr}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion-->
 </ResourceDictionary>

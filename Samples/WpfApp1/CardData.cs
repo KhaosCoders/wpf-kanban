@@ -1,4 +1,5 @@
-﻿using System.Windows.Media;
+﻿using System;
+using System.Windows.Media;
 
 namespace WpfApp1
 {
@@ -14,6 +15,10 @@ namespace WpfApp1
         public string Assignee { get; set; }
 
         public Color TitleColor { get; set; }
+
+        public DateTime CreationTime { get; set; }
+
+        public int Duration { get; set; } = -1;
 
         public string this[string indexer]
         {

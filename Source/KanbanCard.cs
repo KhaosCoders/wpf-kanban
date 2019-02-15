@@ -105,7 +105,46 @@ namespace KC.WPF_Kanban
         }
         public static readonly DependencyProperty TitleBackgroundProperty =
             DependencyProperty.Register("TitleBackground", typeof(Brush), typeof(KanbanCard),
-                new PropertyMetadata(Brushes.Transparent));
+                new FrameworkPropertyMetadata(Brushes.Transparent));
+
+        /// <summary>
+        /// Gets or sets a descriptive texts
+        /// </summary>
+        public string DescriptionText
+        {
+            get { return (string)GetValue(DescriptionTextProperty); }
+            set { SetValue(DescriptionTextProperty, value); }
+        }
+        public static readonly DependencyProperty DescriptionTextProperty =
+            DependencyProperty.Register("DescriptionText", typeof(string), typeof(KanbanCard),
+                new FrameworkPropertyMetadata(null));
+
+        /// <summary>
+        /// Gets or sets the moment the card was created
+        /// </summary>
+        public DateTime CreationTime
+        {
+            get { return (DateTime)GetValue(CreationTimeProperty); }
+            set { SetValue(CreationTimeProperty, value); }
+        }
+        public static readonly DependencyProperty CreationTimeProperty =
+            DependencyProperty.Register("CreationTime", typeof(DateTime), typeof(KanbanCard),
+                new FrameworkPropertyMetadata(DateTime.MinValue));
+
+        /// <summary>
+        /// Gets or sets the time worked on the card in minutes
+        /// </summary>
+        public int WorkedMinutes
+        {
+            get { return (int)GetValue(WorkedMinutesProperty); }
+            set { SetValue(WorkedMinutesProperty, value); }
+        }
+        public static readonly DependencyProperty WorkedMinutesProperty =
+            DependencyProperty.Register("WorkedMinutes", typeof(int), typeof(KanbanCard),
+                new FrameworkPropertyMetadata(-1));
+
+
+
 
         #endregion
 

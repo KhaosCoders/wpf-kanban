@@ -51,7 +51,10 @@
     <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converter\BrushConverter.cs" />
     <Compile Include="Converter\ColorToBrushConverter.cs" />
+    <Compile Include="Converter\ConditionalVisibilityConverter.cs" />
+    <Compile Include="Converter\MinutesToShortDurationConverter.cs" />
     <Compile Include="Converter\TextUppercaseConverter.cs" />
+    <Compile Include="ElapsedTime.cs" />
     <Compile Include="IColumnSpan.cs" />
     <Compile Include="KanbanBoardCell.cs" />
     <Compile Include="KanbanBoardGridPanel.cs" />
@@ -71,6 +74,7 @@
     <Compile Include="Model\KanbanModelBase.cs" />
     <Compile Include="Utils\FrameworkUtils.cs" />
     <Compile Include="Utils\PropertyPathResolver.cs" />
+    <Compile Include="Utils\TimeUtil.cs" />
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
