@@ -63,6 +63,30 @@ namespace KC.WPF_Kanban.Utils
             return null;
         }
 
-
+        public static T FindChild<T>(UIElement element) where T : UIElement
+        {
+            if (element == null)
+            {
+                return null;
+            }
+            if (element is T t)
+            {
+                return t;
+            }
+            int childCount = VisualTreeHelper.GetChildrenCount(element);
+            for (int i=0; i<childCount; i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(element, i);
+                if (child is UIElement uiChild)
+                {
+                    T found = FindChild<T>(uiChild);
+                    if (found != null)
+                    {
+                        return found;
+                    }
+                }
+            }
+            return null;
+        }
     }
 }

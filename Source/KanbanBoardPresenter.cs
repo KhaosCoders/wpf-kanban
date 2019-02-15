@@ -42,7 +42,7 @@ namespace KC.WPF_Kanban
                     //throw new NotImplementedException("Implement Reset!");
 
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-                    throw new NotImplementedException("Implement Remove");
+                    //throw new NotImplementedException(string.Format("Implement Remove. Count:{0} OldPos:{1} Pos:{2}", args.ItemCount, args.OldPosition, args.Position));
 
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
                     throw new NotImplementedException("Implement Replace");

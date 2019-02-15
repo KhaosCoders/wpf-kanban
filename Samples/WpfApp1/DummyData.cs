@@ -19,15 +19,16 @@ namespace WpfApp1
         {
             Table = new DataTable();
             Table.Columns.Add(new DataColumn("Column", typeof(string)));
+            Table.Columns.Add(new DataColumn("Lane", typeof(string)));
             Table.Columns.Add(new DataColumn("Title", typeof(string)));
-            Table.Rows.Add("Backlog", "BL 1");
-            Table.Rows.Add("Requested", "R 1");
-            Table.Rows.Add("Requested", "R 2");
-            Table.Rows.Add("Design", "De 1");
-            Table.Rows.Add("Doing", "Doi 1");
-            Table.Rows.Add("Doing", "Doi 2");
-            Table.Rows.Add("Done", "Don 1");
-            Table.Rows.Add("Backlog", "BL 2");
+            Table.Rows.Add("Backlog", "lane1", "BL 1");
+            Table.Rows.Add("Requested", "lane1", "R 1");
+            Table.Rows.Add("Requested", "lane1", "R 2");
+            Table.Rows.Add("Design", "lane1", "De 1");
+            Table.Rows.Add("Doing", "lane1", "Doi 1");
+            Table.Rows.Add("Doing", "lane2", "Doi 2");
+            Table.Rows.Add("Done", "lane1", "Don 1");
+            Table.Rows.Add("Backlog", "lane2", "BL 2");
 
             Collection.Add(new CardData() { Column = "Backlog", Lane = "lane1", Title = "Something in the backlog Part 1/2", Color = Colors.LightBlue });
             Collection.Add(new CardData() { Column = "Requested", Lane = "lane1", Title = "This is something requested, not started jet" });
