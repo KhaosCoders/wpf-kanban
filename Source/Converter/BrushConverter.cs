@@ -27,11 +27,35 @@ namespace KC.WPF_Kanban.Converter
                     {
                         return Brushes.Transparent;
                     }
-                    return new SolidColorBrush(Color.FromRgb((byte)(i % (255*255*255) / 255 / 255), (byte)(i % (255*255) / 255), (byte)(i % 255)));
+                    return new SolidColorBrush(ToColor(i));
             }
             return value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
+
+        /// <summary>
+        /// Converts a integer representation back to a <see cref="Color"/>. Alpha-Chanel not supported!
+        /// </summary>
+        public static Color ToColor(int number)
+        {
+            if (number < 0)
+            {
+                return Colors.Transparent;
+            }
+            else
+            {
+                byte nR = (byte)(number % 256),
+                     nG = (byte)(number / 256 % 256),
+                     nB = (byte)(number / 65536 % 256);
+                return Color.FromRgb(nR, nG, nB);
+            }
+        }
+
+        /// <summary>
+        /// Converts a <see cref="Color"/> to a integer representation. Alpha-Chanel not supported!
+        /// </summary>
+        public static int ToInteger(Color color) =>
+            color.R + (color.G * 256) + (color.B * 65536);
     }
 }

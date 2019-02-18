@@ -33,11 +33,7 @@ namespace WpfApp1
         }
 
 
-        public int TitleRgb => RGB(TitleColor);
+        public int TitleRgb => KC.WPF_Kanban.Converter.BrushConverter.ToInteger(TitleColor);
 
-        private int RGB(Color color)
-        {
-            return ((int)color.R * (255*255)) + ((int)color.G * 255) + (int)color.B;
-        }
     }
 }
