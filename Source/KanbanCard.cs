@@ -25,8 +25,6 @@ namespace KC.WPF_Kanban
         {
             // Enable Themes for this Control
             DefaultStyleKeyProperty.OverrideMetadata(typeof(KanbanCard), new FrameworkPropertyMetadata(typeof(KanbanCard)));
-
-            BackgroundProperty.OverrideMetadata(typeof(KanbanCard), new FrameworkPropertyMetadata(Brushes.White));
         }
 
         #endregion

@@ -31,6 +31,7 @@
     <SolidColorBrush x:Key="kanbanPillForeground" Color="#373737" />
     <SolidColorBrush x:Key="kanbanPillViolatedForeground" Color="#FC3030" />
     <SolidColorBrush x:Key="kanbanColumnViolatedBackground" Color="#FC5858" />
+    <SolidColorBrush x:Key="kanbanCellBackground" Color="#FDFDFD" />
     <SolidColorBrush x:Key="kanbanCardBackground" Color="#FFFDC1" />
     <SolidColorBrush x:Key="kanbanIconColor" Color="#BFBFBF" />
     <SolidColorBrush x:Key="kanbanCardFooterBackground" Color="#CFCFCF" />
@@ -158,6 +159,7 @@
     <Style x:Key="styKanbanColumnHeaderText" TargetType="TextBlock">
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontWeight" Value="Bold" />
     </Style>
 
     <Style x:Key="styKanbanColumnHeaderBorder" TargetType="Border">
@@ -168,6 +170,7 @@
         <Setter Property="MinWidth" Value="30" />
         <Setter Property="Canvas.ZIndex" Value="1" />
         <Setter Property="Focusable" Value="False" />
+        <Setter Property="Margin" Value="1" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanColumn}">
@@ -254,7 +257,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanBoardCell}">
-                    <Border Margin="1,1,1,1" Background="{StaticResource kanbanColumnBackground}">
+                    <Border Margin="1,1,1,1" Background="{StaticResource kanbanCellBackground}">
                         <ItemsControl ItemsSource="{TemplateBinding Cards}" ScrollViewer.VerticalScrollBarVisibility="Disabled" VirtualizingPanel.IsVirtualizing="False">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -334,15 +337,14 @@
                                 </Setter.Value>
                             </Setter>
                         </DataTrigger>
+                        <DataTrigger Binding="{Binding CardLimit, RelativeSource={RelativeSource Mode=Self}}" Value="-1">
+                            <Setter TargetName="txt2" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="txt3" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding CardLimit, RelativeSource={RelativeSource Mode=Self}}" Value="-1">
-                <Setter Property="Visibility" Value="Collapsed" />
-            </DataTrigger>
-        </Style.Triggers>
     </Style>
 
     <!--#endregion-->
@@ -360,6 +362,7 @@
     <Style TargetType="{x:Type local:KanbanCard}">
         <Setter Property="Padding" Value="10,10" />
         <Setter Property="Margin" Value="10,10" />
+        <Setter Property="Background" Value="{StaticResource kanbanCardBackground}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanCard}">
