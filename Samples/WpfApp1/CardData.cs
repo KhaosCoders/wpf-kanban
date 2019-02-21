@@ -14,7 +14,7 @@ namespace WpfApp1
 
         public string Assignee { get; set; }
 
-        public Color TitleColor { get; set; }
+        public Color TileColor { get; set; }
 
         public DateTime CreationTime { get; set; }
 
@@ -33,7 +33,7 @@ namespace WpfApp1
         }
 
 
-        public int TitleRgb => KC.WPF_Kanban.Converter.BrushConverter.ToInteger(TitleColor);
+        public int TileRgb => KC.WPF_Kanban.Converter.BrushConverter.ToInteger(TileColor);
 
     }
 }

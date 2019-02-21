@@ -387,20 +387,29 @@
                                        Text="{TemplateBinding DescriptionText}" />
 
                             <Border Grid.Row="2" Margin="0,1,0,1" Background="{StaticResource kanbanCardFooterBackground}">
-                                <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal">
-                                    <local:ElapsedTime Width="25"
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <local:ElapsedTime Grid.Column="3"
+                                                       Width="25"
                                                        Margin="2"
                                                        Background="White"
                                                        Time="{TemplateBinding CreationTime}" />
 
-                                    <TextBlock Width="25"
+                                    <TextBlock Grid.Column="2"
+                                               Width="25"
                                                Margin="2"
                                                Background="White"
                                                Text="{TemplateBinding WorkedMinutes,
                                                                       Converter={StaticResource convMinutesToDuration}}"
                                                Visibility="{TemplateBinding WorkedMinutes,
                                                                             Converter={StaticResource convNegativeInvisible}}" />
-                                </StackPanel>
+                                    <Border Grid.Column="0" Width="20" Background="{TemplateBinding TileBrush}" />
+                                </Grid>
                             </Border>
 
                         </Grid>

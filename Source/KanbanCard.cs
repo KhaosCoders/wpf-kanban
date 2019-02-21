@@ -143,11 +143,19 @@ namespace KC.WPF_Kanban
             DependencyProperty.Register("WorkedMinutes", typeof(int), typeof(KanbanCard),
                 new FrameworkPropertyMetadata(-1));
 
-
-
+        /// <summary>
+        ///Gets or sets the <see cref="Brush"/> of a colored tile on the card
+        /// </summary>
+        public Brush TileBrush
+        {
+            get { return (Brush)GetValue(TileBrushProperty); }
+            set { SetValue(TileBrushProperty, value); }
+        }
+        public static readonly DependencyProperty TileBrushProperty =
+            DependencyProperty.Register("TileBrush", typeof(Brush), typeof(KanbanCard),
+                new FrameworkPropertyMetadata(Brushes.Transparent));
 
         #endregion
-
 
     }
 }
