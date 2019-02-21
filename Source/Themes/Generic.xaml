@@ -365,7 +365,7 @@
                 <ControlTemplate TargetType="{x:Type local:KanbanCard}">
                     <Border Width="{TemplateBinding CardWidth}"
                             Height="{TemplateBinding CardHeight}"
-                            Background="White"
+                            Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid>
@@ -395,19 +395,20 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <local:ElapsedTime Grid.Column="3"
-                                                       Width="25"
+                                                       MinWidth="25"
                                                        Margin="2"
                                                        Background="White"
                                                        Time="{TemplateBinding CreationTime}" />
 
-                                    <TextBlock Grid.Column="2"
-                                               Width="25"
-                                               Margin="2"
-                                               Background="White"
-                                               Text="{TemplateBinding WorkedMinutes,
-                                                                      Converter={StaticResource convMinutesToDuration}}"
-                                               Visibility="{TemplateBinding WorkedMinutes,
-                                                                            Converter={StaticResource convNegativeInvisible}}" />
+                                    <Border Grid.Column="2"
+                                            MinWidth="25"
+                                            Margin="2"
+                                            Padding="4,0,4,0"
+                                            Background="White"
+                                            Visibility="{TemplateBinding WorkedMinutes,
+                                                                         Converter={StaticResource convNegativeInvisible}}">
+                                        <TextBlock Text="{TemplateBinding WorkedMinutes, Converter={StaticResource convMinutesToDuration}}" />
+                                    </Border>
                                     <Border Grid.Column="0" Width="20" Background="{TemplateBinding TileBrush}" />
                                 </Grid>
                             </Border>
@@ -502,7 +503,10 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:ElapsedTime}">
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                    <Border Padding="4,0,4,0"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
                         <TextBlock Text="{TemplateBinding ElapsedTimeStr}" />
                     </Border>
                 </ControlTemplate>

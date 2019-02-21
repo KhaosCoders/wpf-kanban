@@ -25,6 +25,8 @@ namespace KC.WPF_Kanban
         {
             // Enable Themes for this Control
             DefaultStyleKeyProperty.OverrideMetadata(typeof(KanbanCard), new FrameworkPropertyMetadata(typeof(KanbanCard)));
+
+            BackgroundProperty.OverrideMetadata(typeof(KanbanCard), new FrameworkPropertyMetadata(Brushes.White));
         }
 
         #endregion
@@ -105,7 +107,7 @@ namespace KC.WPF_Kanban
         }
         public static readonly DependencyProperty TitleBackgroundProperty =
             DependencyProperty.Register("TitleBackground", typeof(Brush), typeof(KanbanCard),
-                new FrameworkPropertyMetadata(Brushes.Transparent));
+                new FrameworkPropertyMetadata(new SolidColorBrush(Color.FromRgb(255, 224, 204))));
 
         /// <summary>
         /// Gets or sets a descriptive texts
