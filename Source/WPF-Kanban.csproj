@@ -38,6 +38,9 @@
     <AssemblyOriginatorKeyFile>WpfKanban.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -75,9 +78,10 @@
     <Compile Include="KanbanColumnItemsPresenter.cs" />
     <Compile Include="KanbanSwimlane.cs" />
     <Compile Include="KanbanSwimlaneCollection.cs" />
-    <Compile Include="Model\KanbanCard.cs" />
-    <Compile Include="Model\KanbanColumn.cs" />
-    <Compile Include="Model\KanbanModelBase.cs" />
+    <Compile Include="Model\JsonBoard.cs" />
+    <Compile Include="Model\JsonColumn.cs" />
+    <Compile Include="Model\JsonSwimlane.cs" />
+    <Compile Include="Utils\BrushSerianization.cs" />
     <Compile Include="Utils\FrameworkUtils.cs" />
     <Compile Include="Utils\PropertyPathResolver.cs" />
     <Compile Include="Utils\TimeUtil.cs" />
@@ -108,6 +112,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

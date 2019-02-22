@@ -1,9 +1,7 @@
-﻿using KC.WPF_Kanban.Utils;
+﻿using KC.WPF_Kanban.Model;
+using KC.WPF_Kanban.Utils;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -164,7 +162,7 @@ namespace KC.WPF_Kanban
 
         #endregion
 
-
+        #region BoardPresenter: Card Management
 
         public void AddCard(UIElement cardContainer)
         {
@@ -200,9 +198,9 @@ namespace KC.WPF_Kanban
             }
         }
 
+        #endregion
 
-
-        #region Card Generation
+        #region CardPresenter Generation
 
         protected override bool IsItemItsOwnContainerOverride(object item)
         {
@@ -213,8 +211,74 @@ namespace KC.WPF_Kanban
         {
             return new KanbanCardPresenter();
         }
+
         #endregion
 
+        #region Board Model
+
+        public string SaveModel()
+        {
+            return JsonConvert.SerializeObject(ToJson(), Formatting.Indented);
+        }
+
+        internal JsonBoard ToJson()
+        {
+            JsonBoard boardModel = new JsonBoard()
+            {
+                Title = this.Title,
+                ColumnPath = this.ColumnPath,
+                SwimlanePath = this.SwimlanePath
+            };
+            foreach (var column in Columns)
+            {
+                boardModel.Columns.Add(column.ToJson());
+            }
+            foreach (var lane in Swimlanes)
+            {
+                boardModel.Swimlanes.Add(lane.ToJson());
+            }
+            return boardModel;
+        }
+
+        public void LoadJsonModel(string model)
+        {
+            JsonBoard boardModel = JsonConvert.DeserializeObject<JsonBoard>(model);
+            ApplyJsonModel(boardModel);
+        }
+
+        private void ApplyJsonModel(JsonBoard model)
+        {
+            if (model.Title != null)
+            {
+                this.Title = model.Title;
+            }
+            if (!string.IsNullOrWhiteSpace(model.ColumnPath))
+            {
+                this.ColumnPath = model.ColumnPath;
+            }
+            if (!string.IsNullOrWhiteSpace(model.SwimlanePath))
+            {
+                this.SwimlanePath = model.SwimlanePath;
+            }
+            if (model.Columns != null && model.Columns.Count > 0)
+            {
+                Columns.Clear();
+                foreach (JsonColumn jsonColumn in model.Columns)
+                {
+                    Columns.Add(KanbanColumn.FromModel(jsonColumn));
+                }
+            }
+            if (model.Swimlanes != null && model.Swimlanes.Count > 0)
+            {
+                Swimlanes.Clear();
+                foreach (JsonSwimlane jsonSwimlane in model.Swimlanes)
+                {
+                    Swimlanes.Add(KanbanSwimlane.FromModel(jsonSwimlane));
+                }
+            }
+        }
+
+        #endregion
 
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using KC.WPF_Kanban.Model;
 using KC.WPF_Kanban.Utils;
 
 namespace KC.WPF_Kanban
@@ -109,7 +110,7 @@ namespace KC.WPF_Kanban
         /// <summary>
         /// Gets or sets a unique value that is used to assign cards to the <see cref="KanbanSwimlane"/>
         /// </summary>
-        public string LaneValue { get; set; }
+        public object LaneValue { get; set; }
 
         #region NotifyPropertyChanged
 
@@ -117,6 +118,33 @@ namespace KC.WPF_Kanban
 
         private void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        #endregion
+
+        #region Json Model
+
+        internal JsonSwimlane ToJson() => new JsonSwimlane()
+        {
+            Caption = this.Caption,
+            Color = BrushSerianization.SerializeBrush(this.Background),
+            IsCollapsed = this.IsCollapsed,
+            LaneValue = this.LaneValue
+        };
+
+        internal static KanbanSwimlane FromModel(JsonSwimlane model)
+        {
+            KanbanSwimlane lane = new KanbanSwimlane()
+            {
+                Caption = model.Caption,
+                IsCollapsed = model.IsCollapsed,
+                LaneValue = model.LaneValue
+            };
+            if (!string.IsNullOrWhiteSpace(model.Color))
+            {
+                lane.Background = BrushSerianization.DeserializeBrush(model.Color);
+            }
+            return lane;
+        }
 
         #endregion
     }

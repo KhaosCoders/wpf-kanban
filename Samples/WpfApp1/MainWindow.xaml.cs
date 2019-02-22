@@ -24,6 +24,82 @@ namespace WpfApp1
         {
             DataContext = new DummyData();
             InitializeComponent();
+
+            /*
+            kanBoard.LoadJsonModel(
+@"{
+  ""Title"": ""My Board"",
+  ""ColumnPath"": ""[Column]"",
+  ""SwimlanePath"": ""[Lane]"",
+  ""Columns"": [
+    {
+      ""Caption"": ""Backlog"",
+      ""CardLimit"": 5,
+      ""ColumnSpan"": 1,
+      ""ColumnValue"": ""Backlog"",
+      ""IsCollapsed"": true,
+      ""Color"": ""#FF000000""
+    },
+    {
+      ""Caption"": ""Requested"",
+      ""CardLimit"": 4,
+      ""ColumnSpan"": 1,
+      ""ColumnValue"": ""Requested"",
+      ""IsCollapsed"": false,
+      ""Color"": ""#FF0000FF""
+    },
+    {
+      ""Caption"": ""In progress"",
+      ""CardLimit"": 2,
+      ""ColumnSpan"": 3,
+      ""ColumnValue"": null,
+      ""IsCollapsed"": false,
+      ""Color"": ""#FFFFA500""
+    },
+    {
+      ""Caption"": ""Done"",
+      ""CardLimit"": -1,
+      ""ColumnSpan"": 1,
+      ""ColumnValue"": ""Done"",
+      ""IsCollapsed"": false,
+      ""Color"": ""#FF008000""
+    },
+    {
+      ""Caption"": ""Archiv"",
+      ""CardLimit"": -1,
+      ""ColumnSpan"": 1,
+      ""ColumnValue"": ""Archiv"",
+      ""IsCollapsed"": true,
+      ""Color"": ""#00FFFFFF""
+    }
+  ],
+  ""Swimlanes"": [
+    {
+      ""Color"": ""#FF7FFFD4"",
+      ""Caption"": ""Lane 1"",
+      ""LaneValue"": ""lane1"",
+      ""IsCollapsed"": false
+    },
+    {
+      ""Color"": ""#FFF0F8FF"",
+      ""Caption"": ""Lane 2"",
+      ""LaneValue"": ""lane2"",
+      ""IsCollapsed"": false
+    },
+    {
+      ""Color"": ""#FFB8860B"",
+      ""Caption"": ""Lane 3"",
+      ""LaneValue"": ""lane3"",
+      ""IsCollapsed"": true
+    }
+  ]
+}");
+*/
+        }
+
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(string.Format("Kanban Json: {0}", kanBoard.SaveModel()));
         }
     }
 }

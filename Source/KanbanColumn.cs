@@ -7,6 +7,7 @@ using System.Windows.Data;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Windows.Media;
+using KC.WPF_Kanban.Model;
 
 namespace KC.WPF_Kanban
 {
@@ -336,6 +337,37 @@ namespace KC.WPF_Kanban
             }
         }
 
+
+        #endregion
+
+        #region Json Model
+
+        internal JsonColumn ToJson() => new JsonColumn()
+        {
+            Caption = this.Caption,
+            CardLimit = this.CardLimit,
+            Color = BrushSerianization.SerializeBrush(this.Color),
+            ColumnSpan = this.ColumnSpan,
+            ColumnValue = this.ColumnValue,
+            IsCollapsed = this.IsCollapsed
+        };
+
+        internal static KanbanColumn FromModel(JsonColumn model)
+        {
+            KanbanColumn column = new KanbanColumn()
+            {
+                Caption = model.Caption,
+                CardLimit = model.CardLimit,
+                ColumnSpan = Math.Max(1, model.ColumnSpan),
+                ColumnValue = model.ColumnValue,
+                IsCollapsed = model.IsCollapsed
+            };
+            if (!string.IsNullOrWhiteSpace(model.Color))
+            {
+                column.Color = BrushSerianization.DeserializeBrush(model.Color);
+            }
+            return column;
+        }
 
         #endregion
     }
