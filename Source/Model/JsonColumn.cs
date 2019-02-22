@@ -19,5 +19,7 @@ namespace KC.WPF_Kanban.Model
         public bool IsCollapsed { get; set; }
 
         public string Color { get; set; }
+
+        public IList<JsonColumn> Columns { get; set; } = new List<JsonColumn>();
     }
 }

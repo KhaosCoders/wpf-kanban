@@ -342,15 +342,23 @@ namespace KC.WPF_Kanban
 
         #region Json Model
 
-        internal JsonColumn ToJson() => new JsonColumn()
+        internal JsonColumn ToJson()
         {
-            Caption = this.Caption,
-            CardLimit = this.CardLimit,
-            Color = BrushSerianization.SerializeBrush(this.Color),
-            ColumnSpan = this.ColumnSpan,
-            ColumnValue = this.ColumnValue,
-            IsCollapsed = this.IsCollapsed
-        };
+            JsonColumn model = new JsonColumn()
+            {
+                Caption = this.Caption,
+                CardLimit = this.CardLimit,
+                Color = BrushSerianization.SerializeBrush(this.Color),
+                ColumnSpan = this.ColumnSpan,
+                ColumnValue = this.ColumnValue,
+                IsCollapsed = this.IsCollapsed
+            };
+            foreach (var column in Columns)
+            {
+                model.Columns.Add(column.ToJson());
+            }
+            return model;
+        }
 
         internal static KanbanColumn FromModel(JsonColumn model)
         {
@@ -365,6 +373,14 @@ namespace KC.WPF_Kanban
             if (!string.IsNullOrWhiteSpace(model.Color))
             {
                 column.Color = BrushSerianization.DeserializeBrush(model.Color);
+            }
+            if (model.Columns != null && model.Columns.Count > 0)
+            {
+                column.Columns.Clear();
+                foreach (JsonColumn jsonColumn in model.Columns)
+                {
+                    column.Columns.Add(FromModel(jsonColumn));
+                }
             }
             return column;
         }
