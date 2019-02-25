@@ -99,7 +99,7 @@ namespace WpfApp1
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(string.Format("Kanban Json: {0}", kanBoard.SaveModel()));
+            // MessageBox.Show(string.Format("Kanban Json: {0}", kanBoard.SaveModel()));
         }
     }
 }

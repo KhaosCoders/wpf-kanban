@@ -24,6 +24,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <kanban:KanbanCard Background="Azure"
+                                       Blockers="{Binding Blocker}"
                                        CreationTime="{Binding CreationTime}"
                                        DescriptionText="{Binding Description}"
                                        LeftTitle="{Binding Number}"
@@ -72,5 +73,6 @@
                 VerticalAlignment="Top"
                 Click="Save_Click"
                 Content="Save" />
+
     </Grid>
 </Window>

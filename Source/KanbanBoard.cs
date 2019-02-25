@@ -216,11 +216,17 @@ namespace KC.WPF_Kanban
 
         #region Board Model
 
+        /// <summary>
+        /// Writes all relevant data to a JSON string
+        /// </summary>
         public string SaveModel()
         {
             return JsonConvert.SerializeObject(ToJson(), Formatting.Indented);
         }
 
+        /// <summary>
+        /// Brings the current board into a serializable model
+        /// </summary>
         internal JsonBoard ToJson()
         {
             JsonBoard boardModel = new JsonBoard()
@@ -240,6 +246,9 @@ namespace KC.WPF_Kanban
             return boardModel;
         }
 
+        /// <summary>
+        /// Loads a JSON string model
+        /// </summary>
         public void LoadJsonModel(string model)
         {
             JsonBoard boardModel = JsonConvert.DeserializeObject<JsonBoard>(model);

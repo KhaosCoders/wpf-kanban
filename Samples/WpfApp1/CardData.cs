@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Media;
+using KC.WPF_Kanban;
 
 namespace WpfApp1
 {
@@ -32,8 +34,8 @@ namespace WpfApp1
             }
         }
 
-
         public int TileRgb => KC.WPF_Kanban.Converter.BrushConverter.ToInteger(TileColor);
 
+        public List<KanbanBlocker> Blocker { get; set; }
     }
 }

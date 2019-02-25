@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -144,7 +145,7 @@ namespace KC.WPF_Kanban
                 new FrameworkPropertyMetadata(-1));
 
         /// <summary>
-        ///Gets or sets the <see cref="Brush"/> of a colored tile on the card
+        /// Gets or sets the <see cref="Brush"/> of a colored tile on the card
         /// </summary>
         public Brush TileBrush
         {
@@ -154,6 +155,41 @@ namespace KC.WPF_Kanban
         public static readonly DependencyProperty TileBrushProperty =
             DependencyProperty.Register("TileBrush", typeof(Brush), typeof(KanbanCard),
                 new FrameworkPropertyMetadata(Brushes.Transparent));
+
+        /// <summary>
+        /// Gets or sets a collection of <see cref="KanbanBlocker"/>
+        /// </summary>
+        public IList<KanbanBlocker> Blockers
+        {
+            get { return (IList<KanbanBlocker>)GetValue(BlockersProperty); }
+            set { SetValue(BlockersProperty, value); }
+        }
+        public static readonly DependencyProperty BlockersProperty =
+            DependencyProperty.Register("Blockers", typeof(IList<KanbanBlocker>), typeof(KanbanCard),
+                new FrameworkPropertyMetadata(new ReadOnlyCollection<KanbanBlocker>(new List<KanbanBlocker>()), new PropertyChangedCallback(OnBlockersChanged)));
+
+        private static void OnBlockersChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is KanbanCard card)
+            {
+                // update HasBlockers
+                card.CoerceValue(HasBlockersProperty);
+            }
+        }
+
+        /// <summary>
+        /// Gets whether the card is blocked by any <see cref="KanbanBlocker"/>
+        /// </summary>
+        public bool HasBlockers
+        {
+            get { return (bool)GetValue(HasBlockersProperty); }
+        }
+        public static readonly DependencyProperty HasBlockersProperty =
+            DependencyProperty.Register("HasBlockers", typeof(bool), typeof(KanbanCard),
+                new FrameworkPropertyMetadata(false, null, new CoerceValueCallback(CoerceHasBlockers)));
+        private static object CoerceHasBlockers(DependencyObject d, object baseValue) => ((d as KanbanCard)?.Blockers?.Count ?? 0) > 0;
+
+
 
         #endregion
 

@@ -337,11 +337,14 @@ namespace KC.WPF_Kanban
             }
         }
 
-
         #endregion
 
         #region Json Model
 
+        /// <summary>
+        /// Saves all relevant data as JSON string
+        /// </summary>
+        /// <returns></returns>
         internal JsonColumn ToJson()
         {
             JsonColumn model = new JsonColumn()
@@ -360,6 +363,9 @@ namespace KC.WPF_Kanban
             return model;
         }
 
+        /// <summary>
+        /// Loads a JSON string model and creates a new <see cref="KanbanColumn"/> from it
+        /// </summary>
         internal static KanbanColumn FromModel(JsonColumn model)
         {
             KanbanColumn column = new KanbanColumn()
