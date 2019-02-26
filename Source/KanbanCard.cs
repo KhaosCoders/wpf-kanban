@@ -109,6 +109,18 @@ namespace KC.WPF_Kanban
                 new FrameworkPropertyMetadata(new SolidColorBrush(Color.FromRgb(255, 224, 204))));
 
         /// <summary>
+        /// Gets or sets a foreground brush for the title bar
+        /// </summary>
+        public Brush TitleForeground
+        {
+            get { return (Brush)GetValue(TitleForegroundProperty); }
+            set { SetValue(TitleForegroundProperty, value); }
+        }
+        public static readonly DependencyProperty TitleForegroundProperty =
+            DependencyProperty.Register("TitleForeground", typeof(Brush), typeof(KanbanCard),
+                new FrameworkPropertyMetadata(Brushes.Black));
+
+        /// <summary>
         /// Gets or sets a descriptive texts
         /// </summary>
         public string DescriptionText
@@ -157,6 +169,30 @@ namespace KC.WPF_Kanban
                 new FrameworkPropertyMetadata(Brushes.Transparent));
 
         /// <summary>
+        /// Gets or sets a text displayed inside the colored tile
+        /// </summary>
+        public string TileText
+        {
+            get { return (string)GetValue(TileTextProperty); }
+            set { SetValue(TileTextProperty, value); }
+        }
+        public static readonly DependencyProperty TileTextProperty =
+            DependencyProperty.Register("TileText", typeof(string), typeof(KanbanCard),
+                new FrameworkPropertyMetadata(string.Empty));
+
+        /// <summary>
+        /// Gets or sets a <see cref="Brush"/> used to display text inside the colored tile
+        /// </summary>
+        public Brush TileForeground
+        {
+            get { return (Brush)GetValue(TileForegroundProperty); }
+            set { SetValue(TileForegroundProperty, value); }
+        }
+        public static readonly DependencyProperty TileForegroundProperty =
+            DependencyProperty.Register("TileForeground", typeof(Brush), typeof(KanbanCard),
+                new FrameworkPropertyMetadata(Brushes.Black));
+
+        /// <summary>
         /// Gets or sets a collection of <see cref="KanbanBlocker"/>
         /// </summary>
         public IList<KanbanBlocker> Blockers
@@ -189,7 +225,17 @@ namespace KC.WPF_Kanban
                 new FrameworkPropertyMetadata(false, null, new CoerceValueCallback(CoerceHasBlockers)));
         private static object CoerceHasBlockers(DependencyObject d, object baseValue) => ((d as KanbanCard)?.Blockers?.Count ?? 0) > 0;
 
-
+        /// <summary>
+        /// Gets or sets a size string. Like T-Shirt sizes: S, M, L, XL. This may be mapped to story points.
+        /// </summary>
+        public string CardSize
+        {
+            get { return (string)GetValue(CardSizeProperty); }
+            set { SetValue(CardSizeProperty, value); }
+        }
+        public static readonly DependencyProperty CardSizeProperty =
+            DependencyProperty.Register("CardSize", typeof(string), typeof(KanbanCard),
+                new FrameworkPropertyMetadata(string.Empty));
 
         #endregion
 

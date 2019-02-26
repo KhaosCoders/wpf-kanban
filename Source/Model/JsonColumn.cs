@@ -10,7 +10,7 @@ namespace KC.WPF_Kanban.Model
     {
         public string Caption { get; set; }
 
-        public int CardLimit { get; set; }
+        public int CardLimit { get; set; } = -1;
 
         public int ColumnSpan { get; set; }
 

@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
+using KC.WPF_Kanban.Utils;
 
 namespace KC.WPF_Kanban.Converter
 {
@@ -28,6 +25,21 @@ namespace KC.WPF_Kanban.Converter
                         return Brushes.Transparent;
                     }
                     return new SolidColorBrush(ToColor(i));
+                case string s:
+                    int nColor=0;
+                    if (s.StartsWith("#"))
+                    {
+                        return BrushSerianization.DeserializeBrush(s);
+                    }
+                    else if (int.TryParse(s, out nColor))
+                    {
+                        if (nColor == 0)
+                        {
+                            return Brushes.Transparent;
+                        }
+                        return new SolidColorBrush(ToColor(nColor));
+                    }
+                    break;
             }
             return value;
         }

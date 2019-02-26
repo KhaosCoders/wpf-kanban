@@ -128,7 +128,8 @@ namespace KC.WPF_Kanban
             Caption = this.Caption,
             Color = BrushSerianization.SerializeBrush(this.Background),
             IsCollapsed = this.IsCollapsed,
-            LaneValue = this.LaneValue
+            LaneValue = this.LaneValue,
+            Foreground = BrushSerianization.SerializeBrush(this.Foreground)
         };
 
         internal static KanbanSwimlane FromModel(JsonSwimlane model)
@@ -142,6 +143,10 @@ namespace KC.WPF_Kanban
             if (!string.IsNullOrWhiteSpace(model.Color))
             {
                 lane.Background = BrushSerianization.DeserializeBrush(model.Color);
+            }
+            if (!string.IsNullOrWhiteSpace(model.Foreground))
+            {
+                lane.Foreground = BrushSerianization.DeserializeBrush(model.Foreground);
             }
             return lane;
         }

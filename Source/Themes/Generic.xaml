@@ -25,14 +25,15 @@
     <SolidColorBrush x:Key="kanbanBoardBackground" Color="#C4C4C4" />
     <SolidColorBrush x:Key="kanbanBoardTitleBackground" Color="#E8E8E8" />
     <SolidColorBrush x:Key="kanbanTitleForeground" Color="#505050" />
-    <SolidColorBrush x:Key="kanbanColumnHeaderBackground" Color="#E8E8E8" />
+    <SolidColorBrush x:Key="kanbanColumnHeaderBackground" Color="#FAFAFA" />
     <SolidColorBrush x:Key="kanbanColumnBackground" Color="#00F7F7F7" />
-    <SolidColorBrush x:Key="kanbanPillBackground" Color="#CFCFCF" />
+    <SolidColorBrush x:Key="kanbanPillBackground" Color="#E8E8E8" />
     <SolidColorBrush x:Key="kanbanPillForeground" Color="#373737" />
-    <SolidColorBrush x:Key="kanbanPillViolatedForeground" Color="#FC3030" />
+    <SolidColorBrush x:Key="kanbanPillViolatedForeground" Color="#E32B2B" />
     <SolidColorBrush x:Key="kanbanColumnViolatedBackground" Color="#FC5858" />
-    <SolidColorBrush x:Key="kanbanCellBackground" Color="#FDFDFD" />
-    <SolidColorBrush x:Key="kanbanCardBackground" Color="#FFFDC1" />
+    <SolidColorBrush x:Key="kanbanColumnViolatedForeground" Color="#FDFDFD" />
+    <SolidColorBrush x:Key="kanbanCellBackground" Color="#F0F4FB" />
+    <SolidColorBrush x:Key="kanbanCardBackground" Color="#FFFFFF" />
     <SolidColorBrush x:Key="kanbanIconColor" Color="#BFBFBF" />
     <SolidColorBrush x:Key="kanbanCardFooterBackground" Color="#CFCFCF" />
     <SolidColorBrush x:Key="kanbanCardBlockedBackground" Color="#FC3030" />
@@ -196,7 +197,8 @@
                                           IsChecked="{Binding IsCollapsed, RelativeSource={RelativeSource Mode=TemplatedParent}}"
                                           Style="{StaticResource styColumnCollapseButton}"
                                           Visibility="{Binding IsSubColumn, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource convInvertedBoolToVisibility}}" />
-                            <TextBlock Grid.Column="1"
+                            <TextBlock Name="caption"
+                                       Grid.Column="1"
                                        Margin="6"
                                        Style="{StaticResource styKanbanColumnHeaderText}"
                                        Text="{TemplateBinding Caption,
@@ -207,6 +209,7 @@
                     <ControlTemplate.Triggers>
                         <DataTrigger Binding="{Binding IsCardLimitViolated, RelativeSource={RelativeSource Mode=Self}}" Value="True">
                             <Setter TargetName="border" Property="Background" Value="{StaticResource kanbanColumnViolatedBackground}" />
+                            <Setter TargetName="caption" Property="Foreground" Value="{StaticResource kanbanColumnViolatedForeground}" />
                         </DataTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -280,7 +283,7 @@
     <!--#region KanbanCardLimitPill-->
 
     <Style x:Key="styKanbanPillSmallText" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="10" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="VerticalAlignment" Value="Bottom" />
         <Setter Property="HorizontalAlignment" Value="Right" />
     </Style>
@@ -382,7 +385,10 @@
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <Border Grid.Row="0" Background="{TemplateBinding TitleBackground}">
+                            <Border Grid.Row="0"
+                                    Padding="4,0,4,0"
+                                    Background="{TemplateBinding TitleBackground}"
+                                    TextBlock.Foreground="{TemplateBinding TitleForeground}">
                                 <Grid>
                                     <TextBlock HorizontalAlignment="Left" Style="{StaticResource styCardTitle}" Text="{TemplateBinding LeftTitle}" />
                                     <TextBlock HorizontalAlignment="Right" Style="{StaticResource styCardTitle}" Text="{TemplateBinding RightTitle}" />
@@ -401,30 +407,48 @@
                                                           VerticalAlignment="Bottom"
                                                           Blockers="{TemplateBinding Blockers}" />
 
-                            <Border Grid.Row="2" Margin="0,1,0,1" Background="{StaticResource kanbanCardFooterBackground}">
+                            <Border Grid.Row="2"
+                                    Background="{StaticResource kanbanCardBackground}"
+                                    BorderBrush="{StaticResource kanbanCardFooterBackground}"
+                                    BorderThickness="0,1,0,0">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <local:ElapsedTime Grid.Column="3"
-                                                       MinWidth="25"
-                                                       Margin="2"
-                                                       Background="White"
-                                                       Time="{TemplateBinding CreationTime}" />
 
-                                    <Border Grid.Column="2"
-                                            MinWidth="25"
+                                    <TextBlock Grid.Column="1"
+                                               Margin="2,0,0,0"
+                                               VerticalAlignment="Center"
+                                               Text="{TemplateBinding CardSize}" />
+
+
+                                    <Border Grid.Column="3"
+                                            MinWidth="30"
                                             Margin="2"
                                             Padding="4,0,4,0"
-                                            Background="White"
                                             Visibility="{TemplateBinding WorkedMinutes,
                                                                          Converter={StaticResource convNegativeInvisible}}">
                                         <TextBlock Text="{TemplateBinding WorkedMinutes, Converter={StaticResource convMinutesToDuration}}" />
                                     </Border>
-                                    <Border Grid.Column="0" Width="20" Background="{TemplateBinding TileBrush}" />
+
+                                    <local:ElapsedTime Grid.Column="4"
+                                                       MinWidth="30"
+                                                       Margin="2"
+                                                       BorderBrush="{StaticResource kanbanCardFooterBackground}"
+                                                       BorderThickness="1,0,0,0"
+                                                       Time="{TemplateBinding CreationTime}" />
+
+                                    <Border Grid.Column="0" Width="20" Background="{TemplateBinding TileBrush}">
+                                        <TextBlock HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{TemplateBinding TileForeground}"
+                                                   Text="{TemplateBinding TileText}" />
+                                    </Border>
+
                                 </Grid>
                             </Border>
 

@@ -402,7 +402,7 @@ namespace KC.WPF_Kanban
                     currentRow++;
 
                     // place cells
-                    SetCellsPosition(lane, column, currentRow, currentColumn);
+                    SetCellsPosition(lane, column, currentRow, currentColumn, column.IsCollapsed);
                     if (!lane.IsCollapsed)
                     {
                         currentRow++;
@@ -416,7 +416,7 @@ namespace KC.WPF_Kanban
             return base.MeasureOverride(constraint);
         }
 
-        private void SetCellsPosition(KanbanSwimlane lane, KanbanColumn column, int currentRow, int currentColumn)
+        private void SetCellsPosition(KanbanSwimlane lane, KanbanColumn column, int currentRow, int currentColumn, bool isParentCollapsed)
         {
             KanbanBoardCell cell = Cells.FirstOrDefault(c => c.Column == column && c.Swimlane == lane);
             if (column.Columns.Count > 0)
@@ -431,7 +431,7 @@ namespace KC.WPF_Kanban
                 int currentSubColumn = currentColumn;
                 foreach(KanbanColumn subcolumn in column.Columns)
                 {
-                    SetCellsPosition(lane, subcolumn, currentRow, currentSubColumn);
+                    SetCellsPosition(lane, subcolumn, currentRow, currentSubColumn, subcolumn.IsCollapsed || isParentCollapsed);
                     currentSubColumn += subcolumn.IsCollapsed ? 1 : subcolumn.ColumnSpan;
                 }
             }
@@ -440,7 +440,7 @@ namespace KC.WPF_Kanban
                 // Column with cards
                 if (cell != null)
                 {
-                    if (column.IsCollapsed || lane.IsCollapsed)
+                    if (column.IsCollapsed || lane.IsCollapsed || isParentCollapsed)
                     {
                         cell.SetValue(VisibilityProperty, Visibility.Collapsed );
                     }
@@ -474,10 +474,7 @@ namespace KC.WPF_Kanban
                 // size collapsed columns only to their MinWidth
                 ColumnDefinitions[currentColumn].Width = new GridLength(column.MinWidth, GridUnitType.Pixel);
                 // Hide all sub-columns
-                foreach (KanbanColumn subcolumn in column.Columns)
-                {
-                    subcolumn.Visibility = Visibility.Collapsed;
-                }
+                CollapseSubColumns(column);
             }
             else
             {
@@ -507,6 +504,15 @@ namespace KC.WPF_Kanban
             }
 
             currentColumn += columnSpan;
+        }
+
+        private void CollapseSubColumns(KanbanColumn column)
+        {
+            foreach (KanbanColumn subcolumn in column.Columns)
+            {
+                subcolumn.Visibility = Visibility.Collapsed;
+                CollapseSubColumns(subcolumn);
+            }
         }
 
         private void StarSizeColumn(int index)

@@ -23,13 +23,14 @@
                             SwimlanePath="[Lane]">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <kanban:KanbanCard Background="Azure"
-                                       Blockers="{Binding Blocker}"
+                    <kanban:KanbanCard Blockers="{Binding Blocker}"
+                                       CardSize="{Binding Size}"
                                        CreationTime="{Binding CreationTime}"
                                        DescriptionText="{Binding Description}"
                                        LeftTitle="{Binding Number}"
                                        RightTitle="{Binding Assignee}"
                                        TileBrush="{Binding TileRgb, Converter={StaticResource convBrush}}"
+                                       TileText="{Binding TileText}"
                                        WorkedMinutes="{Binding Duration}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
