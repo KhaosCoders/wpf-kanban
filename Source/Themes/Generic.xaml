@@ -46,7 +46,7 @@
     <converter:TextUppercaseConverter x:Key="convUppercase" />
     <converter:ColorToBrushConverter x:Key="convColorToBrush" TrasparencyReplacement="{StaticResource kanbanCardBackground}" />
     <converter:BooleanToVisibilityConverter x:Key="convInvertedBoolToVisibility" Invert="True" />
-    <converter:MinutesToShortDurationConverter x:Key="convMinutesToDuration" />
+    <converter:MinutesToHourDurationConverter x:Key="convMinutesToHours" />
     <converter:ConditionalVisibilityConverter x:Key="convNegativeInvisible" Target="0" />
     <converter:ThicknessToDoubleConverter x:Key="convThickness" />
     <converter:MultiplyConveter x:Key="convMultiply" />
@@ -432,7 +432,7 @@
                                             Padding="4,0,4,0"
                                             Visibility="{TemplateBinding WorkedMinutes,
                                                                          Converter={StaticResource convNegativeInvisible}}">
-                                        <TextBlock Text="{TemplateBinding WorkedMinutes, Converter={StaticResource convMinutesToDuration}}" />
+                                        <TextBlock Text="{TemplateBinding WorkedMinutes, Converter={StaticResource convMinutesToHours}}" />
                                     </Border>
 
                                     <local:ElapsedTime Grid.Column="4"

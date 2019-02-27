@@ -9,8 +9,10 @@ using KC.WPF_Kanban.Utils;
 
 namespace KC.WPF_Kanban.Converter
 {
-    public class MinutesToShortDurationConverter : IValueConverter
+    public class MinutesToHourDurationConverter : IValueConverter
     {
+        private const string HoursSuffix = "h";
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             int minutes = 0;
@@ -18,7 +20,13 @@ namespace KC.WPF_Kanban.Converter
             {
                 minutes = i;
             }
-            return TimeSpan.FromMinutes(minutes).AsShortStr(true);
+            TimeSpan time = TimeSpan.FromMinutes(minutes);
+
+            if (time.TotalHours < 10)
+            {
+                return string.Format("{0:0.0}{1}", time.TotalHours, HoursSuffix);
+            }
+            return string.Format("{0:#0}{1}", time.TotalHours, HoursSuffix);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();

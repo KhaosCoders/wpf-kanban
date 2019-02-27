@@ -25,7 +25,7 @@ namespace KC.WPF_Kanban.Utils
             {
                 if (time.TotalDays < 10)
                 {
-                    return string.Format("{0:#.0}{1}", time.TotalDays, DaysSuffix);
+                    return string.Format("{0:0.0}{1}", time.TotalDays, DaysSuffix);
                 }
                 return string.Format("{0:#0}{1}", time.TotalDays, DaysSuffix);
             }
@@ -33,7 +33,7 @@ namespace KC.WPF_Kanban.Utils
             {
                 if (time.TotalHours < 10)
                 {
-                    return string.Format("{0:#.0}{1}", time.TotalHours, HoursSuffix);
+                    return string.Format("{0:0.0}{1}", time.TotalHours, HoursSuffix);
                 }
                 return string.Format("{0:#0}{1}", time.TotalHours, HoursSuffix);
             }
@@ -41,7 +41,7 @@ namespace KC.WPF_Kanban.Utils
             {
                 if (time.TotalMinutes < 10)
                 {
-                    return string.Format("{0:#.0}{1}", time.TotalMinutes, MinutesSuffix);
+                    return string.Format("{0:0.0}{1}", time.TotalMinutes, MinutesSuffix);
                 }
                 return string.Format("{0:#0}{1}", time.TotalMinutes, MinutesSuffix);
             }
