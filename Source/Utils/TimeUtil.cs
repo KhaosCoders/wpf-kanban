@@ -19,9 +19,9 @@ namespace KC.WPF_Kanban.Utils
         /// <summary>
         /// Returns a short string representation of the <see cref="TimeSpan"/>
         /// </summary>
-        public static string AsShortStr(this TimeSpan time)
+        public static string AsShortStr(this TimeSpan time, bool noDays = false)
         {
-            if (time.TotalDays >= 1)
+            if (time.TotalDays >= 1 && !noDays)
             {
                 if (time.TotalDays < 10)
                 {

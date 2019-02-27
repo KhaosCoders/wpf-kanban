@@ -18,8 +18,9 @@ namespace KC.WPF_Kanban.Converter
             {
                 minutes = i;
             }
-            return TimeSpan.FromMinutes(minutes).AsShortStr();
+            return TimeSpan.FromMinutes(minutes).AsShortStr(true);
         }
+
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 }
