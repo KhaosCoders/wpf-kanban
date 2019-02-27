@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace KC.WPF_Kanban
@@ -25,7 +20,8 @@ namespace KC.WPF_Kanban
         /// <summary>
         /// Gets or sets the limit of cards
         /// </summary>
-        public int CardLimit {
+        public int CardLimit
+        {
             get => (int)GetValue(CardLimitProperty);
             set => SetValue(CardLimitProperty, value);
         }
@@ -39,16 +35,19 @@ namespace KC.WPF_Kanban
             obj.SetValue(CardLimitProperty, value);
         }
         public static readonly DependencyProperty CardLimitProperty =
-            DependencyProperty.RegisterAttached("CardLimit", typeof(int), typeof(KanbanCardLimitPill),
+            DependencyProperty.RegisterAttached(nameof(CardLimit), typeof(int), typeof(KanbanCardLimitPill),
                 new FrameworkPropertyMetadata(-1, FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnCardLimitChanged)));
 
-        private static void OnCardLimitChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+        private static void OnCardLimitChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
             d.CoerceValue(IsCardLimitViolatedProperty);
+        }
 
         /// <summary>
         /// Gets or sets the count of cards
         /// </summary>
-        public int CardCount {
+        public int CardCount
+        {
             get => (int)GetValue(CardCountProperty);
             set => SetValue(CardCountProperty, value);
         }
@@ -61,16 +60,19 @@ namespace KC.WPF_Kanban
             obj.SetValue(CardCountProperty, value);
         }
         public static readonly DependencyProperty CardCountProperty =
-            DependencyProperty.RegisterAttached("CardCount", typeof(int), typeof(KanbanCardLimitPill),
+            DependencyProperty.RegisterAttached(nameof(CardCount), typeof(int), typeof(KanbanCardLimitPill),
                 new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnCardCountChanged)));
 
-        private static void OnCardCountChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+        private static void OnCardCountChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
             d.CoerceValue(IsCardLimitViolatedProperty);
+        }
 
         /// <summary>
         /// Gets or sets whether the limit is violated or not
         /// </summary>
-        public bool IsCardLimitViolated {
+        public bool IsCardLimitViolated
+        {
             get => (bool)GetValue(IsCardLimitViolatedProperty);
             private set => SetValue(IsCardLimitViolatedProperty, value);
         }
@@ -84,7 +86,7 @@ namespace KC.WPF_Kanban
             obj.SetValue(IsCardLimitViolatedProperty, value);
         }
         public static readonly DependencyProperty IsCardLimitViolatedProperty =
-            DependencyProperty.RegisterAttached("IsCardLimitViolated", typeof(bool), typeof(KanbanCardLimitPill),
+            DependencyProperty.RegisterAttached(nameof(IsCardLimitViolated), typeof(bool), typeof(KanbanCardLimitPill),
                 new FrameworkPropertyMetadata(null, new CoerceValueCallback(CoerceIsCardLimitViolated)));
 
         private static object CoerceIsCardLimitViolated(DependencyObject d, object baseValue)
@@ -98,11 +100,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public Orientation Orientation
         {
-            get { return (Orientation)GetValue(OrientationProperty); }
-            set { SetValue(OrientationProperty, value); }
+            get => (Orientation)GetValue(OrientationProperty);
+            set => SetValue(OrientationProperty, value);
         }
         public static readonly DependencyProperty OrientationProperty =
-            DependencyProperty.Register("Orientation", typeof(Orientation), typeof(KanbanCardLimitPill),
+            DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(KanbanCardLimitPill),
                 new FrameworkPropertyMetadata(Orientation.Horizontal, FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         #endregion

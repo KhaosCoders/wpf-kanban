@@ -125,4 +125,7 @@
     <None Include="WpfKanban.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="PostPackNugetDeploy" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
+	  <Exec Command="=&quot;%userprofile%\.nuget\nuget.exe push &quot;$(OutputPath)$(PackageId).$(PackageVersion).nupkg&quot; -Source &quot;$(NuGetSourceRelease)&quot; -Verbosity Detailed" />
+  </Target>
 </Project>

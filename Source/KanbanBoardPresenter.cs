@@ -21,7 +21,7 @@ namespace KC.WPF_Kanban
             switch (args.Action)
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
-                    this.Owner.ClearCards();
+                    Owner.ClearCards();
                     break;
 
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
@@ -41,12 +41,12 @@ namespace KC.WPF_Kanban
         /// </summary>
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (this.IsItemsHost)
+            if (IsItemsHost)
             {
                 // internal method EnsureGenerator() is called when accessing InternalChildren ;)
-                var children = this.InternalChildren;
+                var children = InternalChildren;
                 // Use generator to create all new cards
-                IItemContainerGenerator generator = this.ItemContainerGenerator;
+                IItemContainerGenerator generator = ItemContainerGenerator;
                 UIElement child = null;
 
                 // This will startup the generator and generate ALL cards
@@ -55,13 +55,12 @@ namespace KC.WPF_Kanban
                     var startPos = generator.GeneratorPositionFromIndex(0);
                     using (generator.StartAt(startPos, GeneratorDirection.Forward, true))
                     {
-                        bool newlyRealized;
-                        while ((child = generator.GenerateNext(out newlyRealized) as UIElement) != null)
+                        while ((child = generator.GenerateNext(out bool newlyRealized) as UIElement) != null)
                         {
                             generator.PrepareItemContainer(child);
                             if (newlyRealized)
                             {
-                                this.Owner.AddCard(child);
+                                Owner.AddCard(child);
                             }
                         }
                     }
@@ -76,7 +75,7 @@ namespace KC.WPF_Kanban
         /// <summary>
         /// Gets the owning <see cref="KanbanBoard"/> for this presenter
         /// </summary>
-        internal KanbanBoard Owner => this._owner ?? (this._owner = ItemsControl.GetItemsOwner(this) as KanbanBoard);
+        internal KanbanBoard Owner => _owner ?? (_owner = ItemsControl.GetItemsOwner(this) as KanbanBoard);
 
         private KanbanBoard _owner;
 

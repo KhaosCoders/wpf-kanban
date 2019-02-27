@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -26,11 +22,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public IList<KanbanBlocker> Blockers
         {
-            get { return (IList<KanbanBlocker>)GetValue(BlockersProperty); }
-            set { SetValue(BlockersProperty, value); }
+            get => (IList<KanbanBlocker>)GetValue(BlockersProperty);
+            set => SetValue(BlockersProperty, value);
         }
         public static readonly DependencyProperty BlockersProperty =
-            DependencyProperty.Register("Blockers", typeof(IList<KanbanBlocker>), typeof(KanbanBlockerPresenter),
+            DependencyProperty.Register(nameof(Blockers), typeof(IList<KanbanBlocker>), typeof(KanbanBlockerPresenter),
                 new FrameworkPropertyMetadata(new ReadOnlyCollection<KanbanBlocker>(new List<KanbanBlocker>())));
 
     }

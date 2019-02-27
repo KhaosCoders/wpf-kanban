@@ -26,8 +26,7 @@ namespace KC.WPF_Kanban.Converter
                 {
                     return TrasparencyReplacement;
                 }
-                SolidColorBrush brush;
-                if (brushes.TryGetValue(color, out brush))
+                if (brushes.TryGetValue(color, out SolidColorBrush brush))
                 {
                     return brush;
                 }
