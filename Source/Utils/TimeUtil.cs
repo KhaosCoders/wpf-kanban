@@ -19,9 +19,9 @@ namespace KC.WPF_Kanban.Utils
         /// <summary>
         /// Returns a short string representation of the <see cref="TimeSpan"/>
         /// </summary>
-        public static string AsShortStr(this TimeSpan time, bool noDays = false)
+        public static string AsShortStr(this TimeSpan time, TimeUnit units = TimeUnit.All)
         {
-            if (time.TotalDays >= 1 && !noDays)
+            if (units.IsSet(TimeUnit.Days) && (time.TotalDays >= 1 || (units == TimeUnit.Days)))
             {
                 if (time.TotalDays < 10)
                 {
@@ -29,7 +29,7 @@ namespace KC.WPF_Kanban.Utils
                 }
                 return string.Format("{0:#0}{1}", time.TotalDays, DaysSuffix);
             }
-            if (time.TotalHours >= 1)
+            if (units.IsSet(TimeUnit.Hours) && (time.TotalHours >= 1 || (!units.IsSet(TimeUnit.Minutes) && !units.IsSet(TimeUnit.Seconds))))
             {
                 if (time.TotalHours < 10)
                 {
@@ -37,7 +37,7 @@ namespace KC.WPF_Kanban.Utils
                 }
                 return string.Format("{0:#0}{1}", time.TotalHours, HoursSuffix);
             }
-            if (time.TotalMinutes >= 1)
+            if (units.IsSet(TimeUnit.Minutes) && (time.TotalMinutes >= 1 || !units.IsSet(TimeUnit.Seconds)))
             {
                 if (time.TotalMinutes < 10)
                 {
@@ -45,7 +45,23 @@ namespace KC.WPF_Kanban.Utils
                 }
                 return string.Format("{0:#0}{1}", time.TotalMinutes, MinutesSuffix);
             }
-            return string.Format("{0:#0}{1}", time.TotalSeconds, SecondsSuffix);
+            if (units.IsSet(TimeUnit.Seconds))
+            {
+                return string.Format("{0:#0}{1}", time.TotalSeconds, SecondsSuffix);
+            }
+            return string.Empty;
         }
+
+        public static bool IsSet(this TimeUnit units, TimeUnit unit) => (units & unit) == unit;
+    }
+
+    [Flags]
+    public enum TimeUnit
+    {
+        Days,
+        Hours,
+        Minutes,
+        Seconds,
+        All = Days | Hours | Minutes | Seconds
     }
 }

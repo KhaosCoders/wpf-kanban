@@ -31,6 +31,7 @@
                                        RightTitle="{Binding Assignee}"
                                        TileBrush="{Binding TileRgb, Converter={StaticResource convBrush}}"
                                        TileText="{Binding TileText}"
+                                       ElapsedTimeUnits="Hours"
                                        WorkedMinutes="{Binding Duration}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

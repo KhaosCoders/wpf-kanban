@@ -440,7 +440,8 @@
                                                        Margin="2"
                                                        BorderBrush="{StaticResource kanbanCardFooterBackground}"
                                                        BorderThickness="1,0,0,0"
-                                                       Time="{TemplateBinding CreationTime}" />
+                                                       Time="{TemplateBinding CreationTime}"
+                                                       TimeUnits="{TemplateBinding ElapsedTimeUnits}" />
 
                                     <Border Grid.Column="0" Width="20" Background="{TemplateBinding TileBrush}">
                                         <TextBlock HorizontalAlignment="Center"

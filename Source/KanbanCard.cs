@@ -237,6 +237,20 @@ namespace KC.WPF_Kanban
             DependencyProperty.Register("CardSize", typeof(string), typeof(KanbanCard),
                 new FrameworkPropertyMetadata(string.Empty));
 
+        /// <summary>
+        /// Gets or sets the time units used to display the elapsed time value
+        /// </summary>
+        public TimeUnit ElapsedTimeUnits
+        {
+            get { return (TimeUnit)GetValue(ElapsedTimeUnitsProperty); }
+            set { SetValue(ElapsedTimeUnitsProperty, value); }
+        }
+        public static readonly DependencyProperty ElapsedTimeUnitsProperty =
+            DependencyProperty.Register("ElapsedTimeUnits", typeof(TimeUnit), typeof(KanbanCard),
+                new FrameworkPropertyMetadata(TimeUnit.All));
+
+
+
         #endregion
 
     }

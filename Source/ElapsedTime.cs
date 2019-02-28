@@ -69,11 +69,30 @@ namespace KC.WPF_Kanban
                 return;
             }
             TimeSpan duration = DateTime.UtcNow - Time.ToUniversalTime();
-            ElapsedTimeStr = duration.AsShortStr();
+            ElapsedTimeStr = duration.AsShortStr(TimeUnits);
 
             SetTimerInterval(duration);
         }
 
+        /// <summary>
+        /// Gets or sets the time units used to display the elapsed time
+        /// </summary>
+        public TimeUnit TimeUnits
+        {
+            get => GetTimeUnits(this);
+            set => SetTimeUnits(this, value);
+        }
+        public static TimeUnit GetTimeUnits(DependencyObject obj)
+        {
+            return (TimeUnit)obj.GetValue(TimeUnitsProperty);
+        }
+        public static void SetTimeUnits(DependencyObject obj, TimeUnit value)
+        {
+            obj.SetValue(TimeUnitsProperty, value);
+        }
+        public static readonly DependencyProperty TimeUnitsProperty =
+            DependencyProperty.RegisterAttached(nameof(TimeUnits), typeof(TimeUnit), typeof(ElapsedTime),
+                new FrameworkPropertyMetadata(TimeUnit.All));
 
         private DispatcherTimer _timer;
 
@@ -89,35 +108,35 @@ namespace KC.WPF_Kanban
             }
 
             // Set the best interval for updating the control
-            if (duration.TotalSeconds <= 60)
+            if (duration.TotalSeconds <= 60 && TimeUnits.IsSet(TimeUnit.Seconds))
             {
                 if (_timer.Interval.TotalSeconds != 1)
                 {
                     _timer.Interval = TimeSpan.FromSeconds(1);
                 }
             }
-            else if (duration.TotalMinutes <= 10)
+            else if (duration.TotalMinutes <= 10 && TimeUnits.IsSet(TimeUnit.Minutes))
             {
                 if (_timer.Interval.TotalSeconds != 6)
                 {
                     _timer.Interval = TimeSpan.FromSeconds(6);
                 }
             }
-            else if (duration.TotalMinutes <= 60)
+            else if (duration.TotalMinutes <= 60 && TimeUnits.IsSet(TimeUnit.Minutes))
             {
                 if (_timer.Interval.TotalMinutes != 1)
                 {
                     _timer.Interval = TimeSpan.FromMinutes(1);
                 }
             }
-            else if (duration.TotalHours <= 10)
+            else if (duration.TotalHours <= 10 && TimeUnits.IsSet(TimeUnit.Hours))
             {
                 if (_timer.Interval.TotalMinutes != 6)
                 {
                     _timer.Interval = TimeSpan.FromMinutes(6);
                 }
             }
-            else if (duration.TotalHours <= 240)
+            else if (duration.TotalHours <= 240 && TimeUnits.IsSet(TimeUnit.Days))
             {
                 if (_timer.Interval.TotalHours != 1)
                 {
