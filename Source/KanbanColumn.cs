@@ -1,13 +1,12 @@
-﻿using KC.WPF_Kanban.Utils;
+﻿using KC.WPF_Kanban.Model;
+using KC.WPF_Kanban.Utils;
 using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Linq;
-using System.Windows.Data;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
-using KC.WPF_Kanban.Model;
 
 namespace KC.WPF_Kanban
 {
@@ -68,7 +67,7 @@ namespace KC.WPF_Kanban
             obj.SetValue(CaptionProperty, value);
         }
         public static readonly DependencyProperty CaptionProperty =
-            DependencyProperty.RegisterAttached("Caption", typeof(string), typeof(KanbanColumn),
+            DependencyProperty.RegisterAttached(nameof(Caption), typeof(string), typeof(KanbanColumn),
                 new FrameworkPropertyMetadata(DefaultColumnCaption));
 
         /// <summary>
@@ -88,7 +87,7 @@ namespace KC.WPF_Kanban
             obj.SetValue(IsCollapsedProperty, value);
         }
         public static readonly DependencyProperty IsCollapsedProperty =
-            DependencyProperty.RegisterAttached("IsCollapsed", typeof(bool), typeof(KanbanColumn),
+            DependencyProperty.RegisterAttached(nameof(IsCollapsed), typeof(bool), typeof(KanbanColumn),
                 new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         /// <summary>
@@ -96,11 +95,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public int ColumnSpan
         {
-            get { return (int)GetValue(ColumnSpanProperty); }
-            set { SetValue(ColumnSpanProperty, value); }
+            get => (int)GetValue(ColumnSpanProperty);
+            set => SetValue(ColumnSpanProperty, value);
         }
         public static readonly DependencyProperty ColumnSpanProperty =
-            DependencyProperty.Register("ColumnSpan", typeof(int), typeof(KanbanColumn),
+            DependencyProperty.Register(nameof(ColumnSpan), typeof(int), typeof(KanbanColumn),
                 new FrameworkPropertyMetadata(1, FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         /// <summary>
@@ -110,8 +109,8 @@ namespace KC.WPF_Kanban
         /// </summary>
         public int CardLimit
         {
-            get { return (int)GetValue(CardLimitProperty); }
-            set { SetValue(CardLimitProperty, value); }
+            get => (int)GetValue(CardLimitProperty);
+            set => SetValue(CardLimitProperty, value);
         }
         public static readonly DependencyProperty CardLimitProperty =
             KanbanCardLimitPill.CardLimitProperty.AddOwner(
@@ -122,8 +121,8 @@ namespace KC.WPF_Kanban
         /// </summary>
         public int CardCount
         {
-            get { return (int)GetValue(CardCountProperty); }
-            set { SetValue(CardCountProperty, value); }
+            get => (int)GetValue(CardCountProperty);
+            set => SetValue(CardCountProperty, value);
         }
         public static readonly DependencyProperty CardCountProperty =
             KanbanCardLimitPill.CardCountProperty.AddOwner(
@@ -154,22 +153,22 @@ namespace KC.WPF_Kanban
         /// </summary>
         public bool IsSubColumn
         {
-            get { return (bool)GetValue(IsSubColumnProperty); }
-            private set { SetValue(IsSubColumnProperty, value); }
+            get => (bool)GetValue(IsSubColumnProperty);
+            private set => SetValue(IsSubColumnProperty, value);
         }
         public static readonly DependencyProperty IsSubColumnProperty =
-            DependencyProperty.Register("IsSubColumn", typeof(bool), typeof(KanbanColumn), new FrameworkPropertyMetadata(false));
+            DependencyProperty.Register(nameof(IsSubColumn), typeof(bool), typeof(KanbanColumn), new FrameworkPropertyMetadata(false));
 
         /// <summary>
         /// Gets or sets a color brush used to draw a highlight color on the column header
         /// </summary>
         public Brush Color
         {
-            get { return (Brush)GetValue(ColorProperty); }
-            set { SetValue(ColorProperty, value); }
+            get => (Brush)GetValue(ColorProperty);
+            set => SetValue(ColorProperty, value);
         }
         public static readonly DependencyProperty ColorProperty =
-            DependencyProperty.Register("Color", typeof(Brush), typeof(KanbanColumn), new FrameworkPropertyMetadata(Brushes.Transparent));
+            DependencyProperty.Register(nameof(Color), typeof(Brush), typeof(KanbanColumn), new FrameworkPropertyMetadata(Brushes.Transparent));
 
         #endregion
 
@@ -184,7 +183,7 @@ namespace KC.WPF_Kanban
             remove { RemoveHandler(CardCountChangedEvent, value); }
         }
         public static readonly RoutedEvent CardCountChangedEvent = EventManager
-            .RegisterRoutedEvent("CardCountChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(KanbanColumn));
+            .RegisterRoutedEvent(nameof(CardCountChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(KanbanColumn));
 
         #endregion
 
@@ -218,7 +217,7 @@ namespace KC.WPF_Kanban
                 if (e.OldValue is KanbanColumnCollection oldCollection)
                 {
                     oldCollection.CollectionChanged -= column.Columns_CollectionChanged;
-                    foreach(KanbanColumn subcolumn in oldCollection)
+                    foreach (KanbanColumn subcolumn in oldCollection)
                     {
                         subcolumn.CardCountChanged -= column.SubColumn_CardCountChanged;
                         subcolumn.IsSubColumn = false;
@@ -241,7 +240,7 @@ namespace KC.WPF_Kanban
             // When the column collection changed, register the CardCountChangedEvent on the sub-columns
             switch (e?.Action)
             {
-                case NotifyCollectionChangedAction.Add when e.NewItems?.Count==1 && e.NewItems[0] is KanbanColumn column:
+                case NotifyCollectionChangedAction.Add when e.NewItems?.Count == 1 && e.NewItems[0] is KanbanColumn column:
                     column.CardCountChanged += SubColumn_CardCountChanged;
                     column.IsSubColumn = true;
                     break;
@@ -250,7 +249,7 @@ namespace KC.WPF_Kanban
                     column.IsSubColumn = false;
                     break;
                 case NotifyCollectionChangedAction.Reset when e.OldItems?.Count > 0:
-                    foreach(KanbanColumn column in e.OldItems)
+                    foreach (KanbanColumn column in e.OldItems)
                     {
                         column.CardCountChanged -= SubColumn_CardCountChanged;
                         column.IsSubColumn = false;
@@ -304,22 +303,34 @@ namespace KC.WPF_Kanban
         /// <summary>
         /// Returns the first <see cref="KanbanBoardCell"/> of this collumn, that is assigned to the given <see cref="KanbanSwimlane"/>, or null.
         /// </summary>
-        public KanbanBoardCell FindCellForSwimlane(KanbanSwimlane lane) => Cells.FirstOrDefault(c => c.Swimlane == lane);
+        public KanbanBoardCell FindCellForSwimlane(KanbanSwimlane lane)
+        {
+            return Cells.FirstOrDefault(c => c.Swimlane == lane);
+        }
 
         #endregion
 
         #region Count Cards
 
         // Sub-Columns changed => re-count cards
-        private void SubColumn_CardCountChanged(object sender, RoutedEventArgs e) => CardCount = SumCardsOfCells();
+        private void SubColumn_CardCountChanged(object sender, RoutedEventArgs e)
+        {
+            CardCount = SumCardsOfCells();
+        }
 
         // CardCount of cell changed => re-count cards
-        private void Cell_CardsChanged(object sender, RoutedEventArgs e) => CardCount = SumCardsOfCells();
+        private void Cell_CardsChanged(object sender, RoutedEventArgs e)
+        {
+            CardCount = SumCardsOfCells();
+        }
 
         /// <summary>
         /// Counts all cards assigned to the column and all sub-columns
         /// </summary>
-        private int SumCardsOfCells() => Cells.Sum(cell => cell.Cards.Count) + Columns.Sum(col => col.SumCardsOfCells());
+        private int SumCardsOfCells()
+        {
+            return Cells.Sum(cell => cell.Cards.Count) + Columns.Sum(col => col.SumCardsOfCells());
+        }
 
         #endregion
 
@@ -327,11 +338,11 @@ namespace KC.WPF_Kanban
 
         public void ClearCards()
         {
-            foreach(KanbanBoardCell cell in Cells)
+            foreach (KanbanBoardCell cell in Cells)
             {
                 cell.ClearCards();
             }
-            foreach(KanbanColumn column in Columns)
+            foreach (KanbanColumn column in Columns)
             {
                 column.ClearCards();
             }
@@ -349,12 +360,12 @@ namespace KC.WPF_Kanban
         {
             JsonColumn model = new JsonColumn()
             {
-                Caption = this.Caption,
-                CardLimit = this.CardLimit,
-                Color = BrushSerianization.SerializeBrush(this.Color),
-                ColumnSpan = this.ColumnSpan,
-                ColumnValue = this.ColumnValue,
-                IsCollapsed = this.IsCollapsed
+                Caption = Caption,
+                CardLimit = CardLimit,
+                Color = BrushSerianization.SerializeBrush(Color),
+                ColumnSpan = ColumnSpan,
+                ColumnValue = ColumnValue,
+                IsCollapsed = IsCollapsed
             };
             foreach (var column in Columns)
             {

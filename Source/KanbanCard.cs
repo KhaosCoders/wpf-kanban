@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using KC.WPF_Kanban.Utils;
 
 namespace KC.WPF_Kanban
 {
@@ -49,7 +44,7 @@ namespace KC.WPF_Kanban
             obj.SetValue(CardWidthProperty, value);
         }
         public static readonly DependencyProperty CardWidthProperty =
-            DependencyProperty.RegisterAttached("CardWidth", typeof(double), typeof(KanbanCard),
+            DependencyProperty.RegisterAttached(nameof(CardWidth), typeof(double), typeof(KanbanCard),
                 new FrameworkPropertyMetadata(DefaultCardWidth, FrameworkPropertyMetadataOptions.Inherits | FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         /// <summary>
@@ -69,7 +64,7 @@ namespace KC.WPF_Kanban
             obj.SetValue(CardHeightProperty, value);
         }
         public static readonly DependencyProperty CardHeightProperty =
-            DependencyProperty.RegisterAttached("CardHeight", typeof(double), typeof(KanbanCard),
+            DependencyProperty.RegisterAttached(nameof(CardHeight), typeof(double), typeof(KanbanCard),
                 new FrameworkPropertyMetadata(DefaultCardHeight, FrameworkPropertyMetadataOptions.Inherits | FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         /// <summary>
@@ -77,11 +72,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public string LeftTitle
         {
-            get { return (string)GetValue(LeftTitleProperty); }
-            set { SetValue(LeftTitleProperty, value); }
+            get => (string)GetValue(LeftTitleProperty);
+            set => SetValue(LeftTitleProperty, value);
         }
         public static readonly DependencyProperty LeftTitleProperty =
-            DependencyProperty.Register("LeftTitle", typeof(string), typeof(KanbanCard),
+            DependencyProperty.Register(nameof(LeftTitle), typeof(string), typeof(KanbanCard),
                 new FrameworkPropertyMetadata(null));
 
         /// <summary>
@@ -89,11 +84,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public string RightTitle
         {
-            get { return (string)GetValue(RightTitleProperty); }
-            set { SetValue(RightTitleProperty, value); }
+            get => (string)GetValue(RightTitleProperty);
+            set => SetValue(RightTitleProperty, value);
         }
         public static readonly DependencyProperty RightTitleProperty =
-            DependencyProperty.Register("RightTitle", typeof(string), typeof(KanbanCard),
+            DependencyProperty.Register(nameof(RightTitle), typeof(string), typeof(KanbanCard),
                 new FrameworkPropertyMetadata(null));
 
         /// <summary>
@@ -101,11 +96,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public Brush TitleBackground
         {
-            get { return (Brush)GetValue(TitleBackgroundProperty); }
-            set { SetValue(TitleBackgroundProperty, value); }
+            get => (Brush)GetValue(TitleBackgroundProperty);
+            set => SetValue(TitleBackgroundProperty, value);
         }
         public static readonly DependencyProperty TitleBackgroundProperty =
-            DependencyProperty.Register("TitleBackground", typeof(Brush), typeof(KanbanCard),
+            DependencyProperty.Register(nameof(TitleBackground), typeof(Brush), typeof(KanbanCard),
                 new FrameworkPropertyMetadata(new SolidColorBrush(Color.FromRgb(255, 224, 204))));
 
         /// <summary>
@@ -113,11 +108,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public Brush TitleForeground
         {
-            get { return (Brush)GetValue(TitleForegroundProperty); }
-            set { SetValue(TitleForegroundProperty, value); }
+            get => (Brush)GetValue(TitleForegroundProperty);
+            set => SetValue(TitleForegroundProperty, value);
         }
         public static readonly DependencyProperty TitleForegroundProperty =
-            DependencyProperty.Register("TitleForeground", typeof(Brush), typeof(KanbanCard),
+            DependencyProperty.Register(nameof(TitleForeground), typeof(Brush), typeof(KanbanCard),
                 new FrameworkPropertyMetadata(Brushes.Black));
 
         /// <summary>
@@ -125,11 +120,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public string DescriptionText
         {
-            get { return (string)GetValue(DescriptionTextProperty); }
-            set { SetValue(DescriptionTextProperty, value); }
+            get => (string)GetValue(DescriptionTextProperty);
+            set => SetValue(DescriptionTextProperty, value);
         }
         public static readonly DependencyProperty DescriptionTextProperty =
-            DependencyProperty.Register("DescriptionText", typeof(string), typeof(KanbanCard),
+            DependencyProperty.Register(nameof(DescriptionText), typeof(string), typeof(KanbanCard),
                 new FrameworkPropertyMetadata(null));
 
         /// <summary>
@@ -137,11 +132,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public DateTime CreationTime
         {
-            get { return (DateTime)GetValue(CreationTimeProperty); }
-            set { SetValue(CreationTimeProperty, value); }
+            get => (DateTime)GetValue(CreationTimeProperty);
+            set => SetValue(CreationTimeProperty, value);
         }
         public static readonly DependencyProperty CreationTimeProperty =
-            DependencyProperty.Register("CreationTime", typeof(DateTime), typeof(KanbanCard),
+            DependencyProperty.Register(nameof(CreationTime), typeof(DateTime), typeof(KanbanCard),
                 new FrameworkPropertyMetadata(DateTime.MinValue));
 
         /// <summary>
@@ -149,11 +144,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public int WorkedMinutes
         {
-            get { return (int)GetValue(WorkedMinutesProperty); }
-            set { SetValue(WorkedMinutesProperty, value); }
+            get => (int)GetValue(WorkedMinutesProperty);
+            set => SetValue(WorkedMinutesProperty, value);
         }
         public static readonly DependencyProperty WorkedMinutesProperty =
-            DependencyProperty.Register("WorkedMinutes", typeof(int), typeof(KanbanCard),
+            DependencyProperty.Register(nameof(WorkedMinutes), typeof(int), typeof(KanbanCard),
                 new FrameworkPropertyMetadata(-1));
 
         /// <summary>
@@ -161,11 +156,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public Brush TileBrush
         {
-            get { return (Brush)GetValue(TileBrushProperty); }
-            set { SetValue(TileBrushProperty, value); }
+            get => (Brush)GetValue(TileBrushProperty);
+            set => SetValue(TileBrushProperty, value);
         }
         public static readonly DependencyProperty TileBrushProperty =
-            DependencyProperty.Register("TileBrush", typeof(Brush), typeof(KanbanCard),
+            DependencyProperty.Register(nameof(TileBrush), typeof(Brush), typeof(KanbanCard),
                 new FrameworkPropertyMetadata(Brushes.Transparent));
 
         /// <summary>
@@ -173,11 +168,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public string TileText
         {
-            get { return (string)GetValue(TileTextProperty); }
-            set { SetValue(TileTextProperty, value); }
+            get => (string)GetValue(TileTextProperty);
+            set => SetValue(TileTextProperty, value);
         }
         public static readonly DependencyProperty TileTextProperty =
-            DependencyProperty.Register("TileText", typeof(string), typeof(KanbanCard),
+            DependencyProperty.Register(nameof(TileText), typeof(string), typeof(KanbanCard),
                 new FrameworkPropertyMetadata(string.Empty));
 
         /// <summary>
@@ -185,11 +180,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public Brush TileForeground
         {
-            get { return (Brush)GetValue(TileForegroundProperty); }
-            set { SetValue(TileForegroundProperty, value); }
+            get => (Brush)GetValue(TileForegroundProperty);
+            set => SetValue(TileForegroundProperty, value);
         }
         public static readonly DependencyProperty TileForegroundProperty =
-            DependencyProperty.Register("TileForeground", typeof(Brush), typeof(KanbanCard),
+            DependencyProperty.Register(nameof(TileForeground), typeof(Brush), typeof(KanbanCard),
                 new FrameworkPropertyMetadata(Brushes.Black));
 
         /// <summary>
@@ -197,11 +192,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public IList<KanbanBlocker> Blockers
         {
-            get { return (IList<KanbanBlocker>)GetValue(BlockersProperty); }
-            set { SetValue(BlockersProperty, value); }
+            get => (IList<KanbanBlocker>)GetValue(BlockersProperty);
+            set => SetValue(BlockersProperty, value);
         }
         public static readonly DependencyProperty BlockersProperty =
-            DependencyProperty.Register("Blockers", typeof(IList<KanbanBlocker>), typeof(KanbanCard),
+            DependencyProperty.Register(nameof(Blockers), typeof(IList<KanbanBlocker>), typeof(KanbanCard),
                 new FrameworkPropertyMetadata(new ReadOnlyCollection<KanbanBlocker>(new List<KanbanBlocker>()), new PropertyChangedCallback(OnBlockersChanged)));
 
         private static void OnBlockersChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -216,25 +211,26 @@ namespace KC.WPF_Kanban
         /// <summary>
         /// Gets whether the card is blocked by any <see cref="KanbanBlocker"/>
         /// </summary>
-        public bool HasBlockers
-        {
-            get { return (bool)GetValue(HasBlockersProperty); }
-        }
+        public bool HasBlockers => (bool)GetValue(HasBlockersProperty);
+
         public static readonly DependencyProperty HasBlockersProperty =
-            DependencyProperty.Register("HasBlockers", typeof(bool), typeof(KanbanCard),
+            DependencyProperty.Register(nameof(HasBlockers), typeof(bool), typeof(KanbanCard),
                 new FrameworkPropertyMetadata(false, null, new CoerceValueCallback(CoerceHasBlockers)));
-        private static object CoerceHasBlockers(DependencyObject d, object baseValue) => ((d as KanbanCard)?.Blockers?.Count ?? 0) > 0;
+        private static object CoerceHasBlockers(DependencyObject d, object baseValue)
+        {
+            return ((d as KanbanCard)?.Blockers?.Count ?? 0) > 0;
+        }
 
         /// <summary>
         /// Gets or sets a size string. Like T-Shirt sizes: S, M, L, XL. This may be mapped to story points.
         /// </summary>
         public string CardSize
         {
-            get { return (string)GetValue(CardSizeProperty); }
-            set { SetValue(CardSizeProperty, value); }
+            get => (string)GetValue(CardSizeProperty);
+            set => SetValue(CardSizeProperty, value);
         }
         public static readonly DependencyProperty CardSizeProperty =
-            DependencyProperty.Register("CardSize", typeof(string), typeof(KanbanCard),
+            DependencyProperty.Register(nameof(CardSize), typeof(string), typeof(KanbanCard),
                 new FrameworkPropertyMetadata(string.Empty));
 
         /// <summary>

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using KC.WPF_Kanban.Utils;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using KC.WPF_Kanban.Utils;
 
 namespace KC.WPF_Kanban
 {
@@ -30,11 +26,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public DateTime Time
         {
-            get { return (DateTime)GetValue(TimeProperty); }
-            set { SetValue(TimeProperty, value); }
+            get => (DateTime)GetValue(TimeProperty);
+            set => SetValue(TimeProperty, value);
         }
         public static readonly DependencyProperty TimeProperty =
-            DependencyProperty.Register("Time", typeof(DateTime), typeof(ElapsedTime),
+            DependencyProperty.Register(nameof(Time), typeof(DateTime), typeof(ElapsedTime),
                 new FrameworkPropertyMetadata(DateTime.MinValue, new PropertyChangedCallback(OnTimeChanged)));
 
         private static void OnTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -50,11 +46,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public string ElapsedTimeStr
         {
-            get { return (string)GetValue(ElapsedTimeStrProperty); }
-            set { SetValue(ElapsedTimeStrProperty, value); }
+            get => (string)GetValue(ElapsedTimeStrProperty);
+            set => SetValue(ElapsedTimeStrProperty, value);
         }
         public static readonly DependencyProperty ElapsedTimeStrProperty =
-            DependencyProperty.Register("ElapsedTimeStr", typeof(string), typeof(ElapsedTime),
+            DependencyProperty.Register(nameof(ElapsedTimeStr), typeof(string), typeof(ElapsedTime),
                 new FrameworkPropertyMetadata(null));
 
         /// <summary>
@@ -101,10 +97,10 @@ namespace KC.WPF_Kanban
         /// </summary>
         private void SetTimerInterval(TimeSpan duration)
         {
-            if (_timer==null)
+            if (_timer == null)
             {
                 _timer = new DispatcherTimer();
-                _timer.Tick += this._timer_Tick;
+                _timer.Tick += _timer_Tick;
             }
 
             // Set the best interval for updating the control
@@ -153,6 +149,9 @@ namespace KC.WPF_Kanban
             _timer.Start();
         }
 
-        private void _timer_Tick(object sender, EventArgs e) => ConvertTimeStr();
+        private void _timer_Tick(object sender, EventArgs e)
+        {
+            ConvertTimeStr();
+        }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace KC.WPF_Kanban
@@ -27,11 +22,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public string Description
         {
-            get { return (string)GetValue(DescriptionProperty); }
-            set { SetValue(DescriptionProperty, value); }
+            get => (string)GetValue(DescriptionProperty);
+            set => SetValue(DescriptionProperty, value);
         }
         public static readonly DependencyProperty DescriptionProperty =
-            DependencyProperty.Register("Description", typeof(string), typeof(KanbanBlocker),
+            DependencyProperty.Register(nameof(Description), typeof(string), typeof(KanbanBlocker),
                 new FrameworkPropertyMetadata(null));
 
         /// <summary>
@@ -39,11 +34,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public string BlockType
         {
-            get { return (string)GetValue(BlockTypeProperty); }
-            set { SetValue(BlockTypeProperty, value); }
+            get => (string)GetValue(BlockTypeProperty);
+            set => SetValue(BlockTypeProperty, value);
         }
         public static readonly DependencyProperty BlockTypeProperty =
-            DependencyProperty.Register("BlockType", typeof(string), typeof(KanbanBlocker),
+            DependencyProperty.Register(nameof(BlockType), typeof(string), typeof(KanbanBlocker),
                 new FrameworkPropertyMetadata(null));
 
         #endregion

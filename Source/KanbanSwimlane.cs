@@ -1,14 +1,10 @@
-﻿using System;
+﻿using KC.WPF_Kanban.Model;
+using KC.WPF_Kanban.Utils;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using KC.WPF_Kanban.Model;
-using KC.WPF_Kanban.Utils;
 
 namespace KC.WPF_Kanban
 {
@@ -61,8 +57,10 @@ namespace KC.WPF_Kanban
         /// </summary>
         public int CardCount => Cells.Sum(cell => cell.Cards.Count);
 
-        private void Cell_CardsChanged(object sender, RoutedEventArgs e) =>
+        private void Cell_CardsChanged(object sender, RoutedEventArgs e)
+        {
             OnPropertyChanged(nameof(CardCount));
+        }
 
         #endregion
 
@@ -73,11 +71,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public string Caption
         {
-            get { return (string)GetValue(CaptionProperty); }
-            set { SetValue(CaptionProperty, value); }
+            get => (string)GetValue(CaptionProperty);
+            set => SetValue(CaptionProperty, value);
         }
         public static readonly DependencyProperty CaptionProperty =
-            DependencyProperty.Register("Caption", typeof(string), typeof(KanbanSwimlane),
+            DependencyProperty.Register(nameof(Caption), typeof(string), typeof(KanbanSwimlane),
                 new FrameworkPropertyMetadata(DefaultCaption));
 
         /// <summary>
@@ -85,11 +83,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public bool IsCollapsed
         {
-            get { return (bool)GetValue(IsCollapsedProperty); }
-            set { SetValue(IsCollapsedProperty, value); }
+            get => (bool)GetValue(IsCollapsedProperty);
+            set => SetValue(IsCollapsedProperty, value);
         }
         public static readonly DependencyProperty IsCollapsedProperty =
-            DependencyProperty.Register("IsCollapsed", typeof(bool), typeof(KanbanSwimlane),
+            DependencyProperty.Register(nameof(IsCollapsed), typeof(bool), typeof(KanbanSwimlane),
                 new FrameworkPropertyMetadata(false, new PropertyChangedCallback(OnIsCollapsedChanged)));
 
         private static void OnIsCollapsedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -116,21 +114,26 @@ namespace KC.WPF_Kanban
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void OnPropertyChanged(string propertyName) =>
+        private void OnPropertyChanged(string propertyName)
+        {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         #endregion
 
         #region Json Model
 
-        internal JsonSwimlane ToJson() => new JsonSwimlane()
+        internal JsonSwimlane ToJson()
         {
-            Caption = this.Caption,
-            Color = BrushSerianization.SerializeBrush(this.Background),
-            IsCollapsed = this.IsCollapsed,
-            LaneValue = this.LaneValue,
-            Foreground = BrushSerianization.SerializeBrush(this.Foreground)
-        };
+            return new JsonSwimlane()
+            {
+                Caption = Caption,
+                Color = BrushSerianization.SerializeBrush(Background),
+                IsCollapsed = IsCollapsed,
+                LaneValue = LaneValue,
+                Foreground = BrushSerianization.SerializeBrush(Foreground)
+            };
+        }
 
         internal static KanbanSwimlane FromModel(JsonSwimlane model)
         {

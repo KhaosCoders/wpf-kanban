@@ -53,7 +53,7 @@ namespace KC.WPF_Kanban
             set => this.SetValue(ColumnsProperty, value);
         }
         public static readonly DependencyProperty ColumnsProperty =
-            DependencyProperty.Register("Columns", typeof(KanbanColumnCollection), typeof(KanbanColumnItemsPresenter),
+            DependencyProperty.Register(nameof(Columns), typeof(KanbanColumnCollection), typeof(KanbanColumnItemsPresenter),
                 new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnColumnsChanged)));
 
         private static void OnColumnsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -107,7 +107,7 @@ namespace KC.WPF_Kanban
             set => this.SetValue(CardsProperty, value);
         }
         public static readonly DependencyProperty CardsProperty =
-            DependencyProperty.Register("Cards", typeof(KanbanCardCollection), typeof(KanbanColumnItemsPresenter),
+            DependencyProperty.Register(nameof(Cards), typeof(KanbanCardCollection), typeof(KanbanColumnItemsPresenter),
                 new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
 
     }

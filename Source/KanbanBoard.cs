@@ -5,7 +5,6 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
 
 namespace KC.WPF_Kanban
 {
@@ -56,7 +55,7 @@ namespace KC.WPF_Kanban
             set => SetValue(TitleControlProperty, value);
         }
         public static readonly DependencyProperty TitleControlProperty =
-            DependencyProperty.Register("TitleControl", typeof(ControlTemplate), typeof(KanbanBoard),
+            DependencyProperty.Register(nameof(TitleControl), typeof(ControlTemplate), typeof(KanbanBoard),
                 new FrameworkPropertyMetadata(FrameworkUtils.CreateTemplate(typeof(KanbanBoardTitle), typeof(Control))));
 
         /// <summary>
@@ -64,11 +63,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public KanbanColumnCollection Columns
         {
-            get { return (KanbanColumnCollection)GetValue(ColumnsProperty); }
-            set { SetValue(ColumnsProperty, value); }
+            get => (KanbanColumnCollection)GetValue(ColumnsProperty);
+            set => SetValue(ColumnsProperty, value);
         }
         public static readonly DependencyProperty ColumnsProperty =
-            DependencyProperty.Register("Columns", typeof(KanbanColumnCollection), typeof(KanbanBoard),
+            DependencyProperty.Register(nameof(Columns), typeof(KanbanColumnCollection), typeof(KanbanBoard),
                 new FrameworkPropertyMetadata(null));
 
         /// <summary>
@@ -76,11 +75,11 @@ namespace KC.WPF_Kanban
         /// </summary>
         public KanbanSwimlaneCollection Swimlanes
         {
-            get { return (KanbanSwimlaneCollection)GetValue(SwimlanesProperty); }
-            set { SetValue(SwimlanesProperty, value); }
+            get => (KanbanSwimlaneCollection)GetValue(SwimlanesProperty);
+            set => SetValue(SwimlanesProperty, value);
         }
         public static readonly DependencyProperty SwimlanesProperty =
-            DependencyProperty.Register("Swimlanes", typeof(KanbanSwimlaneCollection), typeof(KanbanBoard),
+            DependencyProperty.Register(nameof(Swimlanes), typeof(KanbanSwimlaneCollection), typeof(KanbanBoard),
                 new FrameworkPropertyMetadata(null));
 
 
@@ -192,7 +191,7 @@ namespace KC.WPF_Kanban
 
         public void ClearCards()
         {
-            foreach(KanbanColumn column in Columns)
+            foreach (KanbanColumn column in Columns)
             {
                 column.ClearCards();
             }
@@ -231,9 +230,9 @@ namespace KC.WPF_Kanban
         {
             JsonBoard boardModel = new JsonBoard()
             {
-                Title = this.Title,
-                ColumnPath = this.ColumnPath,
-                SwimlanePath = this.SwimlanePath
+                Title = Title,
+                ColumnPath = ColumnPath,
+                SwimlanePath = SwimlanePath
             };
             foreach (var column in Columns)
             {
@@ -259,15 +258,15 @@ namespace KC.WPF_Kanban
         {
             if (model.Title != null)
             {
-                this.Title = model.Title;
+                Title = model.Title;
             }
             if (!string.IsNullOrWhiteSpace(model.ColumnPath))
             {
-                this.ColumnPath = model.ColumnPath;
+                ColumnPath = model.ColumnPath;
             }
             if (!string.IsNullOrWhiteSpace(model.SwimlanePath))
             {
-                this.SwimlanePath = model.SwimlanePath;
+                SwimlanePath = model.SwimlanePath;
             }
             if (model.Columns != null && model.Columns.Count > 0)
             {
