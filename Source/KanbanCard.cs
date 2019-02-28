@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using KC.WPF_Kanban.Utils;
 
 namespace KC.WPF_Kanban
 {
