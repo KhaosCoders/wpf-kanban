@@ -88,7 +88,10 @@ namespace KC.WPF_Kanban
         }
         public static readonly DependencyProperty TimeUnitsProperty =
             DependencyProperty.RegisterAttached(nameof(TimeUnits), typeof(TimeUnit), typeof(ElapsedTime),
-                new FrameworkPropertyMetadata(TimeUnit.All));
+                new FrameworkPropertyMetadata(TimeUnit.All, new PropertyChangedCallback(OnTimeUnitsChanged)));
+
+        private static void OnTimeUnitsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+            (d as ElapsedTime)?.ConvertTimeStr();
 
         private DispatcherTimer _timer;
 
