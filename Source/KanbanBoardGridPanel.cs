@@ -29,7 +29,8 @@ namespace KC.WPF_Kanban
         /// <summary>
         /// Gets or sets a collection of <see cref="KanbanColumn"/>
         /// </summary>
-        public KanbanColumnCollection Columns {
+        public KanbanColumnCollection Columns
+        {
             get => (KanbanColumnCollection)GetValue(ColumnsProperty);
             set => SetValue(ColumnsProperty, value);
         }
@@ -63,7 +64,7 @@ namespace KC.WPF_Kanban
                     newCollection.CollectionChanged += Columns_CollectionChanged;
                     newCollection.Panel = panel;
                     // Add all columns of the new attached collection
-                    foreach(KanbanColumn column in newCollection)
+                    foreach (KanbanColumn column in newCollection)
                     {
                         panel.AddColumn(column);
                     }
@@ -143,11 +144,16 @@ namespace KC.WPF_Kanban
         /// </summary>
         private void ClearColumns()
         {
-            foreach (UIElement element in Children)
+            int skippedChildren = 0;
+            while (Children.Count > skippedChildren)
             {
-                if (element is KanbanColumn column)
+                if (Children[skippedChildren] is KanbanColumn column)
                 {
                     Children.Remove(column);
+                }
+                else
+                {
+                    skippedChildren++;
                 }
             }
         }
@@ -206,7 +212,7 @@ namespace KC.WPF_Kanban
                     // Clear all lanes if collection is removed
                     panel.ClearSwimlanes();
                 }
-                if(e.NewValue is KanbanSwimlaneCollection newCollection)
+                if (e.NewValue is KanbanSwimlaneCollection newCollection)
                 {
                     newCollection.Panel = panel;
                     newCollection.CollectionChanged += Swimlanes_CollectionChanged;
@@ -224,7 +230,7 @@ namespace KC.WPF_Kanban
             // Whenn the attached column collection is changed
             if (sender is KanbanSwimlaneCollection collection)
             {
-                switch(e.Action)
+                switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add when e.NewItems.Count == 1 && e.NewItems[0] is KanbanSwimlane lane:
                         collection.Panel?.AddSwimlane(lane);
@@ -271,11 +277,16 @@ namespace KC.WPF_Kanban
         /// </summary>
         private void ClearSwimlanes()
         {
-            foreach (UIElement element in Children)
+            int skippedLanes = 0;
+            while (Children.Count > skippedLanes)
             {
-                if (element is KanbanSwimlane lane)
+                if (Children[skippedLanes] is KanbanSwimlane lane)
                 {
                     Children.Remove(lane);
+                }
+                else
+                {
+                    skippedLanes++;
                 }
             }
         }
@@ -303,7 +314,7 @@ namespace KC.WPF_Kanban
                     AddNewCell(lane, column);
                 }
                 // Add cells for all sub-columns, too
-                foreach(KanbanColumn subcolumn in column.Columns)
+                foreach (KanbanColumn subcolumn in column.Columns)
                 {
                     AddCellsForNewColumn(subcolumn);
                 }
@@ -429,7 +440,7 @@ namespace KC.WPF_Kanban
                     Children.Remove(cell);
                 }
                 int currentSubColumn = currentColumn;
-                foreach(KanbanColumn subcolumn in column.Columns)
+                foreach (KanbanColumn subcolumn in column.Columns)
                 {
                     SetCellsPosition(lane, subcolumn, currentRow, currentSubColumn, subcolumn.IsCollapsed || isParentCollapsed);
                     currentSubColumn += subcolumn.IsCollapsed ? 1 : subcolumn.ColumnSpan;
@@ -442,7 +453,7 @@ namespace KC.WPF_Kanban
                 {
                     if (column.IsCollapsed || lane.IsCollapsed || isParentCollapsed)
                     {
-                        cell.SetValue(VisibilityProperty, Visibility.Collapsed );
+                        cell.SetValue(VisibilityProperty, Visibility.Collapsed);
                     }
                     else
                     {
@@ -599,7 +610,7 @@ namespace KC.WPF_Kanban
             firstExpandedSpan = -1;
             totalExpandedSpan = 0;
             int depth = 1;
-            foreach(KanbanColumn column in Columns)
+            foreach (KanbanColumn column in Columns)
             {
                 // Don't follow collapsed columns
                 if (column.IsCollapsed)
@@ -656,7 +667,7 @@ namespace KC.WPF_Kanban
         {
             currentDepth++;
             int depth = currentDepth;
-            foreach(KanbanColumn subcolumn in column.Columns)
+            foreach (KanbanColumn subcolumn in column.Columns)
             {
                 int colDepth = GetColumnDepth(subcolumn, currentDepth);
                 if (colDepth > depth)
