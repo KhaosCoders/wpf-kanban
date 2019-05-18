@@ -20,6 +20,7 @@
                             Title="My Board"
                             ColumnPath="[Column]"
                             ItemsSource="{Binding Collection}"
+                            CanCollapseSubcolumns="true"
                             SwimlanePath="[Lane]">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -46,11 +47,11 @@
                                      Color="Blue" />
                 <kanban:KanbanColumn Caption="In progress"
                                      CardLimit="2"
-                                     ColumnSpan="3"
+                                     ColumnSpan="2"
                                      Color="Orange">
                     <kanban:KanbanColumn.Columns>
                         <kanban:KanbanColumn Caption="Design" CardLimit="1" ColumnValue="Design" />
-                        <kanban:KanbanColumn Caption="Doing" ColumnSpan="2" ColumnValue="Doing" />
+                        <kanban:KanbanColumn Caption="Doing" ColumnSpan="2" ColumnValue="Doing" IsCollapsed="True" />
                     </kanban:KanbanColumn.Columns>
                 </kanban:KanbanColumn>
                 <kanban:KanbanColumn Caption="Done" ColumnValue="Done" Color="Green" />

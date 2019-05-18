@@ -459,7 +459,7 @@ namespace KC.WPF_Kanban
         private void SetColumnPosition(KanbanColumn column, ref int currentColumn, int startRow, int firstCardsRow, int rowCount)
         {
             // Collapsed columns span only one column
-            int columnSpan = column.IsCollapsed ? 1 : column.ColumnSpan;
+            int columnSpan = column.LayoutColumnSpan;
             // Columns with no more sub-columns can span the remaining rows
             int headerRowSpan = column.IsCollapsed ? firstCardsRow + rowCount :
                                 column.Columns.Count > 0 ? 1 :
@@ -597,7 +597,6 @@ namespace KC.WPF_Kanban
         {
             totalColSpan = 0;
             firstExpandedSpan = -1;
-            totalExpandedSpan = 0;
             int depth = 1;
             foreach(KanbanColumn column in Columns)
             {
@@ -614,7 +613,7 @@ namespace KC.WPF_Kanban
                     {
                         firstExpandedSpan = totalColSpan;
                     }
-                    totalColSpan += column.ColumnSpan;
+                    totalColSpan += column.LayoutColumnSpan;
                     int colDepth = GetColumnDepth(column);
                     if (colDepth > depth)
                     {

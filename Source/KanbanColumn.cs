@@ -403,5 +403,16 @@ namespace KC.WPF_Kanban
         }
 
         #endregion
+
+        #region Layouting Properties
+
+        /// <summary>
+        /// Gets the combined column span of all sub-columns (if any) used by layouting
+        /// </summary>
+        internal int LayoutColumnSpan =>
+            IsCollapsed ? 1 : 
+            Columns?.Count > 0 ? Columns.Sum(c => c.LayoutColumnSpan) : ColumnSpan;
+
+        #endregion
     }
 }

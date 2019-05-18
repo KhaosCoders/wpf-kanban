@@ -62,7 +62,9 @@
     <Compile Include="Converter\BrushConverter.cs" />
     <Compile Include="Converter\ColorToBrushConverter.cs" />
     <Compile Include="Converter\ConditionalVisibilityConverter.cs" />
+    <Compile Include="Converter\InvertBoolConverter.cs" />
     <Compile Include="Converter\MinutesToHourDurationConverter.cs" />
+    <Compile Include="Converter\MultiBoolToVisibilityConverter.cs" />
     <Compile Include="Converter\MultiplyConveter.cs" />
     <Compile Include="Converter\TextUppercaseConverter.cs" />
     <Compile Include="Converter\ThicknessToDoubleConverter.cs" />

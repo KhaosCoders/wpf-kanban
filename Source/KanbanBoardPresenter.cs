@@ -33,7 +33,6 @@ namespace KC.WPF_Kanban
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
                     throw new NotImplementedException("Implement Add");
             }
-
         }
 
         /// <summary>

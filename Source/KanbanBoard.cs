@@ -82,6 +82,16 @@ namespace KC.WPF_Kanban
             DependencyProperty.Register(nameof(Swimlanes), typeof(KanbanSwimlaneCollection), typeof(KanbanBoard),
                 new FrameworkPropertyMetadata(null));
 
+        /// <summary>
+        /// Gets or sets whether sub-columns can be collapsed or not
+        /// </summary>
+        public bool CanCollapseSubcolumns
+        {
+            get { return (bool)GetValue(CanCollapseSubcolumnsProperty); }
+            set { SetValue(CanCollapseSubcolumnsProperty, value); }
+        }
+        public static readonly DependencyProperty CanCollapseSubcolumnsProperty =
+            DependencyProperty.Register("CanCollapseSubcolumns", typeof(bool), typeof(KanbanBoard), new PropertyMetadata(false));
 
         #region Column/Lane assignment
 
@@ -157,7 +167,6 @@ namespace KC.WPF_Kanban
             }
             return null;
         }
-
 
         #endregion
 
@@ -270,6 +279,7 @@ namespace KC.WPF_Kanban
             }
             if (model.Columns != null && model.Columns.Count > 0)
             {
+                model.FixParentColumnSpan();
                 Columns.Clear();
                 foreach (JsonColumn jsonColumn in model.Columns)
                 {

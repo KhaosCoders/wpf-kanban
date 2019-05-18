@@ -18,5 +18,13 @@ namespace KC.WPF_Kanban.Model
         public IList<JsonColumn> Columns { get; set; } = new List<JsonColumn>();
 
         public IList<JsonSwimlane> Swimlanes { get; set; } = new List<JsonSwimlane>();
+
+        internal void FixParentColumnSpan()
+        {
+            foreach (JsonColumn col in Columns)
+            {
+                col.FixParentColumnSpan();
+            }
+        }
     }
 }

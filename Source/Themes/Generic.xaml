@@ -45,11 +45,12 @@
 
     <converter:TextUppercaseConverter x:Key="convUppercase" />
     <converter:ColorToBrushConverter x:Key="convColorToBrush" TrasparencyReplacement="{StaticResource kanbanCardBackground}" />
-    <converter:BooleanToVisibilityConverter x:Key="convInvertedBoolToVisibility" Invert="True" />
     <converter:MinutesToHourDurationConverter x:Key="convMinutesToHours" />
     <converter:ConditionalVisibilityConverter x:Key="convNegativeInvisible" Target="0" />
     <converter:ThicknessToDoubleConverter x:Key="convThickness" />
     <converter:MultiplyConveter x:Key="convMultiply" />
+    <converter:MultiBoolToVisibilityConverter x:Key="convMultiBoolToVisibile" Condition="Any" />
+    <converter:InvertBoolConverter x:Key="convInvertBool" />
 
     <!--#endregion-->
 
@@ -195,8 +196,14 @@
                             <ToggleButton Grid.Column="0"
                                           Margin="6"
                                           IsChecked="{Binding IsCollapsed, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                          Style="{StaticResource styColumnCollapseButton}"
-                                          Visibility="{Binding IsSubColumn, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource convInvertedBoolToVisibility}}" />
+                                          Style="{StaticResource styColumnCollapseButton}">
+                                <ToggleButton.Visibility>
+                                    <MultiBinding Converter="{StaticResource convMultiBoolToVisibile}">
+                                        <Binding Path="IsSubColumn" RelativeSource="{RelativeSource Mode=TemplatedParent}" Converter="{StaticResource convInvertBool}" />
+                                        <Binding Path="CanCollapseSubcolumns" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type local:KanbanBoard}}" />
+                                    </MultiBinding>
+                                </ToggleButton.Visibility>
+                            </ToggleButton>
                             <TextBlock Name="caption"
                                        Grid.Column="1"
                                        Margin="6"
