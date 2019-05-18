@@ -22,7 +22,7 @@
 
     <!--#region Colors-->
 
-    <SolidColorBrush x:Key="kanbanBoardBackground" Color="#C4C4C4" />
+    <SolidColorBrush x:Key="kanbanBoardBackground" Color="#FFFFFF" />
     <SolidColorBrush x:Key="kanbanBoardTitleBackground" Color="#E8E8E8" />
     <SolidColorBrush x:Key="kanbanTitleForeground" Color="#505050" />
     <SolidColorBrush x:Key="kanbanColumnHeaderBackground" Color="#FAFAFA" />
@@ -33,6 +33,7 @@
     <SolidColorBrush x:Key="kanbanColumnViolatedBackground" Color="#FC5858" />
     <SolidColorBrush x:Key="kanbanColumnViolatedForeground" Color="#FDFDFD" />
     <SolidColorBrush x:Key="kanbanCellBackground" Color="#F0F4FB" />
+    <SolidColorBrush x:Key="kanbanCellBorder" Color="#C7C7C7" />
     <SolidColorBrush x:Key="kanbanCardBackground" Color="#FFFFFF" />
     <SolidColorBrush x:Key="kanbanIconColor" Color="#BFBFBF" />
     <SolidColorBrush x:Key="kanbanCardFooterBackground" Color="#CFCFCF" />
@@ -170,6 +171,8 @@
 
     <Style x:Key="styKanbanColumnHeaderBorder" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource kanbanColumnHeaderBackground}" />
+        <Setter Property="BorderBrush" Value="{StaticResource kanbanCellBorder}" />
+        <Setter Property="BorderThickness" Value="1,0,1,0" />
     </Style>
 
     <Style TargetType="{x:Type local:KanbanColumn}">
@@ -227,26 +230,23 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="local:KanbanColumn">
-                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                                <Border Name="border" DockPanel.Dock="Top" Style="{StaticResource styKanbanColumnHeaderBorder}">
-                                    <StackPanel Orientation="Vertical">
-                                        <Line Stretch="Fill"
-                                              Stroke="{Binding Color, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                              StrokeThickness="4"
-                                              X2="1" />
-                                        <ToggleButton Margin="0,2,0,4"
-                                                      HorizontalAlignment="Center"
-                                                      DockPanel.Dock="Left"
-                                                      IsChecked="{Binding IsCollapsed, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                                      Style="{StaticResource styColumnCollapseButton}" />
-                                        <local:KanbanCardLimitPill Margin="0,0,0,4" Orientation="Vertical" />
-                                        <TextBlock Style="{StaticResource styKanbanColumnHeaderText}" Text="{TemplateBinding Caption, Converter={StaticResource convUppercase}}">
-                                            <TextBlock.LayoutTransform>
-                                                <RotateTransform Angle="270" />
-                                            </TextBlock.LayoutTransform>
-                                        </TextBlock>
-                                    </StackPanel>
-                                </Border>
+                            <Border Name="border" Style="{StaticResource styKanbanColumnHeaderBorder}">
+                                <StackPanel Orientation="Vertical">
+                                    <Line Stretch="Fill"
+                                          Stroke="{Binding Color, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                          StrokeThickness="4"
+                                          X2="1" />
+                                    <ToggleButton Margin="0,2,0,4"
+                                                  HorizontalAlignment="Center"
+                                                  IsChecked="{Binding IsCollapsed, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                                  Style="{StaticResource styColumnCollapseButton}" />
+                                    <local:KanbanCardLimitPill Margin="0,0,0,4" Orientation="Vertical" />
+                                    <TextBlock Style="{StaticResource styKanbanColumnHeaderText}" Text="{TemplateBinding Caption, Converter={StaticResource convUppercase}}">
+                                        <TextBlock.LayoutTransform>
+                                            <RotateTransform Angle="270" />
+                                        </TextBlock.LayoutTransform>
+                                    </TextBlock>
+                                </StackPanel>
                             </Border>
                             <ControlTemplate.Triggers>
                                 <DataTrigger Binding="{Binding IsCardLimitViolated, RelativeSource={RelativeSource Mode=Self}}" Value="True">
@@ -271,7 +271,10 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanBoardCell}">
-                    <Border Margin="1,1,1,1" Background="{StaticResource kanbanCellBackground}">
+                    <Border Margin="1,1,1,1"
+                            Background="{StaticResource kanbanCellBackground}"
+                            BorderBrush="{StaticResource kanbanCellBorder}"
+                            BorderThickness="1,0,1,0">
                         <ItemsControl ItemsSource="{TemplateBinding Cards}" ScrollViewer.VerticalScrollBarVisibility="Disabled" VirtualizingPanel.IsVirtualizing="False">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -447,7 +450,8 @@
                                                        Margin="2"
                                                        BorderBrush="{StaticResource kanbanCardFooterBackground}"
                                                        BorderThickness="1,0,0,0"
-                                                       Time="{TemplateBinding CreationTime}" />
+                                                       Time="{TemplateBinding CreationTime}"
+                                                       TimeUnits="{TemplateBinding ElapsedTimeUnits}" />
 
                                     <Border Grid.Column="0" Width="20" Background="{TemplateBinding TileBrush}">
                                         <TextBlock HorizontalAlignment="Center"

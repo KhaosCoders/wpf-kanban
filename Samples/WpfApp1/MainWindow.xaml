@@ -28,6 +28,7 @@
                                        CardSize="{Binding Size}"
                                        CreationTime="{Binding CreationTime}"
                                        DescriptionText="{Binding Description}"
+                                       ElapsedTimeUnits="All"
                                        LeftTitle="{Binding Number}"
                                        RightTitle="{Binding Assignee}"
                                        TileBrush="{Binding TileRgb, Converter={StaticResource convBrush}}"

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using KC.WPF_Kanban.Utils;
 
 namespace KC.WPF_Kanban
 {
@@ -232,6 +233,20 @@ namespace KC.WPF_Kanban
         public static readonly DependencyProperty CardSizeProperty =
             DependencyProperty.Register(nameof(CardSize), typeof(string), typeof(KanbanCard),
                 new FrameworkPropertyMetadata(string.Empty));
+
+        /// <summary>
+        /// Gets or sets the time units used to display the elapsed time value
+        /// </summary>
+        public TimeUnit ElapsedTimeUnits
+        {
+            get { return (TimeUnit)GetValue(ElapsedTimeUnitsProperty); }
+            set { SetValue(ElapsedTimeUnitsProperty, value); }
+        }
+        public static readonly DependencyProperty ElapsedTimeUnitsProperty =
+            DependencyProperty.Register("ElapsedTimeUnits", typeof(TimeUnit), typeof(KanbanCard),
+                new FrameworkPropertyMetadata(TimeUnit.All));
+
+
 
         #endregion
 
