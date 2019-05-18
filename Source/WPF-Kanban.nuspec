@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Khaos-Coders</authors>
+    <owners>Khaos-Coders</owners>
+    <license type="file">LICENSE.txt</license>
+    <projectUrl>https://github.com/KhaosCoders/wpf-kanban</projectUrl>
+    <iconUrl>https://github.com/KhaosCoders/wpf-kanban/raw/master/Logo.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A simple kanban board WPF control</description>
+    <releaseNotes>Initial release.</releaseNotes>
+    <copyright>Copyright 2019</copyright>
+    <tags>WPF Kanban Card Board Control</tags>
+  </metadata>
+  <files>
+    <file src="license\LICENSE.txt" target="" />
+  </files>
+</package>
