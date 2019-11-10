@@ -57,9 +57,26 @@ namespace KC.WPF_Kanban
         /// </summary>
         public int CardCount => Cells.Sum(cell => cell.Cards.Count);
 
+        /// <summary>
+        /// Gets the count of all cards in expanded columns assigned to the <see cref="KanbanSwimlane"/>
+        /// </summary>
+        public int VisibleCardCount => Cells.Where(cell => cell.Column.IsColumnContentVisible).Sum(cell => cell.Cards.Count);
+
         private void Cell_CardsChanged(object sender, RoutedEventArgs e)
         {
             OnPropertyChanged(nameof(CardCount));
+            OnPropertyChanged(nameof(VisibleCardCount));
+        }
+
+
+        /// <summary>
+        /// Handles swimlane specific action, when a collumn in collapsed or expanded
+        /// </summary>
+        /// <param name="column">The column that was changed</param>
+        public virtual void OnColumnCollapsedChanged(KanbanColumn column)
+        {
+            // Visible CardCount may change, when a column is collapsed or expanded
+            OnPropertyChanged(nameof(VisibleCardCount));
         }
 
         #endregion
@@ -92,14 +109,10 @@ namespace KC.WPF_Kanban
 
         private static void OnIsCollapsedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            // Relayout kanban panel, when swimlane is expanded or collapsed
             if (d is KanbanSwimlane lane)
             {
                 var panel = FrameworkUtils.FindVisualParent<KanbanBoardGridPanel>(lane);
-                if (panel != null)
-                {
-                    panel.InvalidateMeasure();
-                }
+                panel?.OnSwimlaneCollapsedChanged(lane);
             }
         }
 

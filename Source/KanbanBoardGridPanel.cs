@@ -175,6 +175,18 @@ namespace KC.WPF_Kanban
             }
         }
 
+        public virtual void OnColumnCollapsedChanged(KanbanColumn column)
+        {
+            if (column == null)
+            {
+                return;
+            }
+            foreach (KanbanSwimlane lane in Swimlanes)
+            {
+                lane.OnColumnCollapsedChanged(column);
+            }
+        }
+
         #endregion
 
         #region Swimlane-Collection
@@ -289,6 +301,20 @@ namespace KC.WPF_Kanban
                     skippedLanes++;
                 }
             }
+        }
+
+        public virtual void OnSwimlaneCollapsedChanged(KanbanSwimlane lane)
+        {
+            if (lane == null)
+            {
+                return;
+            }
+            foreach (KanbanColumn column in Columns)
+            {
+                column.OnSwimlaneCollapsedChanged(lane);
+            }
+            // Relayout kanban panel, when swimlane is expanded or collapsed
+            this.InvalidateMeasure();
         }
 
         #endregion

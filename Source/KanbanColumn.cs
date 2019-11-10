@@ -88,7 +88,16 @@ namespace KC.WPF_Kanban
         }
         public static readonly DependencyProperty IsCollapsedProperty =
             DependencyProperty.RegisterAttached(nameof(IsCollapsed), typeof(bool), typeof(KanbanColumn),
-                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsMeasure));
+                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsMeasure, new PropertyChangedCallback(OnIsCollapsedChanged)));
+
+        private static void OnIsCollapsedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is KanbanColumn column)
+            {
+                var panel = FrameworkUtils.FindVisualParent<KanbanBoardGridPanel>(column);
+                panel?.OnColumnCollapsedChanged(column);
+            }
+        }
 
         /// <summary>
         /// Gets or sets a span factor of the column
@@ -220,6 +229,7 @@ namespace KC.WPF_Kanban
                     foreach (KanbanColumn subcolumn in oldCollection)
                     {
                         subcolumn.CardCountChanged -= column.SubColumn_CardCountChanged;
+                        subcolumn.ParentColumn = null;
                         subcolumn.IsSubColumn = false;
                     }
                 }
@@ -229,6 +239,7 @@ namespace KC.WPF_Kanban
                     foreach (KanbanColumn subcolumn in newCollection)
                     {
                         subcolumn.CardCountChanged += column.SubColumn_CardCountChanged;
+                        subcolumn.ParentColumn = column;
                         subcolumn.IsSubColumn = true;
                     }
                 }
@@ -242,33 +253,45 @@ namespace KC.WPF_Kanban
             {
                 case NotifyCollectionChangedAction.Add when e.NewItems?.Count == 1 && e.NewItems[0] is KanbanColumn column:
                     column.CardCountChanged += SubColumn_CardCountChanged;
+                    column.ParentColumn = this;
                     column.IsSubColumn = true;
                     break;
                 case NotifyCollectionChangedAction.Remove when e.OldItems?.Count == 1 && e.OldItems[0] is KanbanColumn column:
                     column.CardCountChanged -= SubColumn_CardCountChanged;
+                    column.ParentColumn = null;
                     column.IsSubColumn = false;
                     break;
                 case NotifyCollectionChangedAction.Reset when e.OldItems?.Count > 0:
                     foreach (KanbanColumn column in e.OldItems)
                     {
                         column.CardCountChanged -= SubColumn_CardCountChanged;
+                        column.ParentColumn = null;
                         column.IsSubColumn = false;
                     }
                     break;
                 case NotifyCollectionChangedAction.Replace when e.OldItems?.Count > 0 && e.NewItems?.Count > 0:
                     foreach (KanbanColumn column in e.OldItems)
                     {
+                        column.IsSubColumn = false;
                         column.CardCountChanged -= SubColumn_CardCountChanged;
                         column.IsSubColumn = false;
                     }
                     foreach (KanbanColumn column in e.NewItems)
                     {
                         column.CardCountChanged += SubColumn_CardCountChanged;
+                        column.ParentColumn = this;
                         column.IsSubColumn = true;
                     }
                     break;
             }
         }
+
+        public KanbanColumn ParentColumn { get; private set; }
+
+        /// <summary>
+        /// Gets whether the column and all parents are expanded or not
+        /// </summary>
+        public bool IsColumnContentVisible => !IsCollapsed && (ParentColumn?.IsColumnContentVisible ?? true);
 
         #endregion
 
@@ -306,6 +329,15 @@ namespace KC.WPF_Kanban
         public KanbanBoardCell FindCellForSwimlane(KanbanSwimlane lane)
         {
             return Cells.FirstOrDefault(c => c.Swimlane == lane);
+        }
+
+        /// <summary>
+        /// Handles column specific action, when a swimlane in collapsed or expanded
+        /// </summary>
+        /// <param name="lane">The swimlane that was changed</param>
+        public virtual void OnSwimlaneCollapsedChanged(KanbanSwimlane lane)
+        {
+
         }
 
         #endregion
@@ -410,7 +442,7 @@ namespace KC.WPF_Kanban
         /// Gets the combined column span of all sub-columns (if any) used by layouting
         /// </summary>
         internal int LayoutColumnSpan =>
-            IsCollapsed ? 1 : 
+            IsCollapsed ? 1 :
             Columns?.Count > 0 ? Columns.Sum(c => c.LayoutColumnSpan) : ColumnSpan;
 
         #endregion

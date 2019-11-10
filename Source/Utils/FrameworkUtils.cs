@@ -47,9 +47,15 @@ namespace KC.WPF_Kanban.Utils
             return null;
         }
 
+        /// <summary>
+        /// Returns the nearest visual parent of type T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="element"></param>
+        /// <returns></returns>
         public static T FindVisualParent<T>(UIElement element) where T : UIElement
         {
-            UIElement parent = element;
+            UIElement parent = VisualTreeHelper.GetParent(element) as UIElement;
             while (parent != null)
             {
                 T correctlyTyped = parent as T;
@@ -63,6 +69,12 @@ namespace KC.WPF_Kanban.Utils
             return null;
         }
 
+        /// <summary>
+        /// Returns the first child element or type T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="element"></param>
+        /// <returns></returns>
         public static T FindChild<T>(UIElement element) where T : UIElement
         {
             if (element == null)
@@ -74,7 +86,7 @@ namespace KC.WPF_Kanban.Utils
                 return t;
             }
             int childCount = VisualTreeHelper.GetChildrenCount(element);
-            for (int i=0; i<childCount; i++)
+            for (int i = 0; i < childCount; i++)
             {
                 DependencyObject child = VisualTreeHelper.GetChild(element, i);
                 if (child is UIElement uiChild)
