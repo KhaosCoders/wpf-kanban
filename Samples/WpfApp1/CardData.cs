@@ -37,6 +37,7 @@ namespace WpfApp1
         public int TileRgb => KC.WPF_Kanban.Converter.BrushConverter.ToInteger(TileColor);
 
         public List<KanbanBlocker> Blocker { get; set; }
+        public List<KanbanStickerBase> Stickers { get; set; }
 
         public string Size { get; set; }
 

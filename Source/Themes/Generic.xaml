@@ -2,7 +2,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converter="clr-namespace:KC.WPF_Kanban.Converter"
-    xmlns:local="clr-namespace:KC.WPF_Kanban">
+    xmlns:local="clr-namespace:KC.WPF_Kanban"
+    xmlns:stickers="clr-namespace:KC.WPF_Kanban.Stickers">
 
     <!-- Boilerplate Style for new controls:
     <Style TargetType="{x:Type local:Type}">
@@ -454,12 +455,18 @@
                                 Style="{StaticResource styCardDescription}"
                                 Text="{TemplateBinding DescriptionText}" />
 
-                            <local:KanbanBlockerPresenter
+                            <StackPanel
                                 Grid.Row="1"
                                 Margin="0,0,4,4"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Bottom"
-                                Blockers="{TemplateBinding Blockers}" />
+                                Orientation="Horizontal">
+
+                                <local:KanbanStickerPresenter Margin="4,0" Stickers="{TemplateBinding Stickers}" />
+
+                                <local:KanbanBlockerPresenter Blockers="{TemplateBinding Blockers}" />
+                            </StackPanel>
+
 
                             <Border
                                 Grid.Row="2"
@@ -667,7 +674,7 @@
 
     <!--#endregion-->
 
-    <!--#region KanbanBlocker-->
+    <!--#region KanbanBlockerPresenter-->
 
     <Style TargetType="{x:Type local:KanbanBlockerPresenter}">
         <Setter Property="Template">
@@ -696,6 +703,55 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!--#endregion-->
+
+    <!--#region KanbanStickerBase-->
+
+    <Style x:Key="{x:Type local:KanbanStickerBase}" TargetType="{x:Type local:KanbanStickerBase}">
+        <Setter Property="Width" Value="24" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:KanbanStickerBase}">
+                    <Grid ToolTip="{TemplateBinding Description}">
+                        <Image Source="{TemplateBinding Image}" Stretch="UniformToFill" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion-->
+
+    <!--#region KanbanStickerPresenter-->
+
+    <Style TargetType="{x:Type local:KanbanStickerPresenter}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:KanbanStickerPresenter}">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <ItemsControl AlternationCount="1000" ItemsSource="{TemplateBinding Stickers}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion-->
+
+    <!--#region OkSticker-->
+
+    <Style BasedOn="{StaticResource ResourceKey={x:Type local:KanbanStickerBase}}" TargetType="{x:Type stickers:OkSticker}" />
 
     <!--#endregion-->
 

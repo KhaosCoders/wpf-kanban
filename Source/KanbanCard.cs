@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using KC.WPF_Kanban.Utils;
 
@@ -144,40 +141,6 @@ namespace KC.WPF_Kanban
         public static readonly DependencyProperty TileForegroundProperty =
             DependencyProperty.Register(nameof(TileForeground), typeof(Brush), typeof(KanbanCard),
                 new FrameworkPropertyMetadata(Brushes.Black));
-
-        /// <summary>
-        /// Gets or sets a collection of <see cref="KanbanBlocker"/>
-        /// </summary>
-        public IList<KanbanBlocker> Blockers
-        {
-            get => (IList<KanbanBlocker>)GetValue(BlockersProperty);
-            set => SetValue(BlockersProperty, value);
-        }
-        public static readonly DependencyProperty BlockersProperty =
-            DependencyProperty.Register(nameof(Blockers), typeof(IList<KanbanBlocker>), typeof(KanbanCard),
-                new FrameworkPropertyMetadata(new ReadOnlyCollection<KanbanBlocker>(new List<KanbanBlocker>()), new PropertyChangedCallback(OnBlockersChanged)));
-
-        private static void OnBlockersChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is KanbanCard card)
-            {
-                // update HasBlockers
-                card.CoerceValue(HasBlockersProperty);
-            }
-        }
-
-        /// <summary>
-        /// Gets whether the card is blocked by any <see cref="KanbanBlocker"/>
-        /// </summary>
-        public bool HasBlockers => (bool)GetValue(HasBlockersProperty);
-
-        public static readonly DependencyProperty HasBlockersProperty =
-            DependencyProperty.Register(nameof(HasBlockers), typeof(bool), typeof(KanbanCard),
-                new FrameworkPropertyMetadata(false, null, new CoerceValueCallback(CoerceHasBlockers)));
-        private static object CoerceHasBlockers(DependencyObject d, object baseValue)
-        {
-            return ((d as KanbanCard)?.Blockers?.Count ?? 0) > 0;
-        }
 
         /// <summary>
         /// Gets or sets a size string. Like T-Shirt sizes: S, M, L, XL. This may be mapped to story points.
