@@ -11,7 +11,14 @@
     <iconUrl>https://github.com/KhaosCoders/wpf-kanban/raw/master/Logo.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A simple kanban board WPF control</description>
-    <releaseNotes>Initial release.</releaseNotes>
+    <releaseNotes>
+      Stickers can now be added to cards
+      Swimlanes show the number of visible cards and the number of total cards on the line
+
+      Others:
+      Refactored KanbanCard to have a base class
+      Updated Newtonsoft.Json to latest version
+    </releaseNotes>
     <copyright>Copyright 2019</copyright>
     <tags>WPF Kanban Card Board Control</tags>
   </metadata>
