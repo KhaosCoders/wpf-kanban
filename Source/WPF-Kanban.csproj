@@ -76,6 +76,7 @@
     <Compile Include="KanbanBoardGridPanel.cs" />
     <Compile Include="KanbanBoardPresenter.cs" />
     <Compile Include="KanbanCard.cs" />
+    <Compile Include="KanbanCardBase.cs" />
     <Compile Include="KanbanCardPresenter.cs" />
     <Compile Include="KanbanCardCollection.cs" />
     <Compile Include="KanbanCardLimitPill.cs" />
