@@ -8,7 +8,6 @@
     <owners>Khaos-Coders</owners>
     <license type="file">LICENSE.txt</license>
     <projectUrl>https://github.com/KhaosCoders/wpf-kanban</projectUrl>
-    <iconUrl>https://github.com/KhaosCoders/wpf-kanban/raw/master/Logo.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A simple kanban board WPF control</description>
     <releaseNotes>
