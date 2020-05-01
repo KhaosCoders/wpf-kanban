@@ -19,6 +19,7 @@
     <Grid>
         <kanban:KanbanBoard
             Name="kanBoard"
+            AllowDragDrop="True"
             Title="My Board"
             CanCollapseSubcolumns="true"
             ColumnPath="[Column]"

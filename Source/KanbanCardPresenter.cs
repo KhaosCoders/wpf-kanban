@@ -16,5 +16,9 @@ namespace KC.WPF_Kanban
     /// </summary>
     public class KanbanCardPresenter : ContentPresenter
     {
+        /// <summary>
+        /// Gets the visual <see cref="KanbanCardBase"/> presented by this element
+        /// </summary>
+        public KanbanCardBase Card => FrameworkUtils.FindChild<KanbanCardBase>(this);
     }
 }

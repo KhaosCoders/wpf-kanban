@@ -41,6 +41,8 @@
     <SolidColorBrush x:Key="kanbanCardFooterBackground" Color="#CFCFCF" />
     <SolidColorBrush x:Key="kanbanCardBlockedBackground" Color="#FC3030" />
     <SolidColorBrush x:Key="kanbanCardBlockedForeground" Color="#FDFDFD" />
+    <SolidColorBrush x:Key="kanbanCardDropTargetBackground" Color="#fff9de" />
+    <SolidColorBrush x:Key="kanbanCardDropTargetBorder" Color="#e3d58f" />
 
     <!--#endregion-->
 
@@ -529,6 +531,9 @@
                             <Setter TargetName="Border" Property="Background" Value="{StaticResource kanbanCardBlockedBackground}" />
                             <Setter TargetName="Content" Property="Foreground" Value="{StaticResource kanbanCardBlockedForeground}" />
                         </DataTrigger>
+                        <DataTrigger Binding="{Binding IsDraged, RelativeSource={RelativeSource Mode=Self}}" Value="True">
+                            <Setter TargetName="Border" Property="Opacity" Value="0.3" />
+                        </DataTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -536,6 +541,32 @@
     </Style>
 
     <!--#endregion-->
+
+    <!--#region KanbanCardDropTarget-->
+
+    <Style TargetType="{x:Type local:KanbanCardDropTarget}">
+        <Setter Property="Padding" Value="10,10" />
+        <Setter Property="Margin" Value="10,10" />
+        <Setter Property="Background" Value="{StaticResource kanbanCardDropTargetBackground}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:KanbanCardDropTarget}">
+                    <Border
+                        Name="Border"
+                        Width="{TemplateBinding CardWidth}"
+                        Height="{TemplateBinding CardHeight}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <Rectangle Stroke="{StaticResource kanbanCardDropTargetBorder}" StrokeThickness="3" StrokeDashArray="4, 4" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion-->
+
 
     <!--#region KanbanSwimLane-->
 

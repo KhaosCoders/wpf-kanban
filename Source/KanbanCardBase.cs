@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace KC.WPF_Kanban
 {
@@ -13,6 +14,14 @@ namespace KC.WPF_Kanban
     {
         protected const double DefaultCardWidth = 200d;
         protected const double DefaultCardHeight = 100d;
+
+        #region Contructor
+
+        public KanbanCardBase()
+        {
+        }
+
+        #endregion
 
         #region Override DP Metadata
 
@@ -114,6 +123,123 @@ namespace KC.WPF_Kanban
 
         private static object CoerceHasStickers(DependencyObject d, object baseValue) =>
             ((d as KanbanCardBase)?.Blockers?.Count ?? 0) > 0;
+
+        /// <summary>
+        /// Gets or sets whether Drag&Drop of cards between columns is allowed on the board
+        /// </summary>
+        public bool AllowDragDrop
+        {
+            get => (bool)GetValue(AllowDragDropProperty);
+            set => SetValue(AllowDragDropProperty, value);
+        }
+        public static bool GetAllowDragDrop(DependencyObject obj)
+        {
+            return (bool)obj.GetValue(AllowDragDropProperty);
+        }
+        public static void SetAllowDragDrop(DependencyObject obj, bool value)
+        {
+            obj.SetValue(AllowDragDropProperty, value);
+        }
+        public static readonly DependencyProperty AllowDragDropProperty =
+            DependencyProperty.RegisterAttached("AllowDragDrop", typeof(bool), typeof(KanbanCardBase),
+                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.Inherits));
+
+        /// <summary>
+        /// Gets or sets whether the card is beeing draged right now
+        /// </summary>
+        public bool IsDraged
+        {
+            get { return (bool)GetValue(IsDragedProperty); }
+            set { SetValue(IsDragedProperty, value); }
+        }
+        public static readonly DependencyProperty IsDragedProperty =
+            DependencyProperty.Register("IsDraged", typeof(bool), typeof(KanbanCardBase), new PropertyMetadata(false, new PropertyChangedCallback(OnIsDragedChanged)));
+
+        private static void OnIsDragedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is KanbanCardBase card)
+            {
+                card.RaiseEvent(new RoutedEventArgs(IsDragedChangedEvent));
+            }
+        }
+
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// A event that is fired whenever the cards assigned to the column change
+        /// </summary>
+        public event RoutedEventHandler IsDragedChanged
+        {
+            add { AddHandler(IsDragedChangedEvent, value); }
+            remove { RemoveHandler(IsDragedChangedEvent, value); }
+        }
+        public static readonly RoutedEvent IsDragedChangedEvent = EventManager
+            .RegisterRoutedEvent("IsDragedChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(KanbanCardBase));
+
+        #endregion
+
+        #region Drag&Drop
+
+        /// <summary>
+        /// Override this to control where a card can be droped
+        /// </summary>
+        /// <param name="column">The target column</param>
+        /// <param name="swimlane">The target swimlane</param>
+        /// <returns>Return true, if the card can be droped there</returns>
+        public virtual bool CanDropCard(KanbanColumn column, KanbanSwimlane swimlane) => true;
+
+        /// <summary>
+        /// Override this to control if a card can be draged or not
+        /// </summary>
+        /// <returns>Return true, if the card can be draged</returns>
+        public virtual bool CanDragCard() => true;
+
+        /// <summary>
+        /// Creates a DataObject containing all Drag&Drop information
+        /// </summary>
+        /// <returns></returns>
+        public virtual DataObject DragData()
+        {
+            DataObject data = new DataObject();
+            data.SetData(typeof(KanbanCardBase), this);
+            return data;
+        }
+
+        /// <summary>
+        /// Override this to handle the drop of a card on a new column and/or swimlane
+        /// </summary>
+        /// <param name="column">The target column</param>
+        /// <param name="swimlane">The target swimlane</param>
+        public virtual void OnCardMoved(KanbanColumn column, KanbanSwimlane swimlane) { }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+
+            // Begin Drag
+            if (AllowDragDrop && CanDragCard() && e.LeftButton == MouseButtonState.Pressed)
+            {
+                Dispatcher.Invoke(new Action(() => IsDraged = true));
+                
+                DragDrop.DoDragDrop(this, DragData(), DragDropEffects.Move);
+            }
+        }
+
+        protected override void OnQueryContinueDrag(QueryContinueDragEventArgs e)
+        {
+            // Drop or abort Drag
+            if ((e.KeyStates & DragDropKeyStates.LeftMouseButton) != DragDropKeyStates.LeftMouseButton
+                || (e.KeyStates & DragDropKeyStates.RightMouseButton) == DragDropKeyStates.RightMouseButton
+                || (e.KeyStates & DragDropKeyStates.MiddleMouseButton) == DragDropKeyStates.MiddleMouseButton
+                || Keyboard.IsKeyDown(Key.Escape))
+            {
+                Dispatcher.Invoke(new Action(() => IsDraged = false));
+            }
+
+            base.OnQueryContinueDrag(e);
+        }
 
         #endregion
     }

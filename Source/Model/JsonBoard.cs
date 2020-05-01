@@ -14,6 +14,7 @@ namespace KC.WPF_Kanban.Model
 
         public string SwimlanePath { get; set; }
 
+        public bool? AllowDragDrop { get; set; }
 
         public IList<JsonColumn> Columns { get; set; } = new List<JsonColumn>();
 

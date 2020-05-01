@@ -55,12 +55,12 @@ namespace KC.WPF_Kanban
         /// <summary>
         /// Gets the count of all cards assigned to the <see cref="KanbanSwimlane"/>
         /// </summary>
-        public int CardCount => Cells.Sum(cell => cell.Cards.Count);
+        public int CardCount => Cells.Sum(cell => cell.CardCount);
 
         /// <summary>
         /// Gets the count of all cards in expanded columns assigned to the <see cref="KanbanSwimlane"/>
         /// </summary>
-        public int VisibleCardCount => Cells.Where(cell => cell.Column.IsColumnContentVisible).Sum(cell => cell.Cards.Count);
+        public int VisibleCardCount => Cells.Where(cell => cell.Column.IsColumnContentVisible).Sum(cell => cell.CardCount);
 
         private void Cell_CardsChanged(object sender, RoutedEventArgs e)
         {

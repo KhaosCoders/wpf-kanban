@@ -361,7 +361,7 @@ namespace KC.WPF_Kanban
         /// </summary>
         private int SumCardsOfCells()
         {
-            return Cells.Sum(cell => cell.Cards.Count) + Columns.Sum(col => col.SumCardsOfCells());
+            return Cells.Sum(cell => cell.CardCount) + Columns.Sum(col => col.SumCardsOfCells());
         }
 
         #endregion

@@ -93,6 +93,18 @@ namespace KC.WPF_Kanban
         public static readonly DependencyProperty CanCollapseSubcolumnsProperty =
             DependencyProperty.Register("CanCollapseSubcolumns", typeof(bool), typeof(KanbanBoard), new PropertyMetadata(false));
 
+        /// <summary>
+        /// Gets or sets whether Drag&Drop of cards between columns is allowed on the board
+        /// </summary>
+        public bool AllowDragDrop
+        {
+            get => (bool)GetValue(AllowDragDropProperty);
+            set => SetValue(AllowDragDropProperty, value);
+        }
+        public static readonly DependencyProperty AllowDragDropProperty =
+            KanbanCardBase.AllowDragDropProperty.AddOwner(
+                typeof(KanbanBoard), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.Inherits));
+
         #region Column/Lane assignment
 
         /// <summary>
@@ -193,7 +205,7 @@ namespace KC.WPF_Kanban
                 if (column != null)
                 {
                     var cell = column.FindCellForSwimlane(lane);
-                    cell?.Cards.Add(card);
+                    cell?.AddCard(card);
                 }
             }
         }
@@ -241,7 +253,8 @@ namespace KC.WPF_Kanban
             {
                 Title = Title,
                 ColumnPath = ColumnPath,
-                SwimlanePath = SwimlanePath
+                SwimlanePath = SwimlanePath,
+                AllowDragDrop = AllowDragDrop
             };
             foreach (var column in Columns)
             {
@@ -268,6 +281,10 @@ namespace KC.WPF_Kanban
             if (model.Title != null)
             {
                 Title = model.Title;
+            }
+            if (model.AllowDragDrop.HasValue)
+            {
+                AllowDragDrop = model.AllowDragDrop.Value;
             }
             if (!string.IsNullOrWhiteSpace(model.ColumnPath))
             {

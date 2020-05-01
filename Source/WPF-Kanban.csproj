@@ -13,7 +13,7 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <Deterministic>true</Deterministic>
-	<PackageIcon>Logo.png</PackageIcon>
+    <PackageIcon>Logo.png</PackageIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -78,6 +78,7 @@
     <Compile Include="KanbanBoardPresenter.cs" />
     <Compile Include="KanbanCard.cs" />
     <Compile Include="KanbanCardBase.cs" />
+    <Compile Include="KanbanCardDropTarget.cs" />
     <Compile Include="KanbanCardPresenter.cs" />
     <Compile Include="KanbanCardCollection.cs" />
     <Compile Include="KanbanCardLimitPill.cs" />
