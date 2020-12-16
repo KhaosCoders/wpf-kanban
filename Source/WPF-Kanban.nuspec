@@ -6,22 +6,14 @@
     <title>$title$</title>
     <authors>Khaos-Coders</authors>
     <owners>Khaos-Coders</owners>
-    <license type="file">LICENSE.txt</license>
+    <license type="expression">MIT</license>
     <projectUrl>https://github.com/KhaosCoders/wpf-kanban</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A simple kanban board WPF control</description>
     <releaseNotes>
-      Stickers can now be added to cards
-      Swimlanes show the number of visible cards and the number of total cards on the line
-
-      Others:
-      Refactored KanbanCard to have a base class
-      Updated Newtonsoft.Json to latest version
+      Added a KanbanPlainCard, so Content of the Card can be defined by the user
     </releaseNotes>
-    <copyright>Copyright 2019</copyright>
+    <copyright>Copyright 2020</copyright>
     <tags>WPF Kanban Card Board Control</tags>
   </metadata>
-  <files>
-    <file src="license\LICENSE.txt" target="" />
-  </files>
 </package>
