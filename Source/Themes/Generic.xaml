@@ -542,6 +542,32 @@
 
     <!--#endregion-->
 
+    <!--#region KanbanPlainCard-->
+
+    <Style TargetType="{x:Type local:KanbanPlainCard}">
+        <Setter Property="Padding" Value="10,10" />
+        <Setter Property="Margin" Value="10,10" />
+        <Setter Property="Background" Value="{StaticResource kanbanCardBackground}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:KanbanPlainCard}">
+                    <Border
+                        Name="Border"
+                        Width="{TemplateBinding CardWidth}"
+                        Height="{TemplateBinding CardHeight}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+
+                        <ContentPresenter />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion-->
+
     <!--#region KanbanCardDropTarget-->
 
     <Style TargetType="{x:Type local:KanbanCardDropTarget}">

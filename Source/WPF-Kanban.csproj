@@ -86,6 +86,7 @@
     <Compile Include="KanbanColumn.cs" />
     <Compile Include="KanbanColumnCollection.cs" />
     <Compile Include="KanbanColumnItemsPresenter.cs" />
+    <Compile Include="KanbanPlainCard.cs" />
     <Compile Include="KanbanStickerBase.cs" />
     <Compile Include="KanbanStickerPresenter.cs" />
     <Compile Include="KanbanSwimlane.cs" />
@@ -134,7 +135,6 @@
     <None Include="WpfKanban.snk" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="license\LICENSE.txt" />
     <None Include="Res\Logo.png" Pack="true" PackagePath="\" />
     <Resource Include="Res\ok.png" />
   </ItemGroup>
