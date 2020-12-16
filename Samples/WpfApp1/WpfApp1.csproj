@@ -57,7 +57,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CardData.cs" />
-    <Page Include="MainWindow.xaml">
+    <Page Include="KanbanPlainCardWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="KanbanCardWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -66,8 +70,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DummyData.cs" />
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="KanbanPlainCardWindow.xaml.cs">
+      <DependentUpon>KanbanPlainCardWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="KanbanCardWindow.xaml.cs">
+      <DependentUpon>KanbanCardWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
