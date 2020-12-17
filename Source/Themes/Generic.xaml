@@ -561,6 +561,11 @@
 
                         <ContentPresenter />
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsDraged, RelativeSource={RelativeSource Mode=Self}}" Value="True">
+                            <Setter TargetName="Border" Property="Opacity" Value="0.3" />
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
