@@ -101,5 +101,11 @@ namespace WpfApp1
         {
             // MessageBox.Show(string.Format("Kanban Json: {0}", kanBoard.SaveModel()));
         }
+
+        private void kanBoard_CanDragCard(object sender, KC.WPF_Kanban.CanDragCardEventArgs e)
+        {
+            Console.Write($"CanDragCard? {e.Card.Id}");
+            e.CanDrag = e.Card.Id != null;
+        }
     }
 }

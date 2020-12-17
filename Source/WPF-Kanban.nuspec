@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A simple kanban board WPF control</description>
     <releaseNotes>
-      Added a KanbanPlainCard, so Content of the Card can be defined by the user
+      Added events to handle drag/drop of cards without overrides
     </releaseNotes>
     <copyright>Copyright 2020</copyright>
     <tags>WPF Kanban Card Board Control</tags>

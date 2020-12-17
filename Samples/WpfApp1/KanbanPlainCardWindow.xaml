@@ -22,12 +22,13 @@
             AllowDragDrop="True"
             Title="My Board"
             CanCollapseSubcolumns="true"
+            CanDragCard="kanBoard_CanDragCard"
             ColumnPath="[Column]"
             ItemsSource="{Binding Collection}"
             SwimlanePath="[Lane]">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <kanban:KanbanPlainCard>
+                    <kanban:KanbanPlainCard Blockers="{Binding Blocker}" Id="{Binding Id}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -39,7 +40,7 @@
                                 <TextBlock Text="{Binding Assignee}" Foreground="White" Margin="4,2" />
                             </Border>
 
-                            <TextBlock Grid.Row="1" Text="{Binding Description}" Margin="4" />
+                            <TextBlock Grid.Row="1" Text="{Binding Description}" Margin="4" Name="Content" />
 
                             <StackPanel
                                 Grid.Row="1"
@@ -50,12 +51,22 @@
 
                                 <kanban:KanbanStickerPresenter Margin="4,0" Stickers="{Binding Stickers}" />
 
-                                <kanban:KanbanBlockerPresenter Blockers="{Binding Blockers}" />
+                                <kanban:KanbanBlockerPresenter Blockers="{Binding Blocker}" />
                             </StackPanel>
 
                             <Border Grid.Row="2" Background="LightGray">
                                 <TextBlock Text="{Binding Number}" Margin="4,2" />
                             </Border>
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Setter Property="Background" Value="White"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HasBlockers, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type kanban:KanbanPlainCard}}}" Value="True">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
                         </Grid>
                     </kanban:KanbanPlainCard>
                 </DataTemplate>

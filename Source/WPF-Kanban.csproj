@@ -58,7 +58,10 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CanDragCardEventArgs.cs" />
+    <Compile Include="CanDropCardEventArgs.cs" />
     <Compile Include="CanvasAutoSize.cs" />
+    <Compile Include="CardMovedEventArgs.cs" />
     <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converter\BrushConverter.cs" />
     <Compile Include="Converter\ColorToBrushConverter.cs" />

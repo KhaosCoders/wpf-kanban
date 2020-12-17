@@ -166,7 +166,7 @@ namespace KC.WPF_Kanban
                 KanbanBoardCell cell = FrameworkUtils.FindVisualParent<KanbanBoardCell>(card);
 
                 // Don't drop card on origin cell or if card can't be droped here
-                if (cell != this && card.CanDropCard(Column, Swimlane))
+                if (cell != this && card.OnDropCard(Column, Swimlane))
                 {
                     // Allow drop
                     e.Effects = DragDropEffects.Move;
@@ -205,7 +205,7 @@ namespace KC.WPF_Kanban
                 KanbanBoardCell cell = FrameworkUtils.FindVisualParent<KanbanBoardCell>(card);
 
                 // Don't drop card on origin cell or if card can't be droped here
-                if (cell != this && card.CanDropCard(Column, Swimlane))
+                if (cell != this && card.OnDropCard(Column, Swimlane))
                 {
                     // Mark as handled
                     e.Handled = true;

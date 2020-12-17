@@ -24,10 +24,14 @@
             CanCollapseSubcolumns="true"
             ColumnPath="[Column]"
             ItemsSource="{Binding Collection}"
+            CanDragCard="kanBoard_CanDragCard"
+            CanDropCard="kanBoard_CanDropCard"
+            CardMoved="kanBoard_CardMoved"
             SwimlanePath="[Lane]">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <kanban:KanbanCard
+                        Id="{Binding Id}"
                         Blockers="{Binding Blocker}"
                         CardSize="{Binding Size}"
                         CreationTime="{Binding CreationTime}"

@@ -34,6 +34,8 @@ namespace KC.WPF_Kanban
             Swimlanes = new KanbanSwimlaneCollection();
         }
 
+        #region DP
+
         /// <summary>
         /// Gets or sets the title of the board
         /// </summary>
@@ -104,6 +106,39 @@ namespace KC.WPF_Kanban
         public static readonly DependencyProperty AllowDragDropProperty =
             KanbanCardBase.AllowDragDropProperty.AddOwner(
                 typeof(KanbanBoard), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.Inherits));
+
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// A event that is fired to check if a card can be dragged
+        /// </summary>
+        public event CanDragCardEventHandler CanDragCard
+        {
+            add { AddHandler(KanbanCardBase.CanDragCardEvent, value); }
+            remove { RemoveHandler(KanbanCardBase.CanDragCardEvent, value); }
+        }
+
+        /// <summary>
+        /// A event that is fired to check if a card can be dropped
+        /// </summary>
+        public event CanDropCardEventHandler CanDropCard
+        {
+            add { AddHandler(KanbanCardBase.CanDropCardEvent, value); }
+            remove { RemoveHandler(KanbanCardBase.CanDropCardEvent, value); }
+        }
+
+        /// <summary>
+        /// A event that is fired when a card was moved (draged & dropped) to a new cell
+        /// </summary>
+        public event CardMovedEventHandler CardMoved
+        {
+            add { AddHandler(KanbanCardBase.CardMovedEvent, value); }
+            remove { RemoveHandler(KanbanCardBase.CardMovedEvent, value); }
+        }
+
+        #endregion
 
         #region Column/Lane assignment
 

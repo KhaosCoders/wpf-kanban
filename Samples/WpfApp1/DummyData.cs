@@ -48,6 +48,7 @@ namespace WpfApp1
             });
             Collection.Add(new CardData()
             {
+                Id = "CardBlocked",
                 Column = "Design",
                 Lane = "lane1",
                 CreationTime = DateTime.UtcNow,

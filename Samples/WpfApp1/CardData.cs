@@ -7,6 +7,7 @@ namespace WpfApp1
 {
     public class CardData
     {
+        public string Id { get; set; }
         public string Column { get; set; }
         public string Lane { get; set; }
 

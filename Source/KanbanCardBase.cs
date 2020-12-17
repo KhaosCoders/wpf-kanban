@@ -36,6 +36,21 @@ namespace KC.WPF_Kanban
         #region Visual DP
 
         /// <summary>
+        ///Gets or sets an Identifier for the card
+        /// </summary>
+        public string Id {
+            get => (string)GetValue(IdProperty);
+            set => SetValue(IdProperty, value);
+        }
+        public static string GetId(DependencyObject obj) => (string)obj.GetValue(IdProperty);
+
+        public static void SetId(DependencyObject obj, string value) => obj.SetValue(IdProperty, value);
+
+        public static readonly DependencyProperty IdProperty =
+            DependencyProperty.RegisterAttached("Id", typeof(string), typeof(KanbanCardBase),
+                new FrameworkPropertyMetadata(null));
+
+        /// <summary>
         /// Gets or sets the width of the card
         /// </summary>
         public double CardWidth
@@ -168,7 +183,7 @@ namespace KC.WPF_Kanban
         #region Events
 
         /// <summary>
-        /// A event that is fired whenever the cards assigned to the column change
+        /// A event that is fired whenever the card is dragged
         /// </summary>
         public event RoutedEventHandler IsDragedChanged
         {
@@ -177,6 +192,39 @@ namespace KC.WPF_Kanban
         }
         public static readonly RoutedEvent IsDragedChangedEvent = EventManager
             .RegisterRoutedEvent("IsDragedChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(KanbanCardBase));
+
+        /// <summary>
+        /// A event that is fired to check if a card can be dragged
+        /// </summary>
+        public event CanDragCardEventHandler CanDragCard
+        {
+            add { AddHandler(CanDragCardEvent, value); }
+            remove { RemoveHandler(CanDragCardEvent, value); }
+        }
+        public static readonly RoutedEvent CanDragCardEvent = EventManager
+            .RegisterRoutedEvent("CanDragCard", RoutingStrategy.Bubble, typeof(CanDragCardEventHandler), typeof(KanbanCardBase));
+
+        /// <summary>
+        /// A event that is fired to check if a card can be dropped
+        /// </summary>
+        public event CanDropCardEventHandler CanDropCard
+        {
+            add { AddHandler(CanDropCardEvent, value); }
+            remove { RemoveHandler(CanDropCardEvent, value); }
+        }
+        public static readonly RoutedEvent CanDropCardEvent = EventManager
+            .RegisterRoutedEvent("CanDropCard", RoutingStrategy.Bubble, typeof(CanDropCardEventHandler), typeof(KanbanCardBase));
+
+        /// <summary>
+        /// A event that is fired when a card was moved (draged & dropped) to a new cell
+        /// </summary>
+        public event CardMovedEventHandler CardMoved
+        {
+            add { AddHandler(CardMovedEvent, value); }
+            remove { RemoveHandler(CardMovedEvent, value); }
+        }
+        public static readonly RoutedEvent CardMovedEvent = EventManager
+            .RegisterRoutedEvent("CardMoved", RoutingStrategy.Bubble, typeof(CardMovedEventHandler), typeof(KanbanCardBase));
 
         #endregion
 
@@ -188,13 +236,29 @@ namespace KC.WPF_Kanban
         /// <param name="column">The target column</param>
         /// <param name="swimlane">The target swimlane</param>
         /// <returns>Return true, if the card can be droped there</returns>
-        public virtual bool CanDropCard(KanbanColumn column, KanbanSwimlane swimlane) => true;
+        public virtual bool OnDropCard(KanbanColumn column, KanbanSwimlane swimlane)
+        {
+            CanDropCardEventArgs args = new CanDropCardEventArgs(CanDropCardEvent, this, column, swimlane)
+            {
+                CanDrop = true
+            };
+            this.RaiseEvent(args);
+            return args.CanDrop;
+        }
 
         /// <summary>
         /// Override this to control if a card can be draged or not
         /// </summary>
         /// <returns>Return true, if the card can be draged</returns>
-        public virtual bool CanDragCard() => true;
+        public virtual bool OnDragCard()
+        {
+            CanDragCardEventArgs args = new CanDragCardEventArgs(CanDragCardEvent, this)
+            {
+                CanDrag = true
+            };
+            this.RaiseEvent(args);
+            return args.CanDrag;
+        }
 
         /// <summary>
         /// Creates a DataObject containing all Drag&Drop information
@@ -212,17 +276,21 @@ namespace KC.WPF_Kanban
         /// </summary>
         /// <param name="column">The target column</param>
         /// <param name="swimlane">The target swimlane</param>
-        public virtual void OnCardMoved(KanbanColumn column, KanbanSwimlane swimlane) { }
+        public virtual void OnCardMoved(KanbanColumn column, KanbanSwimlane swimlane)
+        {
+            CardMovedEventArgs args = new CardMovedEventArgs(CardMovedEvent, this, column, swimlane);
+            this.RaiseEvent(args);
+        }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
 
             // Begin Drag
-            if (AllowDragDrop && CanDragCard() && e.LeftButton == MouseButtonState.Pressed)
+            if (AllowDragDrop && OnDragCard() && e.LeftButton == MouseButtonState.Pressed)
             {
                 Dispatcher.Invoke(new Action(() => IsDraged = true));
-                
+
                 DragDrop.DoDragDrop(this, DragData(), DragDropEffects.Move);
             }
         }

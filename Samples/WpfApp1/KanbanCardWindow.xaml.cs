@@ -101,5 +101,20 @@ namespace WpfApp1
         {
             // MessageBox.Show(string.Format("Kanban Json: {0}", kanBoard.SaveModel()));
         }
+
+        private void kanBoard_CanDragCard(object sender, KC.WPF_Kanban.CanDragCardEventArgs e)
+        {
+            e.CanDrag = e.Card.Id != null;
+        }
+
+        private void kanBoard_CanDropCard(object sender, KC.WPF_Kanban.CanDropCardEventArgs e)
+        {
+            e.CanDrop = e.TargetColumn.ColumnValue.ToString()[0] == 'D';
+        }
+
+        private void kanBoard_CardMoved(object sender, KC.WPF_Kanban.CardMovedEventArgs e)
+        {
+            MessageBox.Show($"Moved card {e.Card.Id} to Colum {e.TargetColumn.ColumnValue} / Swimlane {e.TargetSwimlane.LaneValue}");
+        }
     }
 }
