@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <package >
   <metadata>
     <id>$id$</id>
@@ -9,11 +9,11 @@
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/KhaosCoders/wpf-kanban</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A simple kanban board WPF control</description>
+    <description>A simple task board WPF control</description>
     <releaseNotes>
-      Also visualize dragged KanbanPlainCards
+      Fixed NotImplementedException when ItemSource is changed
     </releaseNotes>
     <copyright>Copyright 2020</copyright>
-    <tags>WPF Kanban Card Board Control</tags>
+    <tags>WPF Kanban Card Task Board Control</tags>
   </metadata>
 </package>
