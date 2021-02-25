@@ -1,17 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace WpfApp1
 {
@@ -99,7 +86,7 @@ namespace WpfApp1
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            // MessageBox.Show(string.Format("Kanban Json: {0}", kanBoard.SaveModel()));
+            //MessageBox.Show(string.Format("Kanban Json: {0}", kanBoard.SaveModel()));
         }
 
         private void kanBoard_CanDragCard(object sender, KC.WPF_Kanban.CanDragCardEventArgs e)
@@ -115,6 +102,14 @@ namespace WpfApp1
         private void kanBoard_CardMoved(object sender, KC.WPF_Kanban.CardMovedEventArgs e)
         {
             MessageBox.Show($"Moved card {e.Card.Id} to Colum {e.TargetColumn.ColumnValue} / Swimlane {e.TargetSwimlane.LaneValue}");
+        }
+
+        private void AddCard_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.DataContext is DummyData oData)
+            {
+                oData.AddCard();
+            }
         }
     }
 }

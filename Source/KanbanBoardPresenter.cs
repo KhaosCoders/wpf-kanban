@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
@@ -23,15 +22,6 @@ namespace KC.WPF_Kanban
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
                     Owner.ClearCards();
                     break;
-
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-                    throw new NotImplementedException(string.Format("Implement Remove. Count:{0} OldPos:{1} Pos:{2}", args.ItemCount, args.OldPosition, args.Position));
-
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
-                    throw new NotImplementedException("Implement Replace");
-
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-                    throw new NotImplementedException("Implement Add");
             }
         }
 
