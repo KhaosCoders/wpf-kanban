@@ -1,8 +1,8 @@
-﻿using System;
+﻿using KC.WPF_Kanban.Utils;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
-using KC.WPF_Kanban.Utils;
 
 namespace KC.WPF_Kanban.Converter
 {
@@ -19,14 +19,26 @@ namespace KC.WPF_Kanban.Converter
                     return brush;
                 case Color color:
                     return new SolidColorBrush(color);
+                case decimal dec:
+                    if (dec == 0)
+                    {
+                        return Brushes.Transparent;
+                    }
+                    return new SolidColorBrush(ToColor((int)dec));
+                case double d:
+                    if (d == 0)
+                    {
+                        return Brushes.Transparent;
+                    }
+                    return new SolidColorBrush(ToColor((int)d));
                 case int i:
-                    if (i==0)
+                    if (i == 0)
                     {
                         return Brushes.Transparent;
                     }
                     return new SolidColorBrush(ToColor(i));
                 case string s:
-                    int nColor=0;
+                    int nColor = 0;
                     if (s.StartsWith("#"))
                     {
                         return BrushSerianization.DeserializeBrush(s);
