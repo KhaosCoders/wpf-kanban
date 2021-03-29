@@ -38,12 +38,11 @@ namespace KC.WPF_Kanban.Converter
                     }
                     return new SolidColorBrush(ToColor(i));
                 case string s:
-                    int nColor = 0;
                     if (s.StartsWith("#"))
                     {
                         return BrushSerianization.DeserializeBrush(s);
                     }
-                    else if (int.TryParse(s, out nColor))
+                    else if (int.TryParse(s, out int nColor))
                     {
                         if (nColor == 0)
                         {
