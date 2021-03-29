@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A simple task board WPF control</description>
     <releaseNotes>
-      Fixed NotImplementedException when ItemSource is changed
+      Improved BrushConverter to accept more numeric types of data
     </releaseNotes>
     <copyright>Copyright 2020</copyright>
     <tags>WPF Kanban Card Task Board Control</tags>
