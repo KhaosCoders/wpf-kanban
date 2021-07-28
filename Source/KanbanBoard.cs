@@ -89,8 +89,8 @@ namespace KC.WPF_Kanban
         /// </summary>
         public bool CanCollapseSubcolumns
         {
-            get { return (bool)GetValue(CanCollapseSubcolumnsProperty); }
-            set { SetValue(CanCollapseSubcolumnsProperty, value); }
+            get => (bool)GetValue(CanCollapseSubcolumnsProperty);
+            set => SetValue(CanCollapseSubcolumnsProperty, value);
         }
         public static readonly DependencyProperty CanCollapseSubcolumnsProperty =
             DependencyProperty.Register("CanCollapseSubcolumns", typeof(bool), typeof(KanbanBoard), new PropertyMetadata(false));
@@ -106,6 +106,18 @@ namespace KC.WPF_Kanban
         public static readonly DependencyProperty AllowDragDropProperty =
             KanbanCardBase.AllowDragDropProperty.AddOwner(
                 typeof(KanbanBoard), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.Inherits));
+
+        /// <summary>
+        /// Gets or sets whether headers of columns are fixed when scrolling
+        /// </summary>
+        public bool IsColumnHeaderFixed
+        {
+            get => (bool)GetValue(IsColumnHeaderFixedProperty);
+            set => SetValue(IsColumnHeaderFixedProperty, value);
+        }
+        public static readonly DependencyProperty IsColumnHeaderFixedProperty =
+            KanbanColumn.IsColumnHeaderFixedProperty.AddOwner(
+                typeof(KanbanBoard), new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.Inherits));
 
         #endregion
 

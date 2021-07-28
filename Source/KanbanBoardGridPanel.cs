@@ -6,13 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace KC.WPF_Kanban
 {
     /// <summary>
     /// The Grid-panel used to layout all elements of a <see cref="KanbanBoard"/>
     /// </summary>
-    public class KanbanBoardGridPanel : Grid
+    public class KanbanBoardGridPanel : SelectiveScrollingGrid
     {
         #region Constructor
 

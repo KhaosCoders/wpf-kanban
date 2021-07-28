@@ -3,7 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converter="clr-namespace:KC.WPF_Kanban.Converter"
     xmlns:local="clr-namespace:KC.WPF_Kanban"
-    xmlns:stickers="clr-namespace:KC.WPF_Kanban.Stickers">
+    xmlns:stickers="clr-namespace:KC.WPF_Kanban.Stickers"
+    xmlns:behaviors="clr-namespace:KC.WPF_Kanban.Behaviors">
 
     <!-- Boilerplate Style for new controls:
     <Style TargetType="{x:Type local:Type}">
@@ -198,7 +199,7 @@
         <Setter Property="MinWidth" Value="30" />
         <Setter Property="Canvas.ZIndex" Value="1" />
         <Setter Property="Focusable" Value="False" />
-        <Setter Property="Margin" Value="1" />
+        <Setter Property="Padding" Value="1" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanColumn}">
@@ -251,6 +252,9 @@
             </Setter.Value>
         </Setter>
         <Style.Triggers>
+            <Trigger Property="IsColumnHeaderFixed" Value="True">
+                <Setter Property="behaviors:SelectiveScrollingBehavior.Orientation" Value="Horizontal" />
+            </Trigger>
             <Trigger Property="IsCollapsed" Value="True">
                 <Setter Property="Template">
                     <Setter.Value>

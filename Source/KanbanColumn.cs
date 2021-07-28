@@ -179,6 +179,19 @@ namespace KC.WPF_Kanban
         public static readonly DependencyProperty ColorProperty =
             DependencyProperty.Register(nameof(Color), typeof(Brush), typeof(KanbanColumn), new FrameworkPropertyMetadata(Brushes.Transparent));
 
+
+        /// <summary>
+        /// Gets or sets whether the header of the column is fixed
+        /// </summary>
+        public bool IsColumnHeaderFixed
+        {
+            get => (bool)GetValue(IsColumnHeaderFixedProperty);
+            set => SetValue(IsColumnHeaderFixedProperty, value);
+        }
+        public static readonly DependencyProperty IsColumnHeaderFixedProperty =
+            DependencyProperty.Register("IsColumnHeaderFixed", typeof(bool), typeof(KanbanColumn),
+                new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.Inherits));
+
         #endregion
 
         #region Events
