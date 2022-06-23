@@ -6,16 +6,8 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <AssemblyTitle>WpfApp1</AssemblyTitle>
     <Product>WpfApp1</Product>
-    <Copyright>Copyright ©  2021</Copyright>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <Copyright>Copyright © 2022</Copyright>
     <UseWPF>true</UseWPF>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Source\WPF-Kanban.csproj" />
