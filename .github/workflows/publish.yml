@@ -18,6 +18,7 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Package
-      run: dotnet pack -c Release -o bin Source/WPF-Kanban.csproj
+      run: dotnet pack -c Release -o . Source/WPF-Kanban.csproj
     - name: Publish to nuget.org
-      run: dotnet nuget push bin/*.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json
+
+      run: dotnet nuget push *.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json
