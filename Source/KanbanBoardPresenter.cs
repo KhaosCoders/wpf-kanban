@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
@@ -12,6 +13,8 @@ namespace KC.WPF_Kanban
     /// </remarks>
     public class KanbanBoardPresenter : VirtualizingPanel
     {
+        private List<UIElement> _realizedElements = new();
+
         /// <summary>
         /// Called when the Items collection associated with the containing ItemsControl changes.
         /// </summary>
@@ -21,6 +24,12 @@ namespace KC.WPF_Kanban
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
                     Owner.ClearCards();
+                    _realizedElements.Clear();
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove
+                        when args.Position.Index < _realizedElements.Count:
+                    Owner.RemoveCard(_realizedElements[args.Position.Index]);
+                    _realizedElements.RemoveAt(args.Position.Index);
                     break;
             }
         }
@@ -41,7 +50,8 @@ namespace KC.WPF_Kanban
                 // This will startup the generator and generate ALL cards
                 using (((ItemContainerGenerator)generator).GenerateBatches())
                 {
-                    var startPos = generator.GeneratorPositionFromIndex(0);
+                    int index = 0;
+                    var startPos = generator.GeneratorPositionFromIndex(index);
                     using (generator.StartAt(startPos, GeneratorDirection.Forward, true))
                     {
                         while ((child = generator.GenerateNext(out bool newlyRealized) as UIElement) != null)
@@ -49,8 +59,10 @@ namespace KC.WPF_Kanban
                             generator.PrepareItemContainer(child);
                             if (newlyRealized)
                             {
+                                _realizedElements.Insert(index, child);
                                 Owner.AddCard(child);
                             }
+                            index++;
                         }
                     }
                 }

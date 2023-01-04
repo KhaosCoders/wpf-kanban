@@ -257,6 +257,32 @@ namespace KC.WPF_Kanban
             }
         }
 
+        public void RemoveCard(UIElement cardContainer)
+        {
+            if (cardContainer is KanbanCardPresenter card)
+            {
+                KanbanColumn column = null;
+                if (!string.IsNullOrWhiteSpace(ColumnPath))
+                {
+                    object columnValue = PropertyPathResolver.ResolvePath(card.DataContext, ColumnPath);
+                    column = FindColumnForValue(columnValue);
+                }
+
+                KanbanSwimlane lane = null;
+                if (!string.IsNullOrWhiteSpace(SwimlanePath))
+                {
+                    object laneValue = PropertyPathResolver.ResolvePath(card.DataContext, SwimlanePath);
+                    lane = FindSwimlaneForValue(laneValue);
+                }
+
+                if (column != null)
+                {
+                    var cell = column.FindCellForSwimlane(lane);
+                    cell?.RemoveCard(card);
+                }
+            }
+        }
+
         public void ClearCards()
         {
             foreach (KanbanColumn column in Columns)

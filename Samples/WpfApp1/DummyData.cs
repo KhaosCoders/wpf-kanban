@@ -14,9 +14,13 @@ namespace WpfApp1
 
         public ICommand RemoveCommand { get; set; }
 
+        public ICommand ClearCommand { get; set; }
+
         public DummyData()
         {
-            RemoveCommand = new RelayCommand<CardData>(card => RemoveCard(card), card => CanRemoveCard(card));
+            //RemoveCommand = new RelayCommand<CardData>(card => RemoveCard(card), card => CanRemoveCard(card));
+            RemoveCommand = new RelayCommand<CardData>(card => RemoveCard(card));
+            ClearCommand = new RelayCommand<object>(_ => Collection.Clear());
 
             //Table = new DataTable();
             //Table.Columns.Add(new DataColumn("Column", typeof(string)));
@@ -76,7 +80,15 @@ namespace WpfApp1
 
         public void AddCard()
         {
-            Collection.Add(new CardData() { Column = "Requested", Lane = "lane2", Size = "L", CreationTime = DateTime.Parse("12.02.2019 08:00"), Duration = 1500, Number = 5, Assignee = "User2", Description = "Something we're working on right now", TileColor = Colors.LightGreen, TileText = "A" });
+            var card = new CardData() { Column = "Requested", Lane = "lane2", Size = "L", CreationTime = DateTime.Parse("12.02.2019 08:00"), Duration = 1500, Number = 5, Assignee = "User2", Description = "Something we're working on right now", TileColor = Colors.LightGreen, TileText = "A" };
+            if (Collection.Count > 1)
+            {
+                Collection.Insert(1, card);
+            }
+            else
+            {
+                Collection.Add(card);
+            }
         }
 
         private void RemoveCard(CardData card) => Collection.Remove(card);

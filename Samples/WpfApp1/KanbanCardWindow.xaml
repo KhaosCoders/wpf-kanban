@@ -107,6 +107,11 @@
             <Button Width="100"
                     Height="20"
                     Margin="0,0,4,0"
+                    Content="Clear All"
+                    Command="{Binding ClearCommand}" />
+            <Button Width="100"
+                    Height="20"
+                    Margin="0,0,4,0"
                     Click="AddCard_Click"
                     Content="Add Card" />
             <Button Width="100"
