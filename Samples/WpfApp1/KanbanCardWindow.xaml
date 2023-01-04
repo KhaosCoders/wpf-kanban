@@ -9,6 +9,7 @@
         Title="MainWindow"
         Width="1200"
         Height="600"
+        x:Name="window"
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True,
                                          Type={x:Type local:DummyData}}"
         mc:Ignorable="d">
@@ -37,9 +38,18 @@
                                        LeftTitle="{Binding Number}"
                                        RightTitle="{Binding Assignee}"
                                        Stickers="{Binding Stickers}"
+                                       Tag="{Binding DataContext, ElementName=window}"
                                        TileBrush="{Binding TileRgb, Converter={StaticResource convBrush}}"
                                        TileText="{Binding TileText}"
-                                       WorkedMinutes="{Binding Duration}" />
+                                       WorkedMinutes="{Binding Duration}">
+                        <kanban:KanbanCard.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Info" Command="{Binding InfoCommand}" />
+                                <Separator />
+                                <MenuItem Header="Remove" Command="{Binding PlacementTarget.Tag.RemoveCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding}" />
+                            </ContextMenu>
+                        </kanban:KanbanCard.ContextMenu>
+                    </kanban:KanbanCard>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <kanban:KanbanBoard.Columns>

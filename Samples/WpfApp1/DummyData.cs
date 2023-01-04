@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace WpfApp1
@@ -11,8 +12,12 @@ namespace WpfApp1
 
         public ObservableCollection<CardData> Collection { get; set; } = new ObservableCollection<CardData>();
 
+        public ICommand RemoveCommand { get; set; }
+
         public DummyData()
         {
+            RemoveCommand = new RelayCommand<CardData>(card => RemoveCard(card), card => CanRemoveCard(card));
+
             //Table = new DataTable();
             //Table.Columns.Add(new DataColumn("Column", typeof(string)));
             //Table.Columns.Add(new DataColumn("Lane", typeof(string)));
@@ -73,5 +78,9 @@ namespace WpfApp1
         {
             Collection.Add(new CardData() { Column = "Requested", Lane = "lane2", Size = "L", CreationTime = DateTime.Parse("12.02.2019 08:00"), Duration = 1500, Number = 5, Assignee = "User2", Description = "Something we're working on right now", TileColor = Colors.LightGreen, TileText = "A" });
         }
+
+        private void RemoveCard(CardData card) => Collection.Remove(card);
+
+        private bool CanRemoveCard(CardData card) => card?.Column == "Done";
     }
 }

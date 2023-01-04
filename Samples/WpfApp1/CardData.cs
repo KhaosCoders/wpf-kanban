@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using KC.WPF_Kanban;
 
@@ -43,5 +45,14 @@ namespace WpfApp1
         public string Size { get; set; }
 
         public string TileText { get; set; }
+
+        public ICommand InfoCommand { get; set; }
+
+        public CardData()
+        {
+            InfoCommand = new RelayCommand<CardData>(_ => ShowInfo());
+        }
+
+        private void ShowInfo() => MessageBox.Show($"{TileText}{Environment.NewLine}{Description}", "CardInfo");
     }
 }
