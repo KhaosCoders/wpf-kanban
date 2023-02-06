@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -10,17 +12,24 @@ namespace WpfApp1
     {
         //public DataTable Table { get; set; }
 
-        public ObservableCollection<CardData> Collection { get; set; } = new ObservableCollection<CardData>();
+        public ObservableCollection<CardData> Collection { get; } = new ObservableCollection<CardData>();
+
+        public ICollectionView View { get; }
 
         public ICommand RemoveCommand { get; set; }
 
         public ICommand ClearCommand { get; set; }
 
+        public ICommand RefreshCommand { get; set; }
+
         public DummyData()
         {
+            View = CollectionViewSource.GetDefaultView(Collection);
+
             //RemoveCommand = new RelayCommand<CardData>(card => RemoveCard(card), card => CanRemoveCard(card));
             RemoveCommand = new RelayCommand<CardData>(card => RemoveCard(card));
             ClearCommand = new RelayCommand<object>(_ => Collection.Clear());
+            RefreshCommand = new RelayCommand<object>(_ => View.Refresh());
 
             //Table = new DataTable();
             //Table.Columns.Add(new DataColumn("Column", typeof(string)));

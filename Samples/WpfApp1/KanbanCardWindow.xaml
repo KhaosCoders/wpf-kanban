@@ -25,7 +25,7 @@
                             CanDropCard="kanBoard_CanDropCard"
                             CardMoved="kanBoard_CardMoved"
                             ColumnPath="[Column]"
-                            ItemsSource="{Binding Collection}"
+                            ItemsSource="{Binding View}"
                             SwimlanePath="[Lane]">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -114,6 +114,11 @@
                     Margin="0,0,4,0"
                     Click="AddCard_Click"
                     Content="Add Card" />
+            <Button Width="100"
+                    Height="20"
+                    Margin="0,0,4,0"
+                    Content="Refresh View"
+                    Command="{Binding RefreshCommand}" />
             <Button Width="100"
                     Height="20"
                     Click="Save_Click"
