@@ -22,7 +22,8 @@ namespace KC.WPF_Kanban
         static KanbanColumn()
         {
             // Enable Themes for this Control
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(KanbanColumn), new FrameworkPropertyMetadata(typeof(KanbanColumn)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(KanbanColumn),
+                new FrameworkPropertyMetadata(typeof(KanbanColumn)));
         }
 
         #endregion
@@ -88,7 +89,8 @@ namespace KC.WPF_Kanban
         }
         public static readonly DependencyProperty IsCollapsedProperty =
             DependencyProperty.RegisterAttached(nameof(IsCollapsed), typeof(bool), typeof(KanbanColumn),
-                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsMeasure, new PropertyChangedCallback(OnIsCollapsedChanged)));
+                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsMeasure,
+                    new PropertyChangedCallback(OnIsCollapsedChanged)));
 
         private static void OnIsCollapsedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -96,6 +98,37 @@ namespace KC.WPF_Kanban
             {
                 var panel = FrameworkUtils.FindVisualParent<KanbanBoardGridPanel>(column);
                 panel?.OnColumnCollapsedChanged(column);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets whether the column is collapsed automatically when no cards are in it
+        /// </summary>
+        public bool AutoCollapse
+        {
+            get => (bool)GetValue(AutoCollapseProperty);
+            set => SetValue(AutoCollapseProperty, value);
+        }
+        public static bool GetAutoCollapse(DependencyObject obj)
+        {
+            return (bool)obj.GetValue(AutoCollapseProperty);
+        }
+        public static void SetAutoCollapse(DependencyObject obj, bool value)
+        {
+            obj.SetValue(AutoCollapseProperty, value);
+        }
+        public static readonly DependencyProperty AutoCollapseProperty =
+            DependencyProperty.RegisterAttached(nameof(AutoCollapse), typeof(bool), typeof(KanbanColumn),
+                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsMeasure,
+                    new PropertyChangedCallback(OnAutoCollapseChanged)));
+
+        private static void OnAutoCollapseChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is KanbanColumn column
+                && (bool)e.NewValue
+                && column.CardCount == 0)
+            {
+                column.IsCollapsed = true;
             }
         }
 
@@ -135,13 +168,18 @@ namespace KC.WPF_Kanban
         }
         public static readonly DependencyProperty CardCountProperty =
             KanbanCardLimitPill.CardCountProperty.AddOwner(
-                typeof(KanbanColumn), new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnCardCountChanged)));
+                typeof(KanbanColumn), new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.Inherits,
+                    new PropertyChangedCallback(OnCardCountChanged)));
 
         private static void OnCardCountChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is UIElement element)
+            if (d is KanbanColumn column)
             {
-                element.RaiseEvent(new RoutedEventArgs(CardCountChangedEvent));
+                column.RaiseEvent(new RoutedEventArgs(CardCountChangedEvent));
+                if (column.AutoCollapse)
+                {
+                    column.IsCollapsed = column.CardCount == 0;
+                }
             }
         }
 
@@ -166,7 +204,8 @@ namespace KC.WPF_Kanban
             private set => SetValue(IsSubColumnProperty, value);
         }
         public static readonly DependencyProperty IsSubColumnProperty =
-            DependencyProperty.Register(nameof(IsSubColumn), typeof(bool), typeof(KanbanColumn), new FrameworkPropertyMetadata(false));
+            DependencyProperty.Register(nameof(IsSubColumn), typeof(bool), typeof(KanbanColumn),
+                new FrameworkPropertyMetadata(false));
 
         /// <summary>
         /// Gets or sets a color brush used to draw a highlight color on the column header
@@ -177,7 +216,8 @@ namespace KC.WPF_Kanban
             set => SetValue(ColorProperty, value);
         }
         public static readonly DependencyProperty ColorProperty =
-            DependencyProperty.Register(nameof(Color), typeof(Brush), typeof(KanbanColumn), new FrameworkPropertyMetadata(Brushes.Transparent));
+            DependencyProperty.Register(nameof(Color), typeof(Brush), typeof(KanbanColumn),
+                new FrameworkPropertyMetadata(Brushes.Transparent));
 
 
         /// <summary>
@@ -205,7 +245,8 @@ namespace KC.WPF_Kanban
             remove { RemoveHandler(CardCountChangedEvent, value); }
         }
         public static readonly RoutedEvent CardCountChangedEvent = EventManager
-            .RegisterRoutedEvent(nameof(CardCountChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(KanbanColumn));
+            .RegisterRoutedEvent(nameof(CardCountChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler),
+                typeof(KanbanColumn));
 
         #endregion
 
@@ -229,7 +270,8 @@ namespace KC.WPF_Kanban
         }
         public static readonly DependencyProperty ColumnsProperty =
             KanbanColumnItemsPresenter.ColumnsProperty.AddOwner(
-                typeof(KanbanColumn), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnColumnsChanged)));
+                typeof(KanbanColumn), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits,
+                    new PropertyChangedCallback(OnColumnsChanged)));
 
         private static void OnColumnsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -337,7 +379,8 @@ namespace KC.WPF_Kanban
         }
 
         /// <summary>
-        /// Returns the first <see cref="KanbanBoardCell"/> of this collumn, that is assigned to the given <see cref="KanbanSwimlane"/>, or null.
+        /// Returns the first <see cref="KanbanBoardCell"/> of this collumn, that is assigned to the given
+        /// <see cref="KanbanSwimlane"/>, or null.
         /// </summary>
         public KanbanBoardCell FindCellForSwimlane(KanbanSwimlane lane)
         {

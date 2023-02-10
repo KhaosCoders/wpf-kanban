@@ -6,10 +6,10 @@
         xmlns:kanban="clr-namespace:KC.WPF_Kanban;assembly=WPF-Kanban"
         xmlns:local="clr-namespace:WpfApp1"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        x:Name="window"
         Title="MainWindow"
         Width="1200"
         Height="600"
-        x:Name="window"
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True,
                                          Type={x:Type local:DummyData}}"
         mc:Ignorable="d">
@@ -44,9 +44,9 @@
                                        WorkedMinutes="{Binding Duration}">
                         <kanban:KanbanCard.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="Info" Command="{Binding InfoCommand}" />
+                                <MenuItem Command="{Binding InfoCommand}" Header="Info" />
                                 <Separator />
-                                <MenuItem Header="Remove" Command="{Binding PlacementTarget.Tag.RemoveCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding}" />
+                                <MenuItem Command="{Binding PlacementTarget.Tag.RemoveCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding}" Header="Remove" />
                             </ContextMenu>
                         </kanban:KanbanCard.ContextMenu>
                     </kanban:KanbanCard>
@@ -67,7 +67,8 @@
                                      ColumnSpan="2"
                                      Color="Orange">
                     <kanban:KanbanColumn.Columns>
-                        <kanban:KanbanColumn Caption="Design"
+                        <kanban:KanbanColumn AutoCollapse="True"
+                                             Caption="Design"
                                              CardLimit="1"
                                              ColumnValue="Design" />
                         <kanban:KanbanColumn Caption="Doing"
@@ -76,20 +77,12 @@
                                              IsCollapsed="True" />
                     </kanban:KanbanColumn.Columns>
                 </kanban:KanbanColumn>
-                <kanban:KanbanColumn Caption="Done"
-                                     ColumnValue="Done"
-                                     Color="Green" />
-                <kanban:KanbanColumn Caption="Archiv"
-                                     ColumnValue="Archiv"
-                                     IsCollapsed="True" />
+                <kanban:KanbanColumn Caption="Done" ColumnValue="Done" Color="Green" />
+                <kanban:KanbanColumn Caption="Archiv" ColumnValue="Archiv" IsCollapsed="True" />
             </kanban:KanbanBoard.Columns>
             <kanban:KanbanBoard.Swimlanes>
-                <kanban:KanbanSwimlane Background="Aquamarine"
-                                       Caption="Lane 1"
-                                       LaneValue="lane1" />
-                <kanban:KanbanSwimlane Background="AliceBlue"
-                                       Caption="Lane 2"
-                                       LaneValue="lane2" />
+                <kanban:KanbanSwimlane Background="Aquamarine" Caption="Lane 1" LaneValue="lane1" />
+                <kanban:KanbanSwimlane Background="AliceBlue" Caption="Lane 2" LaneValue="lane2" />
                 <kanban:KanbanSwimlane Background="DarkGoldenrod"
                                        Caption="Lane 3"
                                        Foreground="White"
@@ -102,13 +95,13 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
                     Orientation="Horizontal">
-            <TextBlock Text="Fixed Headers" Margin="4,4,0,0" />
-            <CheckBox IsChecked="{Binding IsColumnHeaderFixed, ElementName=kanBoard, Mode=TwoWay}" Margin="10,4" />
+            <TextBlock Margin="4,4,0,0" Text="Fixed Headers" />
+            <CheckBox Margin="10,4" IsChecked="{Binding IsColumnHeaderFixed, ElementName=kanBoard, Mode=TwoWay}" />
             <Button Width="100"
                     Height="20"
                     Margin="0,0,4,0"
-                    Content="Clear All"
-                    Command="{Binding ClearCommand}" />
+                    Command="{Binding ClearCommand}"
+                    Content="Clear All" />
             <Button Width="100"
                     Height="20"
                     Margin="0,0,4,0"
@@ -117,8 +110,8 @@
             <Button Width="100"
                     Height="20"
                     Margin="0,0,4,0"
-                    Content="Refresh View"
-                    Command="{Binding RefreshCommand}" />
+                    Command="{Binding RefreshCommand}"
+                    Content="Refresh View" />
             <Button Width="100"
                     Height="20"
                     Click="Save_Click"
