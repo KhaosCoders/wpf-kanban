@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 
-namespace KC.WPF_Kanban
+namespace KC.WPF_Kanban;
+
+public class KanbanSwimlaneCollection : ObservableCollection<KanbanSwimlane>
 {
-    public class KanbanSwimlaneCollection : ObservableCollection<KanbanSwimlane>
-    {
-        public KanbanBoardGridPanel Panel { get; set; }
+    public KanbanBoardGridPanel Panel { get; set; }
 
-    }
 }

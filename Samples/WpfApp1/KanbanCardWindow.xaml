@@ -26,6 +26,8 @@
                             CardMoved="kanBoard_CardMoved"
                             ColumnPath="[Column]"
                             ItemsSource="{Binding View}"
+                            ReloadBoardClicked="kanBoard_ReloadBoardClicked"
+                            ShowReloadButton="True"
                             SwimlanePath="[Lane]">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>

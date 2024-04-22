@@ -111,5 +111,10 @@ namespace WpfApp1
                 oData.AddCard();
             }
         }
+
+        private void kanBoard_ReloadBoardClicked(object sender, System.EventArgs e)
+        {
+            MessageBox.Show("Reload Board clicked");
+        }
     }
 }
