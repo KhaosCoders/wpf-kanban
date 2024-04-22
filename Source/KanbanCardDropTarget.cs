@@ -1,30 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
-namespace KC.WPF_Kanban
+namespace KC.WPF_Kanban;
+
+/// <summary>
+/// A dummy card displayed as preview while a real <see cref="KanbanCardBase"> is draged from one <see cref="KanbanBoardCell"> to another
+/// </summary>
+public class KanbanCardDropTarget : KanbanCardBase
 {
-    /// <summary>
-    /// A dummy card displayed as preview while a real <see cref="KanbanCardBase"> is draged from one <see cref="KanbanBoardCell"> to another
-    /// </summary>
-    public class KanbanCardDropTarget : KanbanCardBase
+    #region Override DP Metadata
+
+    static KanbanCardDropTarget()
     {
-        #region Override DP Metadata
+        // Enable Themes for this Control
+        DefaultStyleKeyProperty.OverrideMetadata(typeof(KanbanCardDropTarget), new FrameworkPropertyMetadata(typeof(KanbanCardDropTarget)));
+    }
 
-        static KanbanCardDropTarget()
-        {
-            // Enable Themes for this Control
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(KanbanCardDropTarget), new FrameworkPropertyMetadata(typeof(KanbanCardDropTarget)));
-        }
+    #endregion
 
-        #endregion
-
-        public KanbanCardDropTarget()
-        {
-            IsHitTestVisible = false;
-        }
+    public KanbanCardDropTarget()
+    {
+        IsHitTestVisible = false;
     }
 }
