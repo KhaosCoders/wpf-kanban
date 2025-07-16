@@ -56,6 +56,7 @@
     <converter:MultiplyConveter x:Key="convMultiply" />
     <converter:MultiBoolToVisibilityConverter x:Key="convMultiBoolToVisibile" Condition="Any" />
     <converter:InvertBoolConverter x:Key="convInvertBool" />
+    <converter:MultiBoolConverter x:Key="convAllBools" />
     <BooleanToVisibilityConverter x:Key="convBoolToVisibility" />
 
     <!--#endregion-->
@@ -509,7 +510,13 @@
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
-                        <DataTrigger Binding="{Binding HasBlockers, RelativeSource={RelativeSource Mode=Self}}" Value="True">
+                        <DataTrigger Value="True">
+                            <DataTrigger.Binding>
+                                <MultiBinding Converter="{StaticResource convAllBools}">
+                                    <Binding Path="UseBlockerColoring" RelativeSource="{RelativeSource Mode=Self}" />
+                                    <Binding Path="HasBlockers" RelativeSource="{RelativeSource Mode=Self}" />
+                                </MultiBinding>
+                            </DataTrigger.Binding>
                             <Setter TargetName="Border" Property="Background" Value="{StaticResource kanbanCardBlockedBackground}" />
                             <Setter TargetName="Content" Property="Foreground" Value="{StaticResource kanbanCardBlockedForeground}" />
                         </DataTrigger>
