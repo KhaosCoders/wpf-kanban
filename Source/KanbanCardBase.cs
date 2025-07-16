@@ -106,6 +106,16 @@ public abstract class KanbanCardBase : Control
     private static object CoerceHasBlockers(DependencyObject d, object baseValue) =>
         ((d as KanbanCardBase)?.Blockers?.Count ?? 0) > 0;
 
+    /// <summary>
+    /// Gets or sets whether the card should be colored based on blockers
+    /// </summary>
+    public bool UseBlockerColoring
+    {
+        get { return (bool)GetValue(UseBlockerColoringProperty); }
+        set { SetValue(UseBlockerColoringProperty, value); }
+    }
+    public static readonly DependencyProperty UseBlockerColoringProperty =
+        DependencyProperty.Register("UseBlockerColoring", typeof(bool), typeof(KanbanCardBase), new PropertyMetadata(true));
 
     /// <summary>
     /// Gets or sets a collection of Stickers (<see cref="KanbanStickerBase"/>)
