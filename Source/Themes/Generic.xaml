@@ -105,7 +105,7 @@
                     <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                         <DockPanel>
                             <Control DockPanel.Dock="Top" Template="{TemplateBinding TitleControl}" />
-                            <ScrollViewer x:Name="KB_ScrollViewer" Focusable="False">
+                            <ScrollViewer x:Name="KB_ScrollViewer" Focusable="False" PanningMode="Both">
                                 <StackPanel>
                                     <local:KanbanBoardGridPanel MinHeight="{Binding ActualHeight, ElementName=KB_ScrollViewer}" Columns="{TemplateBinding Columns}" Swimlanes="{TemplateBinding Swimlanes}" />
                                     <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
