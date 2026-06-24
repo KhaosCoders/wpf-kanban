@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <RootNamespace>KC.WPF_Kanban</RootNamespace>
-    <TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>net481;net10.0-windows</TargetFrameworks>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageIcon>Logo.png</PackageIcon>
     <AssemblyTitle>WPF-Kanban</AssemblyTitle>
     <Company>KhaosCoders</Company>
     <Product>WPF-Kanban</Product>
     <Description>A simple task board WPF control</Description>
-    <Copyright>Copyright 2025</Copyright>
-    <Version>2.1.0</Version>
+    <Copyright>Copyright 2026</Copyright>
+    <Version>2.2.0</Version>
     <UseWPF>true</UseWPF>
     <LangVersion>latest</LangVersion>
     <Authors>Khaos-Coders</Authors>
@@ -27,6 +27,6 @@
     <Resource Include="Res\ok.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="[11.0.2,)" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 </Project>
