@@ -19,6 +19,12 @@ jobs:
 
     - name: Package
       run: dotnet pack -c Release -o . Source/WPF-Kanban.csproj
-    - name: Publish to nuget.org
 
-      run: dotnet nuget push *.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json
+    - name: NuGet login (OIDC → temp API key)
+      uses: NuGet/login@v1
+      id: login
+      with:
+        user: ${{secrets.NUGET_USER}}
+
+    - name: Publish to nuget.org
+      run: dotnet nuget push *.nupkg -k ${{steps.login.outputs.NUGET_API_KEY}}  -s https://api.nuget.org/v3/index.json
