@@ -30,11 +30,48 @@ public class KanbanBoard : MultiSelector
 
     public KanbanBoard()
     {
+        SetValue(IsDarkModeActivePropertyKey, false);
         Columns = [];
         Swimlanes = [];
     }
 
     #region DP
+
+    /// <summary>
+    /// Gets or sets whether the built-in board templates use dark colors.
+    /// Original brush values and bindings are preserved.
+    /// </summary>
+    public bool IsDarkMode
+    {
+        get => GetIsDarkMode(this);
+        set => SetIsDarkMode(this, value);
+    }
+
+    public static bool GetIsDarkMode(DependencyObject element) =>
+        (bool)element.GetValue(IsDarkModeProperty);
+
+    public static void SetIsDarkMode(DependencyObject element, bool value) =>
+        element.SetValue(IsDarkModeProperty, value);
+
+    public static readonly DependencyProperty IsDarkModeProperty =
+        DependencyProperty.RegisterAttached(nameof(IsDarkMode), typeof(bool), typeof(KanbanBoard),
+            new FrameworkPropertyMetadata(false, OnIsDarkModeChanged));
+
+    private static readonly DependencyPropertyKey IsDarkModeActivePropertyKey =
+        DependencyProperty.RegisterAttachedReadOnly("IsDarkModeActive", typeof(bool), typeof(KanbanBoard),
+            new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.Inherits));
+
+    /// <summary>
+    /// The read-only dark-mode state inherited by template elements.
+    /// Each board starts a separate scope, without overriding style setters or bindings.
+    /// </summary>
+    public static readonly DependencyProperty IsDarkModeActiveProperty = IsDarkModeActivePropertyKey.DependencyProperty;
+
+    public static bool GetIsDarkModeActive(DependencyObject element) =>
+        (bool)element.GetValue(IsDarkModeActiveProperty);
+
+    private static void OnIsDarkModeChanged(DependencyObject element, DependencyPropertyChangedEventArgs args) =>
+        element.SetValue(IsDarkModeActivePropertyKey, args.NewValue);
 
     /// <summary>
     /// Gets or sets the title of the board
@@ -346,6 +383,7 @@ public class KanbanBoard : MultiSelector
         JsonBoard boardModel = new JsonBoard()
         {
             Title = Title,
+            IsDarkMode = IsDarkMode,
             ShowReloadButton = ShowReloadButton,
             ColumnPath = ColumnPath,
             SwimlanePath = SwimlanePath,
@@ -373,6 +411,10 @@ public class KanbanBoard : MultiSelector
 
     private void ApplyJsonModel(JsonBoard model)
     {
+        if (model.IsDarkMode is bool isDarkMode)
+        {
+            SetCurrentValue(IsDarkModeProperty, isDarkMode);
+        }
         if (model.Title != null)
         {
             Title = model.Title;
