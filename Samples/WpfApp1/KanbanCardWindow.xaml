@@ -96,25 +96,33 @@
         <StackPanel Margin="0,4,4,0"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
+                    kanban:KanbanBoard.IsDarkMode="{Binding IsDarkMode, ElementName=kanBoard}"
+                    TextElement.Foreground="{conv:DarkModeBrush {x:Static SystemColors.ControlTextBrush}, Role=Foreground}"
                     Orientation="Horizontal">
+            <CheckBox Margin="4" Content="Dark mode"
+                      IsChecked="{Binding IsDarkMode, ElementName=kanBoard, Mode=TwoWay}" />
             <TextBlock Margin="4,4,0,0" Text="Fixed Headers" />
             <CheckBox Margin="10,4" IsChecked="{Binding IsColumnHeaderFixed, ElementName=kanBoard, Mode=TwoWay}" />
             <Button Width="100"
+                    Foreground="{x:Static SystemColors.ControlTextBrush}"
                     Height="20"
                     Margin="0,0,4,0"
                     Command="{Binding ClearCommand}"
                     Content="Clear All" />
             <Button Width="100"
+                    Foreground="{x:Static SystemColors.ControlTextBrush}"
                     Height="20"
                     Margin="0,0,4,0"
                     Click="AddCard_Click"
                     Content="Add Card" />
             <Button Width="100"
+                    Foreground="{x:Static SystemColors.ControlTextBrush}"
                     Height="20"
                     Margin="0,0,4,0"
                     Command="{Binding RefreshCommand}"
                     Content="Refresh View" />
             <Button Width="100"
+                    Foreground="{x:Static SystemColors.ControlTextBrush}"
                     Height="20"
                     Click="Save_Click"
                     Content="Save" />

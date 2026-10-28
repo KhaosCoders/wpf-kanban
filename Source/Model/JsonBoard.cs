@@ -6,6 +6,8 @@ internal class JsonBoard
 {
     public string Title { get; set; }
 
+    public bool? IsDarkMode { get; set; }
+
     public string ColumnPath { get; set; }
 
     public string SwimlanePath { get; set; }

@@ -14,6 +14,11 @@
         mc:Ignorable="d">
     <Window.Resources>
         <conv:BrushConverter x:Key="convBrush" />
+        <SolidColorBrush x:Key="cardBackground" Color="White" />
+        <SolidColorBrush x:Key="cardBlockedBackground" Color="Red" />
+        <SolidColorBrush x:Key="cardHeaderBackground" Color="Black" />
+        <SolidColorBrush x:Key="cardHeaderForeground" Color="White" />
+        <SolidColorBrush x:Key="cardFooterBackground" Color="LightGray" />
     </Window.Resources>
     <Grid>
         <kanban:KanbanBoard Name="kanBoard"
@@ -35,8 +40,8 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <Border Grid.Row="0" Background="Black">
-                                <TextBlock Margin="4,2" Foreground="White" Text="{Binding Assignee}" />
+                            <Border Grid.Row="0" Background="{conv:DarkModeBrush {StaticResource cardHeaderBackground}}">
+                                <TextBlock Margin="4,2" Foreground="{conv:DarkModeBrush {StaticResource cardHeaderForeground}, Role=Foreground}" Text="{Binding Assignee}" />
                             </Border>
 
                             <TextBlock Name="Content"
@@ -55,15 +60,15 @@
                                 <kanban:KanbanBlockerPresenter Blockers="{Binding Blocker}" />
                             </StackPanel>
 
-                            <Border Grid.Row="2" Background="LightGray">
+                            <Border Grid.Row="2" Background="{conv:DarkModeBrush {StaticResource cardFooterBackground}}">
                                 <TextBlock Margin="4,2" Text="{Binding Number}" />
                             </Border>
                             <Grid.Style>
                                 <Style TargetType="Grid">
-                                    <Setter Property="Background" Value="White" />
+                                    <Setter Property="Background" Value="{conv:DarkModeBrush {StaticResource cardBackground}}" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding HasBlockers, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type kanban:KanbanPlainCard}}}" Value="True">
-                                            <Setter Property="Background" Value="Red" />
+                                            <Setter Property="Background" Value="{conv:DarkModeBrush {StaticResource cardBlockedBackground}}" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -108,6 +113,13 @@
             </kanban:KanbanBoard.Swimlanes>
         </kanban:KanbanBoard>
 
+        <CheckBox Margin="0,4,112,0"
+                  HorizontalAlignment="Right"
+                  VerticalAlignment="Top"
+                  Content="Dark mode"
+                  kanban:KanbanBoard.IsDarkMode="{Binding IsDarkMode, ElementName=kanBoard}"
+                  Foreground="{conv:DarkModeBrush {x:Static SystemColors.ControlTextBrush}, Role=Foreground}"
+                  IsChecked="{Binding IsDarkMode, ElementName=kanBoard, Mode=TwoWay}" />
         <Button Width="100"
                 Height="20"
                 Margin="0,4,4,0"

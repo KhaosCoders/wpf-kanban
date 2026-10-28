@@ -25,6 +25,7 @@
     <!--#region Colors-->
 
     <SolidColorBrush x:Key="kanbanBoardBackground" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="kanbanTextForeground" Color="#000000" />
     <SolidColorBrush x:Key="kanbanBoardTitleBackground" Color="#E8E8E8" />
     <SolidColorBrush x:Key="kanbanTitleForeground" Color="#505050" />
     <SolidColorBrush x:Key="kanbanColumnHeaderBackground" Color="#FAFAFA" />
@@ -63,11 +64,13 @@
 
     <!--#region Icons-->
 
-    <Viewbox x:Key="icArrow" x:Shared="false">
-        <Grid Width="512" Height="512">
-            <Path Data="M128,256L384,0v128L256,256l128,128v128L128,256z" Fill="{StaticResource kanbanIconColor}" Stretch="Fill" />
-        </Grid>
-    </Viewbox>
+    <DataTemplate x:Key="icArrow">
+        <Viewbox>
+            <Grid Width="512" Height="512">
+                <Path Data="M128,256L384,0v128L256,256l128,128v128L128,256z" Fill="{converter:DarkModeBrush {StaticResource kanbanIconColor}, Role=Accent}" Stretch="Fill" />
+            </Grid>
+        </Viewbox>
+    </DataTemplate>
 
     <!--#endregion-->
 
@@ -78,34 +81,181 @@
         <Setter Property="Width" Value="32" />
         <Setter Property="Height" Value="32" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Content">
-            <Setter.Value>
-                <!--  Refresh Icon Path  -->
-                <Path Data="M21 3V8M21 8H16M21 8L18 5.29168C16.4077 3.86656 14.3051 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.2832 21 19.8675 18.008 20.777 14"
-                      Stroke="Black"
-                      StrokeEndLineCap="Round"
-                      StrokeLineJoin="Round"
-                      StrokeThickness="2" />
-
-            </Setter.Value>
-        </Setter>
+        <Style.Triggers>
+            <Trigger Property="Content" Value="{x:Null}">
+                <Setter Property="ContentTemplate">
+                    <Setter.Value>
+                        <DataTemplate>
+                            <Path Data="M21 3V8M21 8H16M21 8L18 5.29168C16.4077 3.86656 14.3051 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.2832 21 19.8675 18.008 20.777 14"
+                                  Stroke="{converter:DarkModeBrush {StaticResource kanbanTextForeground}, Role=Foreground}"
+                                  StrokeEndLineCap="Round" StrokeLineJoin="Round" StrokeThickness="2" />
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="local:KanbanBoard.IsDarkModeActive" Value="True">
+                <Setter Property="Background" Value="{StaticResource kanbanBoardTitleBackground}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type local:KanbanBoardReloadButton}">
+                            <Border x:Name="chrome"
+                                    Background="{converter:DarkModeBrush {Binding Background, RelativeSource={RelativeSource TemplatedParent}}}"
+                                    BorderBrush="{converter:DarkModeBrush {Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}, Role=Accent}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    TextElement.Foreground="{converter:DarkModeBrush {Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}, Role=Foreground}"
+                                    CornerRadius="3">
+                                <ContentPresenter Margin="6" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="chrome" Property="Background" Value="{converter:DarkModeBrush {StaticResource kanbanIconColor}}" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="chrome" Property="Background" Value="{converter:DarkModeBrush {StaticResource kanbanTitleForeground}}" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="chrome" Property="Opacity" Value="0.35" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <!--#endregion-->
 
     <!--#region Kanban Board-->
 
+    <Style x:Key="darkScrollBarButton" TargetType="{x:Type RepeatButton}">
+        <Setter Property="Width" Value="16" />
+        <Setter Property="Height" Value="16" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Border x:Name="chrome" Background="Transparent">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="chrome" Property="Background" Value="{converter:DarkModeBrush {StaticResource kanbanIconColor}}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="chrome" Property="Background" Value="{converter:DarkModeBrush {StaticResource kanbanTitleForeground}}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ControlTemplate x:Key="darkScrollBarTemplate" TargetType="{x:Type ScrollBar}">
+        <DockPanel Background="{converter:DarkModeBrush {StaticResource kanbanBoardTitleBackground}}">
+            <RepeatButton x:Name="lineDecrease" DockPanel.Dock="Top"
+                          Style="{StaticResource darkScrollBarButton}" Command="{x:Static ScrollBar.LineUpCommand}">
+                <Path x:Name="decreaseArrow" Data="M0,4 L4,0 L8,4" StrokeThickness="1"
+                      Stroke="{converter:DarkModeBrush {StaticResource kanbanIconColor}, Role=Accent}" />
+            </RepeatButton>
+            <RepeatButton x:Name="lineIncrease" DockPanel.Dock="Bottom"
+                          Style="{StaticResource darkScrollBarButton}" Command="{x:Static ScrollBar.LineDownCommand}">
+                <Path x:Name="increaseArrow" Data="M0,0 L4,4 L8,0" StrokeThickness="1"
+                      Stroke="{converter:DarkModeBrush {StaticResource kanbanIconColor}, Role=Accent}" />
+            </RepeatButton>
+            <Track x:Name="PART_Track" IsDirectionReversed="True"
+                   Orientation="{TemplateBinding Orientation}"
+                   Minimum="{TemplateBinding Minimum}" Maximum="{TemplateBinding Maximum}"
+                   Value="{Binding Value, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                   ViewportSize="{TemplateBinding ViewportSize}">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton x:Name="decrease" Command="{x:Static ScrollBar.PageUpCommand}" Focusable="False">
+                        <RepeatButton.Template>
+                            <ControlTemplate TargetType="RepeatButton">
+                                <Border Background="Transparent" />
+                            </ControlTemplate>
+                        </RepeatButton.Template>
+                    </RepeatButton>
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb MinWidth="8" MinHeight="8" Margin="2"
+                           Background="{converter:DarkModeBrush {StaticResource kanbanIconColor}, Role=Accent}">
+                        <Thumb.Template>
+                            <ControlTemplate TargetType="Thumb">
+                                <Border x:Name="thumb" Background="{TemplateBinding Background}" CornerRadius="3" />
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="thumb" Property="Opacity" Value="0.8" />
+                                    </Trigger>
+                                    <Trigger Property="IsDragging" Value="True">
+                                        <Setter TargetName="thumb" Property="Opacity" Value="0.6" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Thumb.Template>
+                    </Thumb>
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton x:Name="increase" Command="{x:Static ScrollBar.PageDownCommand}" Focusable="False">
+                        <RepeatButton.Template>
+                            <ControlTemplate TargetType="RepeatButton">
+                                <Border Background="Transparent" />
+                            </ControlTemplate>
+                        </RepeatButton.Template>
+                    </RepeatButton>
+                </Track.IncreaseRepeatButton>
+            </Track>
+        </DockPanel>
+        <ControlTemplate.Triggers>
+            <Trigger Property="Orientation" Value="Horizontal">
+                <Setter TargetName="PART_Track" Property="IsDirectionReversed" Value="False" />
+                <Setter TargetName="decrease" Property="Command" Value="{x:Static ScrollBar.PageLeftCommand}" />
+                <Setter TargetName="increase" Property="Command" Value="{x:Static ScrollBar.PageRightCommand}" />
+                <Setter TargetName="lineDecrease" Property="DockPanel.Dock" Value="Left" />
+                <Setter TargetName="lineIncrease" Property="DockPanel.Dock" Value="Right" />
+                <Setter TargetName="lineDecrease" Property="Command" Value="{x:Static ScrollBar.LineLeftCommand}" />
+                <Setter TargetName="lineIncrease" Property="Command" Value="{x:Static ScrollBar.LineRightCommand}" />
+                <Setter TargetName="decreaseArrow" Property="LayoutTransform">
+                    <Setter.Value>
+                        <RotateTransform Angle="-90" />
+                    </Setter.Value>
+                </Setter>
+                <Setter TargetName="increaseArrow" Property="LayoutTransform">
+                    <Setter.Value>
+                        <RotateTransform Angle="-90" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.35" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
     <Style TargetType="{x:Type local:KanbanBoard}">
         <Setter Property="FontFamily" Value="Arial" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
         <Setter Property="Background" Value="{StaticResource kanbanBoardBackground}" />
         <Setter Property="Focusable" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanBoard}">
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                    <Border Background="{converter:DarkModeBrush {Binding Background, RelativeSource={RelativeSource TemplatedParent}}}"
+                            BorderBrush="{converter:DarkModeBrush {Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}, Role=Accent}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            TextElement.Foreground="{converter:DarkModeBrush {Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}, Role=Foreground}">
                         <DockPanel>
                             <Control DockPanel.Dock="Top" Template="{TemplateBinding TitleControl}" />
                             <ScrollViewer x:Name="KB_ScrollViewer" Focusable="False" PanningMode="Both">
+                                <ScrollViewer.Resources>
+                                    <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource {x:Type ScrollBar}}">
+                                        <Style.Triggers>
+                                            <Trigger Property="local:KanbanBoard.IsDarkModeActive" Value="True">
+                                                <Setter Property="Template" Value="{StaticResource darkScrollBarTemplate}" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ScrollViewer.Resources>
                                 <StackPanel>
                                     <local:KanbanBoardGridPanel MinHeight="{Binding ActualHeight, ElementName=KB_ScrollViewer}" Columns="{TemplateBinding Columns}" Swimlanes="{TemplateBinding Swimlanes}" />
                                     <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
@@ -123,13 +273,13 @@
     <!--#region KanbanBoardTitle-->
 
     <Style x:Key="styKanbanBoardTitleText" TargetType="TextBlock">
-        <Setter Property="Foreground" Value="{StaticResource kanbanTitleForeground}" />
+        <Setter Property="Foreground" Value="{converter:DarkModeBrush {StaticResource kanbanTitleForeground}, Role=Foreground}" />
         <Setter Property="Margin" Value="10,20,0,0" />
         <Setter Property="FontSize" Value="24" />
     </Style>
 
     <Style x:Key="styKanbanBoardTitleLine" TargetType="Border">
-        <Setter Property="BorderBrush" Value="{StaticResource kanbanTitleForeground}" />
+        <Setter Property="BorderBrush" Value="{converter:DarkModeBrush {StaticResource kanbanTitleForeground}, Role=Accent}" />
         <Setter Property="BorderThickness" Value="1" />
     </Style>
 
@@ -139,7 +289,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanBoardTitle}">
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                    <Border Background="{converter:DarkModeBrush {Binding Background, RelativeSource={RelativeSource TemplatedParent}}}"
+                            BorderBrush="{converter:DarkModeBrush {Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}, Role=Accent}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -175,7 +327,6 @@
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Focusable" Value="False" />
-        <Setter Property="Content" Value="{StaticResource icArrow}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
@@ -187,6 +338,9 @@
         </Setter>
 
         <Style.Triggers>
+            <Trigger Property="Content" Value="{x:Null}">
+                <Setter Property="ContentTemplate" Value="{StaticResource icArrow}" />
+            </Trigger>
             <Trigger Property="IsChecked" Value="True">
                 <Setter Property="LayoutTransform">
                     <Setter.Value>
@@ -205,8 +359,8 @@
     </Style>
 
     <Style x:Key="styKanbanColumnHeaderBorder" TargetType="Border">
-        <Setter Property="Background" Value="{StaticResource kanbanColumnHeaderBackground}" />
-        <Setter Property="BorderBrush" Value="{StaticResource kanbanCellBorder}" />
+        <Setter Property="Background" Value="{converter:DarkModeBrush {StaticResource kanbanColumnHeaderBackground}}" />
+        <Setter Property="BorderBrush" Value="{converter:DarkModeBrush {StaticResource kanbanCellBorder}, Role=Accent}" />
         <Setter Property="BorderThickness" Value="1,0,1,0" />
     </Style>
 
@@ -218,7 +372,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanColumn}">
-                    <Border Name="border" Style="{StaticResource styKanbanColumnHeaderBorder}">
+                    <Border Name="border" Style="{StaticResource styKanbanColumnHeaderBorder}"
+                            TextElement.Foreground="{converter:DarkModeBrush {Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}, Role=Foreground}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -228,7 +383,7 @@
                             <Line Grid.ColumnSpan="3"
                                   VerticalAlignment="Top"
                                   Stretch="Fill"
-                                  Stroke="{Binding Color, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                  Stroke="{converter:DarkModeBrush {Binding Color, RelativeSource={RelativeSource TemplatedParent}}, Role=Accent}"
                                   StrokeThickness="4"
                                   X2="1" />
                             <ToggleButton Grid.Column="0"
@@ -253,8 +408,8 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <DataTrigger Binding="{Binding IsCardLimitViolated, RelativeSource={RelativeSource Mode=Self}}" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="{StaticResource kanbanColumnViolatedBackground}" />
-                            <Setter TargetName="caption" Property="Foreground" Value="{StaticResource kanbanColumnViolatedForeground}" />
+                            <Setter TargetName="border" Property="Background" Value="{converter:DarkModeBrush {StaticResource kanbanColumnViolatedBackground}}" />
+                            <Setter TargetName="caption" Property="Foreground" Value="{converter:DarkModeBrush {StaticResource kanbanColumnViolatedForeground}, Role=Foreground}" />
                         </DataTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -268,10 +423,11 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="local:KanbanColumn">
-                            <Border Name="border" Style="{StaticResource styKanbanColumnHeaderBorder}">
+                            <Border Name="border" Style="{StaticResource styKanbanColumnHeaderBorder}"
+                                    TextElement.Foreground="{converter:DarkModeBrush {Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}, Role=Foreground}">
                                 <StackPanel Orientation="Vertical">
                                     <Line Stretch="Fill"
-                                          Stroke="{Binding Color, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                          Stroke="{converter:DarkModeBrush {Binding Color, RelativeSource={RelativeSource TemplatedParent}}, Role=Accent}"
                                           StrokeThickness="4"
                                           X2="1" />
                                     <ToggleButton Margin="0,2,0,4"
@@ -288,7 +444,7 @@
                             </Border>
                             <ControlTemplate.Triggers>
                                 <DataTrigger Binding="{Binding IsCardLimitViolated, RelativeSource={RelativeSource Mode=Self}}" Value="True">
-                                    <Setter TargetName="border" Property="Background" Value="{StaticResource kanbanColumnViolatedBackground}" />
+                                    <Setter TargetName="border" Property="Background" Value="{converter:DarkModeBrush {StaticResource kanbanColumnViolatedBackground}}" />
                                 </DataTrigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -310,8 +466,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanBoardCell}">
                     <Border Margin="1,1,1,1"
-                            Background="{StaticResource kanbanCellBackground}"
-                            BorderBrush="{StaticResource kanbanCellBorder}"
+                            Background="{converter:DarkModeBrush {StaticResource kanbanCellBackground}}"
+                            BorderBrush="{converter:DarkModeBrush {StaticResource kanbanCellBorder}, Role=Accent}"
                             BorderThickness="1,0,1,0">
                         <ItemsControl ItemsSource="{TemplateBinding Cards}" ScrollViewer.VerticalScrollBarVisibility="Disabled" VirtualizingPanel.IsVirtualizing="False">
                             <ItemsControl.ItemsPanel>
@@ -351,9 +507,10 @@
                 <ControlTemplate TargetType="{x:Type local:KanbanCardLimitPill}">
                     <Border Name="border"
                             Padding="4,1,4,1"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Background="{converter:DarkModeBrush {Binding Background, RelativeSource={RelativeSource TemplatedParent}}}"
+                            BorderBrush="{converter:DarkModeBrush {Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}, Role=Accent}"
                             BorderThickness="{TemplateBinding BorderThickness}"
+                            TextElement.Foreground="{converter:DarkModeBrush {Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}, Role=Foreground}"
                             CornerRadius="4">
                         <DockPanel>
                             <TextBlock Name="txt1"
@@ -370,7 +527,7 @@
                     <ControlTemplate.Triggers>
                         <DataTrigger Binding="{Binding IsCardLimitViolated, RelativeSource={RelativeSource Mode=Self}}" Value="True">
                             <Setter TargetName="txt3" Property="TextBlock.FontWeight" Value="Bold" />
-                            <Setter TargetName="txt3" Property="TextBlock.Foreground" Value="{StaticResource kanbanPillViolatedForeground}" />
+                            <Setter TargetName="txt3" Property="TextBlock.Foreground" Value="{converter:DarkModeBrush {StaticResource kanbanPillViolatedForeground}, Role=Foreground}" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding Orientation, RelativeSource={RelativeSource Mode=Self}}" Value="Vertical">
                             <Setter TargetName="border" Property="Padding" Value="1,4,1,4" />
@@ -424,19 +581,20 @@
                     <Border Name="Border"
                             Width="{TemplateBinding CardWidth}"
                             Height="{TemplateBinding CardHeight}"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
+                            Background="{converter:DarkModeBrush {Binding Background, RelativeSource={RelativeSource TemplatedParent}}}"
+                            BorderBrush="{converter:DarkModeBrush {Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}, Role=Accent}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            TextElement.Foreground="{converter:DarkModeBrush {Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}, Role=Foreground}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <Border Grid.Row="0"
+                            <Border x:Name="TitleBorder" Grid.Row="0"
                                     Padding="4,0,4,0"
-                                    Background="{TemplateBinding TitleBackground}"
-                                    TextBlock.Foreground="{TemplateBinding TitleForeground}">
+                                    Background="{converter:DarkModeBrush {Binding TitleBackground, RelativeSource={RelativeSource TemplatedParent}}}"
+                                    TextBlock.Foreground="{converter:DarkModeBrush {Binding TitleForeground, RelativeSource={RelativeSource TemplatedParent}}, Role=Foreground}">
                                 <Grid>
                                     <TextBlock HorizontalAlignment="Left" Style="{StaticResource styCardTitle}" Text="{TemplateBinding LeftTitle}" />
                                     <TextBlock HorizontalAlignment="Right" Style="{StaticResource styCardTitle}" Text="{TemplateBinding RightTitle}" />
@@ -462,8 +620,8 @@
 
 
                             <Border Grid.Row="2"
-                                    Background="{StaticResource kanbanCardBackground}"
-                                    BorderBrush="{StaticResource kanbanCardFooterBackground}"
+                                    Background="{converter:DarkModeBrush {StaticResource kanbanCardBackground}}"
+                                    BorderBrush="{converter:DarkModeBrush {StaticResource kanbanCardFooterBackground}, Role=Accent}"
                                     BorderThickness="0,1,0,0">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -497,10 +655,10 @@
                                                        Time="{TemplateBinding CreationTime}"
                                                        TimeUnits="{TemplateBinding ElapsedTimeUnits}" />
 
-                                    <Border Grid.Column="0" Width="20" Background="{TemplateBinding TileBrush}">
+                                    <Border Grid.Column="0" Width="20" Background="{converter:DarkModeBrush {Binding TileBrush, RelativeSource={RelativeSource TemplatedParent}}}">
                                         <TextBlock HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"
-                                                   Foreground="{TemplateBinding TileForeground}"
+                                                   Foreground="{converter:DarkModeBrush {Binding TileForeground, RelativeSource={RelativeSource TemplatedParent}}, Role=Foreground}"
                                                    Text="{TemplateBinding TileText}" />
                                     </Border>
 
@@ -517,8 +675,8 @@
                                     <Binding Path="HasBlockers" RelativeSource="{RelativeSource Mode=Self}" />
                                 </MultiBinding>
                             </DataTrigger.Binding>
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource kanbanCardBlockedBackground}" />
-                            <Setter TargetName="Content" Property="Foreground" Value="{StaticResource kanbanCardBlockedForeground}" />
+                            <Setter TargetName="Border" Property="Background" Value="{converter:DarkModeBrush {StaticResource kanbanCardBlockedBackground}}" />
+                            <Setter TargetName="Content" Property="Foreground" Value="{converter:DarkModeBrush {StaticResource kanbanCardBlockedForeground}, Role=Foreground}" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding IsDraged, RelativeSource={RelativeSource Mode=Self}}" Value="True">
                             <Setter TargetName="Border" Property="Opacity" Value="0.3" />
@@ -543,9 +701,10 @@
                     <Border Name="Border"
                             Width="{TemplateBinding CardWidth}"
                             Height="{TemplateBinding CardHeight}"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
+                            Background="{converter:DarkModeBrush {Binding Background, RelativeSource={RelativeSource TemplatedParent}}}"
+                            BorderBrush="{converter:DarkModeBrush {Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}, Role=Accent}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            TextElement.Foreground="{converter:DarkModeBrush {Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}, Role=Foreground}">
 
                         <ContentPresenter />
                     </Border>
@@ -573,10 +732,10 @@
                     <Border Name="Border"
                             Width="{TemplateBinding CardWidth}"
                             Height="{TemplateBinding CardHeight}"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Background="{converter:DarkModeBrush {Binding Background, RelativeSource={RelativeSource TemplatedParent}}}"
+                            BorderBrush="{converter:DarkModeBrush {Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}, Role=Accent}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Rectangle Stroke="{StaticResource kanbanCardDropTargetBorder}" StrokeDashArray="4, 4" StrokeThickness="3" />
+                        <Rectangle Stroke="{converter:DarkModeBrush {StaticResource kanbanCardDropTargetBorder}, Role=Accent}" StrokeDashArray="4, 4" StrokeThickness="3" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -601,7 +760,6 @@
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Focusable" Value="False" />
-        <Setter Property="Content" Value="{StaticResource icArrow}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
@@ -618,6 +776,9 @@
         </Setter>
 
         <Style.Triggers>
+            <Trigger Property="Content" Value="{x:Null}">
+                <Setter Property="ContentTemplate" Value="{StaticResource icArrow}" />
+            </Trigger>
             <Trigger Property="IsChecked" Value="True">
                 <Setter Property="LayoutTransform">
                     <Setter.Value>
@@ -635,9 +796,10 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanSwimlane}">
                     <Border Padding="4,4,4,4"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
+                            Background="{converter:DarkModeBrush {Binding Background, RelativeSource={RelativeSource TemplatedParent}}}"
+                            BorderBrush="{converter:DarkModeBrush {Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}, Role=Accent}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            TextElement.Foreground="{converter:DarkModeBrush {Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}, Role=Foreground}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -675,9 +837,10 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:ElapsedTime}">
                     <Border Padding="4,0,4,0"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
+                            Background="{converter:DarkModeBrush {Binding Background, RelativeSource={RelativeSource TemplatedParent}}}"
+                            BorderBrush="{converter:DarkModeBrush {Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}, Role=Accent}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            TextElement.Foreground="{converter:DarkModeBrush {Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}, Role=Foreground}">
                         <TextBlock Text="{TemplateBinding ElapsedTimeStr}" />
                     </Border>
                 </ControlTemplate>
@@ -695,11 +858,12 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanBlocker}">
-                    <Grid ToolTip="{TemplateBinding Description}">
+                    <Grid ToolTip="{TemplateBinding Description}"
+                          TextElement.Foreground="{converter:DarkModeBrush {Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}, Role=Foreground}">
                         <Viewbox Stretch="Fill">
                             <Path Data="M100,0 L200,50 L200,150 L100,200 L0,150 L0,50 L100,0 L200,50"
-                                  Fill="{TemplateBinding Background}"
-                                  Stroke="{TemplateBinding BorderBrush}"
+                                  Fill="{converter:DarkModeBrush {Binding Background, RelativeSource={RelativeSource TemplatedParent}}}"
+                                  Stroke="{converter:DarkModeBrush {Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}, Role=Accent}"
                                   StrokeThickness="{TemplateBinding BorderThickness,
                                                                     Converter={StaticResource convThickness}}" />
                         </Viewbox>
@@ -718,7 +882,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanBlockerPresenter}">
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                    <Border Background="{converter:DarkModeBrush {Binding Background, RelativeSource={RelativeSource TemplatedParent}}}"
+                            BorderBrush="{converter:DarkModeBrush {Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}, Role=Accent}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
                         <ItemsControl AlternationCount="1000" ItemsSource="{TemplateBinding Blockers}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -765,7 +931,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KanbanStickerPresenter}">
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                    <Border Background="{converter:DarkModeBrush {Binding Background, RelativeSource={RelativeSource TemplatedParent}}}"
+                            BorderBrush="{converter:DarkModeBrush {Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}, Role=Accent}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
                         <ItemsControl AlternationCount="1000" ItemsSource="{TemplateBinding Stickers}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
