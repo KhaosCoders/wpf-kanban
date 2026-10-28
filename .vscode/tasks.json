@@ -1,0 +1,45 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build solution",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "${workspaceFolder}/WPF-Kanban.sln",
+        "--configuration",
+        "Debug"
+      ],
+      "type": "process",
+      "problemMatcher": "$msCompile",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "build library project",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "${workspaceFolder}/Source/WPF-Kanban.csproj",
+        "--configuration",
+        "Debug"
+      ],
+      "type": "process",
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "build sample project",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "${workspaceFolder}/Samples/WpfApp1/WpfApp1.csproj",
+        "--configuration",
+        "Debug"
+      ],
+      "type": "process",
+      "problemMatcher": "$msCompile"
+    }
+  ]
+}
