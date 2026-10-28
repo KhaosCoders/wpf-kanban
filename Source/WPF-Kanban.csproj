@@ -9,12 +9,12 @@
     <Product>WPF-Kanban</Product>
     <Description>A simple task board WPF control</Description>
     <Copyright>Copyright 2026</Copyright>
-    <Version>2.2.0</Version>
+    <Version>2.2.1</Version>
     <UseWPF>true</UseWPF>
     <LangVersion>latest</LangVersion>
     <Authors>Khaos-Coders</Authors>
     <PackageProjectUrl>https://github.com/KhaosCoders/wpf-kanban</PackageProjectUrl>
-    <PackageReleaseNotes>Switch Newtonsoft.Json dependency to open range</PackageReleaseNotes>
+    <PackageReleaseNotes>Prepare release 2.2.1</PackageReleaseNotes>
     <PackageTags>WPF Kanban Card Task Board Control</PackageTags>
   </PropertyGroup>
   <PropertyGroup>
